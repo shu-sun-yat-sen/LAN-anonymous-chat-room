@@ -1,0 +1,124 @@
+```mermaid
+@startuml 用例图
+left to right direction
+' 用户管理
+actor 用户
+package 用户管理{
+    usecase 用户注册
+    usecase 用户登录
+    usecase 匿名登录
+    usecase 使用账号密码登录
+}
+匿名登录 ..> 用户登录:extend
+使用账号密码登录 .left.> 用户登录:extend
+用户 --> 用户注册
+用户 --> 用户登录
+
+newpage
+left to right direction
+' 聊天室
+actor 聊天室管理员
+actor 用户
+用户 <|- 聊天室管理员
+package 聊天室{
+    usecase 创建聊天室
+    usecase 创建带密码聊天室
+    usecase 成为聊天室管理员
+    usecase 查看聊天室
+    usecase 加入聊天室
+    usecase 加入带密码聊天室
+    usecase 输入房间密码
+    usecase 退出聊天室
+    usecase 发送消息
+    usecase 接收消息
+    usecase 发送文件
+    usecase 管理聊天室
+    usecase 删除聊天室
+    usecase 踢出用户
+}
+创建聊天室 ..> 成为聊天室管理员:include
+发送文件 .left.> 发送消息:extend
+创建带密码聊天室 .up.>创建聊天室:extend
+用户 --> 创建聊天室
+用户 --> 发送消息
+用户 --> 接收消息
+用户 --> 查看聊天室
+用户 --> 加入聊天室
+加入带密码聊天室 .left.>加入聊天室:extend
+加入带密码聊天室 ..> 输入房间密码:include
+用户 --> 退出聊天室
+聊天室管理员 --> 管理聊天室
+删除聊天室 ..> 管理聊天室:extend
+踢出用户 ..> 管理聊天室:extend
+
+newpage 
+left to right direction
+' 游戏
+actor 游戏房主
+actor 用户
+用户 <|- 游戏房主
+package 游戏{
+    usecase 管理游戏房间
+    usecase 创建游戏房间
+    usecase 删除游戏房间
+    usecase 选择游戏类型
+    usecase 游戏邀请
+    usecase 开始游戏
+    usecase 暂停游戏
+    usecase 踢出用户
+    usecase 加入游戏房间
+    usecase 准备就绪
+    usecase 申请暂停游戏
+    usecase 加入游戏房间
+}
+用户 --> 创建游戏房间
+游戏房主 --> 管理游戏房间
+删除游戏房间 ..> 管理游戏房间:extend
+选择游戏类型 ..> 管理游戏房间:extend
+踢出用户 ..> 管理游戏房间:extend
+游戏邀请 ..> 管理游戏房间:extend
+游戏房主 --> 开始游戏
+游戏房主 --> 暂停游戏
+用户 --> 加入游戏房间
+用户 --> 准备就绪
+用户 --> 申请暂停游戏
+
+newpage
+left to right direction
+' 聊天机器人
+actor 聊天室管理员
+actor 用户
+用户 <|-- 聊天室管理员
+package 聊天机器人{
+    usecase 管理聊天机器人
+    usecase 创建聊天机器人
+    usecase 删除聊天机器人
+    usecase 与聊天机器人对话
+    usecase 查询天气等信息
+    usecase 发起趣味文字游戏
+}
+聊天室管理员 --> 管理聊天机器人
+创建聊天机器人 ..> 管理聊天机器人:extend
+删除聊天机器人 ..> 管理聊天机器人:extend
+用户 --> 与聊天机器人对话
+用户 --> 查询天气等信息
+用户 --> 发起趣味文字游戏
+
+newpage
+left to right direction
+' 其他功能
+actor 用户
+package 界面其他功能 {
+    usecase 查看历史消息记录
+    usecase 搜索聊天记录
+    usecase 备份消息数据
+    usecase 数据恢复
+    usecase 切换主题
+}
+用户 --> 查看历史消息记录
+搜索聊天记录 ..> 查看历史消息记录:extend
+用户 --> 备份消息数据
+用户 --> 数据恢复
+用户 --> 切换主题
+@enduml
+```
