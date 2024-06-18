@@ -23,7 +23,7 @@ import ChatWindow from './components/ChatWindow.vue'
 import InputWindow from './components/InputWindow.vue'
 import AllEvent from './components/AllEvent.vue'
 
-import {ref, provide} from 'vue';
+import {ref,computed, provide} from 'vue';
 const sideBarText = ref('这里是侧边栏');// 示例
 const inputWindowText = ref('这里是输入窗口');// 示例
 const chatWindowText = ref('这里是显示消息窗口');// 示例
@@ -46,7 +46,7 @@ const loginInfo = ref(
 
 const roomInfo = ref(
   { 
-    currentRoomName: "fakeRoom",
+    currentRoomName: "sampleRoom1",
     roomList: [
       {
         roomName: "sampleRoom1",
@@ -58,7 +58,8 @@ const roomInfo = ref(
           {
             senderFakeName: "fakeSender",
             headPhoto: null,
-            content: "fakeContent",
+            content: "hello1!",
+            avatar: 'https://via.placeholder.com/40',
             time: "fakeTime"
           }
         ]
@@ -73,7 +74,8 @@ const roomInfo = ref(
           {
             senderFakeName: "fakeSender",
             headPhoto: null,
-            content: "fakeContent",
+            content: "hello2!",
+            avatar: 'https://via.placeholder.com/40',
             time: "fakeTime"
           }
         ]
@@ -92,9 +94,16 @@ const serverInfo = ref(
   }
 )
 
+// 消息类型
+const messageinfo = computed(() => { 
+  const room = roomInfo.value.roomList.find(room => room.roomName === roomInfo.value.currentRoomName);
+  return room ? room.messages : [];
+});
+
 provide('room-info', roomInfo);
 provide('login-info', loginInfo);
 provide('server-info', serverInfo);
+provide('message-info', messageinfo);
 
 const allEvent = ref(null);
 const logIn = () => {
