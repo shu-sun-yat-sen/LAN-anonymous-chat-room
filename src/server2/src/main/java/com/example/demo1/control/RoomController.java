@@ -1,5 +1,6 @@
 package com.example.demo1.control;
 
+import com.example.demo1.Alservice.AssistantmyService;
 import com.example.demo1.model.Result;
 import com.example.demo1.model.Room;
 import com.example.demo1.model.User;
@@ -44,7 +45,7 @@ public class RoomController {
     }
     @GetMapping
     public Result<List<String>> list(){
-//        System.out.println("接收到获取房间请求");
+        System.out.println("接收到获取房间请求");
         List<String> output=new ArrayList<String>();
         List<Room> medie=roomService.findAllRooms();
         for (Room room:medie){
@@ -101,6 +102,8 @@ public class RoomController {
 
     @PutMapping("/roominfo")
     public Result update(HttpServletRequest request,String roomnanme,String owenerid){
+        System.out.print("接收到更新房间信息请求, request: ");
+        System.out.println(request);
         String roomname=request.getHeader("roomname");
         Room room=roomService.findRoomByRoomName(roomname).get();
         String id=room.getRoomOwnerId();
@@ -142,6 +145,8 @@ public class RoomController {
     }
     @DeleteMapping("/roominfo")
     public Result delete(HttpServletRequest request){
+        System.out.print("接收到更新房间信息请求, request: ");
+        System.out.println(request);
         String roomname=request.getHeader("roomname");
         Room room=roomService.findRoomByRoomName(roomname).get();
         if(roomService.checkroomname(room.getRoomName())){
@@ -161,6 +166,10 @@ public class RoomController {
 
     @PostMapping("/addmenber")
     public Result addmembers(HttpServletRequest request,String id){
+        System.out.print("接收到更新房间信息请求, request: ");
+        System.out.println(request);
+        System.out.print("接收到id, id: ");
+        System.out.println(id);
         String roomname=request.getHeader("roomname");
         Room room=roomService.findRoomByRoomName(roomname).get();
         Map<String,Object> map =ThreadLocalUtil.get();
@@ -198,6 +207,10 @@ public class RoomController {
     }
     @PostMapping("/deletemember")
     public Result deletemembers(HttpServletRequest request,String id){
+        System.out.print("接收到更新房间信息请求, request: ");
+        System.out.println(request);
+        System.out.print("接收到id, id: ");
+        System.out.println(id);
         String roomname=request.getHeader("roomname");
         Room room=roomService.findRoomByRoomName(roomname).get();
         Map<String,Object> map =ThreadLocalUtil.get();
