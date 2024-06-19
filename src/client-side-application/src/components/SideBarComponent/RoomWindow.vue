@@ -24,7 +24,6 @@
             required: true
         }
     });
-    const avatar = 'https://via.placeholder.com/40';
 
     const truncateString = (str, len) => {
         if (str.length > len) {

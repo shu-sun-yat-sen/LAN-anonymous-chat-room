@@ -3,6 +3,7 @@ package com.example.demo1.control;
 import com.example.demo1.model.Result;
 import com.example.demo1.model.Room;
 import com.example.demo1.model.User;
+import com.example.demo1.service.CacheService.RoomMap;
 import com.example.demo1.service.DbService.RoomService;
 import com.example.demo1.utils.JwtUtil;
 import com.example.demo1.utils.Md5Util;
@@ -22,7 +23,9 @@ import java.util.regex.Pattern;
 @RequestMapping("/room")
 public class RoomController {
     @Autowired
-    RoomService roomService;
+    private RoomService roomService;
+    @Autowired
+    private RoomMap roomMap;
     @PostMapping
     public Result add(String roomName){
         System.out.print("接收到创建房间请求: roomName:");
@@ -35,6 +38,7 @@ public class RoomController {
         room.setRoomOwnerId(id);
         room.setMembersId(id);
         room.setPassWord(Md5Util.getMD5String(id));
+        roomMap.writeToMap(room.getRoomName(),room);
         roomService.saveRoom(room);
         return Result.success();
     }
@@ -62,6 +66,7 @@ public class RoomController {
             room.setRoomOwnerId(roomnow.getRoomOwnerId());
             room.setNumofpeople(roomnow.getNumofpeople());
             return Result.success(room);}
+
     }
     @PostMapping("/roominfo")
     public Result join(HttpServletRequest request, String password){
@@ -85,6 +90,9 @@ public class RoomController {
         }
         if (Objects.equals(password, room.getPassWord())){
             room.setMembersId(id);
+            int num=room.getNumofpeople()+1;
+            room.setNumofpeople(num);
+            roomMap.updateMap(room.getRoomName(),room);
             return Result.success(u);
         }
         else
@@ -107,6 +115,7 @@ public class RoomController {
                 return Result.error("群名已存在");}
             else{
                 room.setRoomName(roomname);
+                roomMap.updateMap(room.getRoomName(),room);
                 return Result.success();}
         }
         String phoneRegex = "^1[3456789]\\d{9}$";
@@ -124,6 +133,7 @@ public class RoomController {
                 return Result.error("群名已存在");}
             else{
                 room.setRoomName(roomname);
+                roomMap.updateMap(room.getRoomName(),room);
                 return Result.success();}
         }
         else {
@@ -139,6 +149,7 @@ public class RoomController {
             String id=(String) map.get("id");
             if(Objects.equals(id, roomService.findRoomByRoomName(room.getRoomName()).get().getRoomOwnerId()))
             {roomService.deleteRoom(room.getRoomName());
+                roomMap.deletefromMap(room.getRoomName());
             return Result.success();}
             else
                 return Result.error("你没有这个权限");
@@ -173,7 +184,10 @@ public class RoomController {
                     return Result.error("该用户已在聊天室");
                 }
             }
+            int num=room.getNumofpeople()+1;
+            room.setNumofpeople(num);
             room.setMembersId(id);
+            roomMap.updateMap(room.getRoomName(),room);
             return Result.success();
         }
         else {
@@ -198,6 +212,7 @@ public class RoomController {
         for(String mem:roomnowmembersid){
             if(Objects.equals(mem, id)){
                 room.deleteMembersId(id);
+                roomMap.updateMap(room.getRoomName(),room);
                 return Result.success();
             }
         }

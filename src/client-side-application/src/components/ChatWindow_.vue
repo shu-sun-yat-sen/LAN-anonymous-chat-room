@@ -4,9 +4,9 @@
         <ChatBubble
           v-for="(message, index) in items"
           :key="index"
-          :text="message.content" 
+          :text="message.text" 
           :avatar="message.avatar"
-          :username="message.senderFakeName"
+          :username="message.username"
         />
       </div>
     </div>
@@ -22,7 +22,22 @@ export default {
   },
   setup() {
     const chat_window_text = inject('chat_window_text');
-    const items = inject('message-info').value;
+    const arr1 =[
+      { text: 'Heddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddllo!', avatar: 'https://via.placeholder.com/40', username: 'User1' },
+      { text: 'How are you?', avatar: 'https://via.placeholder.com/40', username: 'User2' },
+      { text: 'Hello!', avatar: 'https://via.placeholder.com/40', username: 'User1' },
+      { text: 'How are you?', avatar: 'https://via.placeholder.com/40', username: 'User2' },
+      { text: 'Hello!', avatar: 'https://via.placeholder.com/40', username: 'User1' },
+      { text: 'How are you?', avatar: 'https://via.placeholder.com/40', username: 'User2' },
+      { text: 'Hello!', avatar: 'https://via.placeholder.com/40', username: 'User1' },
+      { text: 'How are you?', avatar: 'https://via.placeholder.com/40', username: 'User2' },
+      { text: 'Hello!', avatar: 'https://via.placeholder.com/40', username: 'User1' },
+      { text: 'How are you?', avatar: 'https://via.placeholder.com/40', username: 'User2' },
+      { text: 'Hello!', avatar: 'https://via.placeholder.com/40', username: 'User1' },
+      { text: 'How are you?', avatar: 'https://via.placeholder.com/40', username: 'User2' },
+      { text: 'I am fine, thank you!', avatar: 'https://via.placeholder.com/40', username: 'User1' }
+    ];
+    const items = ref(arr1);
 
     // 创建一个对 scrollBox 的引用
     const scrollBox = ref(null);

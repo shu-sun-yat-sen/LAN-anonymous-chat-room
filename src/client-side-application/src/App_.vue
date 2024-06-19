@@ -23,7 +23,7 @@ import ChatWindow from './components/ChatWindow.vue'
 import InputWindow from './components/InputWindow.vue'
 import AllEvent from './components/AllEvent.vue'
 
-import {ref,computed, provide} from 'vue';
+import {ref, provide} from 'vue';
 const sideBarText = ref('这里是侧边栏');// 示例
 const inputWindowText = ref('这里是输入窗口');// 示例
 const chatWindowText = ref('这里是显示消息窗口');// 示例
@@ -57,7 +57,6 @@ const roomInfo = ref(
         messages: [
           {
             senderFakeName: "fakeSender",
-            headPhoto: null,
             content: "hello1!",
             avatar: 'https://via.placeholder.com/40',
             time: "fakeTime"
@@ -73,7 +72,6 @@ const roomInfo = ref(
         messages: [
           {
             senderFakeName: "fakeSender",
-            headPhoto: null,
             content: "hello2!",
             avatar: 'https://via.placeholder.com/40',
             time: "fakeTime"
@@ -88,7 +86,7 @@ const serverInfo = ref(
   {
     serverList:[
       {
-        ip: "http://127.0.0.1:8080",
+        ip: "http://localhost:8080",
       }
     ]
   }
@@ -119,7 +117,6 @@ const logOut = () => {
 </script>
 
 <style>
-
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
