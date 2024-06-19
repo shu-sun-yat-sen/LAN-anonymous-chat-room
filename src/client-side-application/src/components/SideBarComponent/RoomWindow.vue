@@ -1,8 +1,8 @@
 <template>
-    <div class="room-window">
+    <div :style="dynamicStyle" @click="handleClick" class="room-window">
       <img :src="roomAvatar" alt="Avatar" class="avatar" />
       <div class="info">
-        <p class="room-name">{{ truncateString(name, 11) }}</p>
+        <p class="room-name">{{ truncateString(roomname, 11) }}</p>
         <p class="newest-message">{{ truncateString(newestMessage, 9) }}</p>
       </div> 
     </div>
@@ -10,8 +10,10 @@
 
 
 <script setup>
-    defineProps({
-        name: {
+    import { computed, inject} from 'vue';
+
+    const props = defineProps({
+        roomname: {
             type: String,
             required: true
         },
@@ -31,6 +33,27 @@
         }
         return str;
     };
+
+
+    const roomInfo = inject("room-info");
+
+
+    const handleClick = () => {
+        roomInfo.value.currentRoomName = props.roomname;
+        console.log(roomInfo.value.currentRoomName);
+    }
+
+    const dynamicStyle = computed(() => (
+         {
+            display: 'flex',
+            alignItems: 'fex-start',
+            left : 'inherit',
+            right: 'inherit',
+            height: '15%',
+            borderBottom: '0.5px solid rgb(83, 76, 76)',
+            backgroundColor: roomInfo.value.currentRoomName === props.roomname ? 'rgb(187, 186, 186)' : '#f5f5f5',
+        }
+    ));
 </script>
 
 
@@ -43,7 +66,8 @@
     right: inherit;
     height: 15%;
     border-bottom: 0.5px solid rgb(83, 76, 76);
-    /* align-items: center; */
+    /* background-color: rgb(187, 186, 186); */
+    align-items: center;
 }
 
 .avatar{

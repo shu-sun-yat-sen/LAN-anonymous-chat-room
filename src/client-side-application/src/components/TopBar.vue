@@ -19,6 +19,7 @@
       <CreateRoomDialog
       :visible="showCreateDialog"
       @close="handlecloseCreateRoom"
+      @createroom="handleCreate"
       />
     </div>
   </template>

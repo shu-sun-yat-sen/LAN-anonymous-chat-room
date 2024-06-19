@@ -67,13 +67,14 @@ const createRoom = (roomName) => { //创建房间
     method: 'post',
     url: serverInfo.value.serverList[0].ip + '/room',
     headers:{
-      Authorization: loginInfo.value.JWT
+      Authorization: loginInfo.value.JWT,
     },
     params:{
       roomName:roomName
     }
   }).then(response => {
-    console.log('创建成功');
+    console.log('创建房间成功');
+    console.log(roomName);
   }, error => {
     console.log('创建失败');
     console.log(error);

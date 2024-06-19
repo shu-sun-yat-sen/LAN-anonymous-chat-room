@@ -2,7 +2,7 @@
 <template>
   <div id="app">
     <header>
-      <TopBar @log-in="logIn" @log-out="logOut" id="top-bar"/>
+      <TopBar @log-in="logIn" @log-out="logOut" @createroom="createRoom" id="top-bar"/>
     </header>
     <main>
       <SideBar />
@@ -116,6 +116,9 @@ const logOut = () => {
     allEvent.value.logOut();
   }
 };
+const createRoom = (roomName) => {
+  allEvent.value.createRoom(roomName);
+}
 </script>
 
 <style>

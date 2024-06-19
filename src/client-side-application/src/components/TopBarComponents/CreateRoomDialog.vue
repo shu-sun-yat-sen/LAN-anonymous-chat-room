@@ -7,11 +7,11 @@
                 <label for="roomname">房间名:</label>
                 <input type="text" id="roomname" v-model="roomname" required />
             </div>
+            <div class="form-group">
+              <button type="submit">创建</button>
+              <button type="button" @click="closeDialog">取消</button>
+            </div>
         </form>
-      </div>
-      <div class="form-group">
-          <button type="submit">创建</button>
-          <button type="button" @click="closeDialog">取消</button>
       </div>
     </div>
 </template>
@@ -31,7 +31,7 @@ const emit = defineEmits(['createroom', 'close']);
 const roomname = ref('');
 
 const submitCreate = () => {
-  emit('createroom', roomname);
+  emit('createroom', roomname.value);
   closeDialog();
 };
 

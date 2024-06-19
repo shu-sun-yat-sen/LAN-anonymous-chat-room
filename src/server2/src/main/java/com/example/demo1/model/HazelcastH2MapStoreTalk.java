@@ -11,18 +11,18 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class HazelcastH2MapStoreRoom implements MapStore<String,Room> {
+public class HazelcastH2MapStoreTalk implements MapStore<String,Talk> {
     private final DataSource dataSource;
 
-    public HazelcastH2MapStoreRoom(DataSource dataSource) {
+    public HazelcastH2MapStoreTalk(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
     @Override
-    public void store(String s, Room room) {
+    public void store(String s, Talk talk) {
         try (Connection conn = dataSource.getConnection();
-             PreparedStatement checkStmt = conn.prepareStatement("SELECT COUNT(*) FROM ROOM WHERE ROOM_NAME = ?");
-             PreparedStatement insertStmt = conn.prepareStatement("INSERT INTO ROOM (ROOM_NAME,ROOM_OWNER_ID, NUMOFPEOPLE,PASS_WORD,MEMBERS_ID) VALUES (?, ?, ?,?,?)")) {
+             PreparedStatement checkStmt = conn.prepareStatement("SELECT COUNT(*) FROM TALK WHERE TIME = ?");
+             PreparedStatement insertStmt = conn.prepareStatement("INSERT INTO TALK (TIME, CHATROOMNAME, SENDERNAME,SENDERPIC,CONTEXT) VALUES (?, ?, ?,?,?)")) {
 
             // 检查是否已经存在相同ID的记录
             checkStmt.setString(1, s);
@@ -36,21 +36,21 @@ public class HazelcastH2MapStoreRoom implements MapStore<String,Room> {
 
             // 插入新记录
             insertStmt.setString(1, s);
-            insertStmt.setString(2, room.getRoomName());
-            insertStmt.setInt(3, room.getNumofpeople());
-            insertStmt.setInt(4, room.getNumofpeople());
-            insertStmt.setString(5, room.gettureMemberid());
+            insertStmt.setString(2, talk.getChatroomname());
+            insertStmt.setString(3, talk.getSendername());
+            insertStmt.setString(4, talk.getSenderpic());
+            insertStmt.setString(5, talk.getContext());
             insertStmt.executeUpdate();
             System.out.print("存入:");
-            System.out.println(room);
+            System.out.println(talk);
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public void storeAll(Map<String, Room> map) {
-        for (Map.Entry<String, Room> entry : map.entrySet()) {
+    public void storeAll(Map<String, Talk> map) {
+        for (Map.Entry<String, Talk> entry : map.entrySet()) {
             store(entry.getKey(), entry.getValue());
             System.out.print("存入:");
             System.out.println(entry.getValue());
@@ -60,7 +60,7 @@ public class HazelcastH2MapStoreRoom implements MapStore<String,Room> {
     @Override
     public void delete(String s) {
         try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement("DELETE FROM ROOM WHERE ROOM_NAME = ?")) {
+             PreparedStatement stmt = conn.prepareStatement("DELETE FROM TALK WHERE TIME = ?")) {
             stmt.setString(1, s);
             stmt.executeUpdate();
             System.out.print("删除:");
@@ -80,13 +80,13 @@ public class HazelcastH2MapStoreRoom implements MapStore<String,Room> {
     }
 
     @Override
-    public Room load(String s) {
+    public Talk load(String s) {
         try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM ROOM WHERE ROOM_NAME = ?")) {
+             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM TALK WHERE TIME = ?")) {
             stmt.setString(1, s);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    Room customer = new Room(rs.getString("ROOM_NAME"));
+                    Talk customer = new Talk(rs.getString("CONTEXT"));
                     System.out.print("读取:");
                     System.out.println(customer);
                     return customer;
@@ -99,10 +99,10 @@ public class HazelcastH2MapStoreRoom implements MapStore<String,Room> {
     }
 
     @Override
-    public Map<String, Room> loadAll(Collection<String> collection) {
-        Map<String, Room> result = new HashMap<>();
+    public Map<String, Talk> loadAll(Collection<String> collection) {
+        Map<String, Talk> result = new HashMap<>();
         for (String key : collection) {
-            Room customer = load(key);
+            Talk customer = load(key);
             if (customer != null) {
                 System.out.print("读取:");
                 System.out.println(customer);

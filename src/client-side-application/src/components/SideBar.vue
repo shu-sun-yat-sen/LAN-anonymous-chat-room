@@ -4,7 +4,7 @@
       <!-- <p>{{ side_bar_text }}</p> -->
       <RoomWindow
           v-for="(room, index) in roomList"
-          :name="room.roomName"
+          :roomname="room.roomName"
           :newestMessage="newestMessage(room.messages)"
           :roomAvatar="room.roomAvatar"
         />
