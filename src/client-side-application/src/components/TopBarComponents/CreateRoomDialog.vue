@@ -1,13 +1,17 @@
 <template>
     <div v-if="visible" class="dialog-overlay">
       <div class="dialog">
-        <h3>登录</h3>
-        <form @submit.prevent="submitLogin">
+        <h3>创建房间</h3>
+        <form @submit.prevent="submitCreate">
             <div class="form-group">
                 <label for="roomname">房间名:</label>
                 <input type="text" id="roomname" v-model="roomname" required />
             </div>
         </form>
+      </div>
+      <div class="form-group">
+          <button type="submit">创建</button>
+          <button type="button" @click="closeDialog">取消</button>
       </div>
     </div>
 </template>
@@ -26,7 +30,7 @@ const emit = defineEmits(['createroom', 'close']);
 
 const roomname = ref('');
 
-const submitLogin = () => {
+const submitCreate = () => {
   emit('createroom', roomname);
   closeDialog();
 };
