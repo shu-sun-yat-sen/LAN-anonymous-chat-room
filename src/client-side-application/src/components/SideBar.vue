@@ -8,30 +8,12 @@
           :newestMessage="newestMessage(room.messages)"
           :roomAvatar="room.roomAvatar"
         />
-        <RoomWindow
-          v-for="(room, index) in roomList"
-          :name="room.roomName"
-          :newestMessage="newestMessage(room.messages)"
-          :roomAvatar="room.roomAvatar"
-        />
-        <RoomWindow
-          v-for="(room, index) in roomList"
-          :name="room.roomName"
-          :newestMessage="newestMessage(room.messages)"
-          :roomAvatar="room.roomAvatar"
-        />
-        <RoomWindow
-          v-for="(room, index) in roomList"
-          :name="room.roomName"
-          :newestMessage="newestMessage(room.messages)"
-          :roomAvatar="room.roomAvatar"
-        />
     </div>
 </template>
   
 <script setup>
     import{ computed, inject, ref } from 'vue';
-    import RoomWindow from './RoomWindow.vue';
+    import RoomWindow from './SideBarComponent/RoomWindow.vue';
 
     const roomInfo = inject('room-info');
     const roomList = computed(() => roomInfo.value.roomList);

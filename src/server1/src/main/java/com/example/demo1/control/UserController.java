@@ -2,6 +2,7 @@ package com.example.demo1.control;
 
 import com.example.demo1.model.Result;
 import com.example.demo1.model.User;
+import com.example.demo1.service.CacheService.UserMap;
 import com.example.demo1.service.DbService.UserService;
 import com.example.demo1.utils.JwtUtil;
 import com.example.demo1.utils.Md5Util;
@@ -20,14 +21,11 @@ import java.util.regex.Pattern;
 public class UserController {
     @Autowired
     private UserService userService;
+    @Autowired
+    private UserMap userMap;
     @PostMapping("/register")
-    public Result register(String id,String fakename, String password){
-        System.out.print("接收到注册请求: id:");
-        System.out.print(id);
-        System.out.print(", fakename:");
-        System.out.print(fakename);
-        System.out.print(", password: ");
-        System.out.println(password);
+    public Result register(String id,String fakename,String password){
+
 
       if(!userService.checkid(id)){
           // 定义电话号码的正则表达式
@@ -45,12 +43,14 @@ public class UserController {
           if (phoneMatcher.matches()){
               User s=new User(id,fakename, Md5Util.getMD5String(password) );
               s.setCookie("0success");
+              userMap.writeToMap(s.getUserId(),s);
               userService.saveUser(s);
               return Result.success();
           } //匹配邮箱
           else if (emailMatcher.matches()) {
               User s=new User(id,fakename,Md5Util.getMD5String(password));
               s.setCookie("1success");
+              userMap.writeToMap(s.getUserId(),s);
               userService.saveUser(s);
               return Result.success();
           }
@@ -64,10 +64,6 @@ public class UserController {
     }
     @PostMapping("/login")
     public Result login(String id,String password){
-        System.out.print("接收到登录请求: id:");
-        System.out.print(id);
-        System.out.print(", password: ");
-        System.out.println(password);
         if(!userService.checkid(id)){
             return Result.error("用户不存在");
         }
@@ -108,10 +104,12 @@ public class UserController {
             Matcher emailMatcher = emailPattern.matcher(id);
             //匹配电话
             if (phoneMatcher.matches()){
+                userMap.updateMap(user.getUserId(),user);
                 userService.updateUser(user);
                 return Result.success();
             } //匹配邮箱
             else if (emailMatcher.matches()) {
+                userMap.updateMap(user.getUserId(),user);
                 userService.updateUser(user);
                 return Result.success();
             }
@@ -137,7 +135,9 @@ public class UserController {
     public Result updateAvatar(@RequestParam String avatarUrl){
        Map<String,Object> map= ThreadLocalUtil.get();
        String id=(String) map.get("id");
-       userService.updateAvatar(avatarUrl,id);
+       User u= userService.findUserById(id).get();
+       u.setUserpic(avatarUrl);
+       userMap.updateMap(u.getUserId(),u);
        return Result.success();
 
     }

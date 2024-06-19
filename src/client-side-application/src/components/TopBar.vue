@@ -1,18 +1,29 @@
 <!-- src/components/TopBar.vue -->
-<template>
-    <div id="user-bar">
-        <img :src="avatar" alt="Avatar" id="avatar" />
-        <button @click="handleLoginClick" id="log-button">{{ buttonLabel }}</button>
-        <!-- <div id="user-name">用户名:{{ userId }}</div> -->
-    </div>
-    <div id="room-name-bar">
-      <p id="room-name">{{ currentRoomName }}</p>
+  <template>
+    <div idd="top-bar">
+      <div id="user-bar">
+          <img :src="avatar" alt="Avatar" id="avatar" />
+          <button @click="handleLoginClick" id="log-button">{{ buttonLabel }}</button>
+          <button id="create-room-button" @click="handleAddClick">+</button>
+          <!-- <div id="user-name">用户名:{{ userId }}</div> -->
+      </div>
+      <div id="room-name-bar">
+        <p id="room-name">{{ currentRoomName }}</p>
+      </div>
+
+      <LoginDialog
+      :visible="showLoginDialog"
+      @login="handleLogin"
+      @close="handleclose"
+      />
     </div>
   </template>
   
 
   <script setup>
-  import{ inject,computed } from 'vue';
+  import{ inject, computed, ref} from 'vue';
+  import LoginDialog from './TopBarComponents/LoginDialog.vue'
+
   const emit =  defineEmits(['log-in', 'log-out']);
 
   const avatar = computed(
@@ -30,7 +41,7 @@
     return loginInfo.value.isLogIn ? '登出' : '登录';
 });
 
-
+  const showLoginDialog = ref(false);
 
   const handleLoginClick = () => {
   // Logic for handling login click can be added here
@@ -38,8 +49,24 @@
       emit("log-out");
     }
     else {
-      emit("log-in");
+      showLoginDialog.value = true;
     }
+    // else {
+    //   emit("log-in");
+    // }
+  };
+
+  const handleLogin = () => {
+    emit('log-in');
+    showLoginDialog.value = false;
+  };
+
+  const handleclose = () => {
+    showLoginDialog.value = false;
+  };
+
+  const handleAddClick = () => {
+      emit('add-room');
   };
   </script>
   
@@ -80,11 +107,20 @@
   #log-button {
     position: fixed;
     background-color: #fffec4;
-    left:12%;
+    left:8%;
     top:1.5%;
     height: 7%;
     width: 10%;
     border-color: #fffec4;
   }
-
+  
+  #create-room-button{
+    position: fixed;
+    background-color: #fffec4;
+    left:20%;
+    top:1.5%;
+    height: 6%;
+    width: 6%;
+    border-color: #fffec4;
+  }
   </style>
