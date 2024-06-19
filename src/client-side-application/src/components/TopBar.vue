@@ -16,15 +16,20 @@
       @login="handleLogin"
       @close="handleclose"
       />
+      <CreateRoomDialog
+      :visible="showCreateDialog"
+      @close="handlecloseCreateRoom"
+      />
     </div>
   </template>
   
 
   <script setup>
   import{ inject, computed, ref} from 'vue';
-  import LoginDialog from './TopBarComponents/LoginDialog.vue'
+  import LoginDialog from './TopBarComponents/LoginDialog.vue';
+  import CreateRoomDialog from './TopBarComponents/CreateRoomDialog.vue';
 
-  const emit =  defineEmits(['log-in', 'log-out']);
+  const emit =  defineEmits(['log-in', 'log-out', "createroom"]);
 
   const avatar = computed(
     () => {
@@ -42,6 +47,7 @@
 });
 
   const showLoginDialog = ref(false);
+  const showCreateDialog = ref(false);
 
   const handleLoginClick = () => {
   // Logic for handling login click can be added here
@@ -51,9 +57,10 @@
     else {
       showLoginDialog.value = true;
     }
-    // else {
-    //   emit("log-in");
-    // }
+  };
+
+  const handleAddClick = () => {
+    showCreateDialog.value = true;
   };
 
   const handleLogin = () => {
@@ -61,13 +68,19 @@
     showLoginDialog.value = false;
   };
 
+  const handleCreate = (roomName) => {
+    emit('createroom', roomName);
+    showCreateDialog.value = false;
+  };
+
   const handleclose = () => {
     showLoginDialog.value = false;
   };
 
-  const handleAddClick = () => {
-      emit('add-room');
+  const handlecloseCreateRoom = () => {
+    showCreateDialog.value = false;
   };
+
   </script>
   
   <style scoped>

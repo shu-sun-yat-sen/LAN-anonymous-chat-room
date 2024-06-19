@@ -66,7 +66,9 @@ const createRoom = (roomName) => { //创建房间
   axios({
     method: 'post',
     url: serverInfo.value.serverList[0].ip + '/room',
-    data:{},
+    headers:{
+      Authorization: loginInfo.value.JWT
+    },
     params:{
       roomName:roomName
     }
@@ -76,26 +78,22 @@ const createRoom = (roomName) => { //创建房间
     console.log('创建失败');
     console.log(error);
   });
-}
+};
 
+const createInitRoom = (roomName) => {
+  return {
+        roomName: roomName,
+        roomAvatar: 'https://via.placeholder.com/40',
+        isLocked: null,
+        isIn:null,
+        password: null,
+        messages: [
+          
+        ]
+      }
+};
 
-// roomList: [
-//       {
-//         roomName: "sampleRoom1",
-//         roomAvatar: 'https://via.placeholder.com/40',
-//         isLocked: false,
-//         isIn:true,
-//         password: "123456",
-//         messages: [
-//           {
-//             senderFakeName: "fakeSender",
-//             avatar: null,
-//             content: "fakeContent",
-//             time: "fakeTime"
-//           }
-//         ]
-//       }
-
+const roomInfo = inject('room-info');
 
 
 const getRoomInfos = () => {
@@ -108,13 +106,20 @@ const getRoomInfos = () => {
         Authorization: loginInfo.value.JWT,
       }
     }).then(response => {
-      console.log('拉取所有房间成功');
-      console.log(response.data.data);
+      // console.log('拉取所有房间成功');
+      // console.log(response.data.data);
+      for(let i=0;i<response.data.data.length;i++){
+        let roomName = response.data.data[i];
+        if(roomInfo.value.roomList.find(room => room.roomName === roomName) === undefined){
+          roomInfo.value.roomList.push(createInitRoom(roomName));
+          console.log('添加了一个房间');
+          console.log(roomName);
+        }
+      }
     }, error => {
       console.log('拉取所有房间失败');
       // console.log(error);
     });
-    // console.log(loginInfo.value.JWT);
   }
 }
 
@@ -138,6 +143,7 @@ onBeforeUnmount(() => {
 defineExpose({
   logIn,
   logOut,
-  searchServer
+  searchServer,
+  createRoom
 })
 </script>
