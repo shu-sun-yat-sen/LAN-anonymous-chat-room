@@ -40,7 +40,6 @@
 
     const handleClick = () => {
         roomInfo.value.currentRoomName = props.roomname;
-        console.log(roomInfo.value.currentRoomName);
     }
 
     const dynamicStyle = computed(() => (

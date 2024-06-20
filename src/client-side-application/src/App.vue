@@ -7,7 +7,7 @@
     <main>
       <SideBar />
       <ChatWindow />
-      <InputWindow />
+      <InputWindow @sendtext = "handleSendText" />
     </main>
     <functions>
       <AllEvent ref="allEvent"/>
@@ -57,7 +57,6 @@ const roomInfo = ref(
         messages: [
           {
             senderFakeName: "fakeSender",
-            headPhoto: null,
             content: "hello1!",
             avatar: 'https://via.placeholder.com/40',
             time: "fakeTime"
@@ -73,7 +72,6 @@ const roomInfo = ref(
         messages: [
           {
             senderFakeName: "fakeSender",
-            headPhoto: null,
             content: "hello2!",
             avatar: 'https://via.placeholder.com/40',
             time: "fakeTime"
@@ -119,6 +117,10 @@ const logOut = () => {
 const createRoom = (roomName) => {
   allEvent.value.createRoom(roomName);
 }
+
+const handleSendText = (message) => {
+  allEvent.value.sendMessage(message);
+};
 </script>
 
 <style>

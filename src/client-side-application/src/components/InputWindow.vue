@@ -43,6 +43,7 @@ export default {
     methods: {
         handleSendText(text) {
             console.log('发送文本:', text);
+            this.$emit('sendtext', text);
         },
         handleUploadFile(file) {
             console.log('上传文件:', file);

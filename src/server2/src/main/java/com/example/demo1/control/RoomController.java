@@ -38,14 +38,14 @@ public class RoomController {
         Room room=new Room(roomName);
         room.setRoomOwnerId(id);
         room.setMembersId(id);
-        room.setPassWord(Md5Util.getMD5String(id));
+        room.setPassWord("88888888");
         roomMap.writeToMap(room.getRoomName(),room);
         roomService.saveRoom(room);
         return Result.success();
     }
     @GetMapping
     public Result<List<String>> list(){
-        System.out.println("接收到获取房间请求");
+//        System.out.println("接收到获取房间请求");
         List<String> output=new ArrayList<String>();
         List<Room> medie=roomService.findAllRooms();
         for (Room room:medie){
@@ -71,10 +71,10 @@ public class RoomController {
     }
     @PostMapping("/roominfo")
     public Result join(HttpServletRequest request, String password){
-        System.out.print("接收到更新房间信息请求, request: ");
-        System.out.println(request);
-        System.out.print("password: ");
-        System.out.println(password);
+//        System.out.print("接收到加入请求, request: ");
+//        System.out.println(request);
+//        System.out.print("password: ");
+//        System.out.println(password);
         String roomname=request.getHeader("roomname");
         Room room=roomService.findRoomByRoomName(roomname).get();
         List<String> roomnowmembersid=room.getMembersId();
@@ -84,24 +84,38 @@ public class RoomController {
         String userpic=(String) map.get("userpic");
         User u=new User(id,fakename,"");
         u.setUserpic(userpic);
+        if(room.getPassWord()=="88888888"){
+            for(String mem:roomnowmembersid){
+                if(Objects.equals(mem, id)){
+                    return Result.success(room);
+                }
+            }
+            room.setMembersId(id);
+            int num=room.getNumofpeople()+1;
+            room.setNumofpeople(num);
+            roomService.updateRoom(room);
+            roomMap.updateMap(room.getRoomName(),room);
+            return Result.success(room);
+        }
         for(String mem:roomnowmembersid){
             if(Objects.equals(mem, id)){
-                return Result.success(u);
+                return Result.success(room);
             }
         }
         if (Objects.equals(password, room.getPassWord())){
             room.setMembersId(id);
             int num=room.getNumofpeople()+1;
             room.setNumofpeople(num);
+            roomService.updateRoom(room);
             roomMap.updateMap(room.getRoomName(),room);
-            return Result.success(u);
+            return Result.success(room);
         }
         else
             return Result.error("密码不正确");
     }
 
     @PutMapping("/roominfo")
-    public Result update(HttpServletRequest request,String roomnanme,String owenerid){
+    public Result update(HttpServletRequest request,String newroomname,String owenerid,String password){
         System.out.print("接收到更新房间信息请求, request: ");
         System.out.println(request);
         String roomname=request.getHeader("roomname");
@@ -113,11 +127,13 @@ public class RoomController {
             return Result.error("你没有这个权限");
         }
         if (Objects.equals(owenerid, null)){
-            if(roomService.checkroomname(roomname)&& !Objects.equals(roomname, room.getRoomName()))
+            if(roomService.checkroomname(newroomname)&& !Objects.equals(newroomname, room.getRoomName()))
             {
                 return Result.error("群名已存在");}
             else{
-                room.setRoomName(roomname);
+                room.setRoomName(newroomname);
+                room.setPassWord(password);
+                roomService.updateRoom(room);
                 roomMap.updateMap(room.getRoomName(),room);
                 return Result.success();}
         }
@@ -135,7 +151,9 @@ public class RoomController {
             {
                 return Result.error("群名已存在");}
             else{
-                room.setRoomName(roomname);
+                room.setPassWord(password);
+                room.setRoomName(newroomname);
+                roomService.updateRoom(room);
                 roomMap.updateMap(room.getRoomName(),room);
                 return Result.success();}
         }
@@ -196,6 +214,7 @@ public class RoomController {
             int num=room.getNumofpeople()+1;
             room.setNumofpeople(num);
             room.setMembersId(id);
+            roomService.updateRoom(room);
             roomMap.updateMap(room.getRoomName(),room);
             return Result.success();
         }
@@ -225,6 +244,7 @@ public class RoomController {
         for(String mem:roomnowmembersid){
             if(Objects.equals(mem, id)){
                 room.deleteMembersId(id);
+                roomService.updateRoom(room);
                 roomMap.updateMap(room.getRoomName(),room);
                 return Result.success();
             }

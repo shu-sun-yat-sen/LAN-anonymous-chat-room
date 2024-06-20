@@ -13,7 +13,7 @@
 </template>
   
 <script>
-import { inject, onMounted, ref } from 'vue';
+import { computed, inject, onMounted, ref } from 'vue';
 import ChatBubble from './ChatBubble.vue';
 
 export default {
@@ -22,7 +22,13 @@ export default {
   },
   setup() {
     const chat_window_text = inject('chat_window_text');
-    const items = inject('message-info').value;
+    const messageInfo = inject('message-info');
+
+    const items = computed(
+      () => {
+        return messageInfo.value;
+      }
+    );
 
     // 创建一个对 scrollBox 的引用
     const scrollBox = ref(null);
