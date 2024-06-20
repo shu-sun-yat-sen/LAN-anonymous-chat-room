@@ -5,4 +5,7 @@ module.exports = defineConfig({
   transpileDependencies: true,
   publicPath: './',
   lintOnSave: false,
+  devServer:{
+    historyApiFallback : true
+  }
 })
