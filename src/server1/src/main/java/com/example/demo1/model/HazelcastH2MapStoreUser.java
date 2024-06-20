@@ -36,8 +36,8 @@ public class HazelcastH2MapStoreUser implements MapStore<String,User> {
             insertStmt.setString(1, s);
             insertStmt.setString(2, user.getFakeName());
             insertStmt.setString(3, user.getPasswd());
-            insertStmt.setString(4,user.getUserpic());
-            insertStmt.setString(5, user.getCookie());
+            insertStmt.setString(4,user.getCookie());
+            insertStmt.setString(5, user.getUserpic());
             insertStmt.executeUpdate();
             System.out.print("存入:");
             System.out.println(user);
