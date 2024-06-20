@@ -67,9 +67,10 @@ public class TalkController {
     }
     @GetMapping
     public Result<List<Talk>> list(HttpServletRequest request){
-//        System.out.print("获取获取信息请求,roomname: ");
+        System.out.println("获取获取信息请求");
+        System.out.println(request);
         String roomname=request.getHeader("roomname");
-//        System.out.println(request.getHeader("roomname"));
+        System.out.println(request.getHeader("roomname"));
         String time=request.getHeader("time");
         if(time==null){
         List<Talk> alltalk=talkService.findalltalk();

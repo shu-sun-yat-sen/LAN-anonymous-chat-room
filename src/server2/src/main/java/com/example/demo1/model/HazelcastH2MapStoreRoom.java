@@ -36,9 +36,9 @@ public class HazelcastH2MapStoreRoom implements MapStore<String,Room> {
 
             // 插入新记录
             insertStmt.setString(1, s);
-            insertStmt.setString(2, room.getRoomName());
-            insertStmt.setString(3, room.getRoomOwnerId());
-            insertStmt.setInt(4, room.getNumofpeople());
+            insertStmt.setString(2, room.getRoomOwnerId());
+            insertStmt.setInt(3, room.getNumofpeople());
+            insertStmt.setString(4, room.getPassWord());
             insertStmt.setString(5, room.gettureMemberid());
             insertStmt.executeUpdate();
             System.out.print("存入:");

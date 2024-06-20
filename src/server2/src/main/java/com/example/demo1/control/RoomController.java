@@ -45,7 +45,7 @@ public class RoomController {
     }
     @GetMapping
     public Result<List<String>> list(){
-//        System.out.println("接收到获取房间请求");
+        System.out.println("接收到获取房间请求");
         List<String> output=new ArrayList<String>();
         List<Room> medie=roomService.findAllRooms();
         for (Room room:medie){
@@ -71,10 +71,10 @@ public class RoomController {
     }
     @PostMapping("/roominfo")
     public Result join(HttpServletRequest request, String password){
-//        System.out.print("接收到加入请求, request: ");
-//        System.out.println(request);
-//        System.out.print("password: ");
-//        System.out.println(password);
+        System.out.print("接收到更新房间信息请求, request: ");
+        System.out.println(request);
+        System.out.print("password: ");
+        System.out.println(password);
         String roomname=request.getHeader("roomname");
         Room room=roomService.findRoomByRoomName(roomname).get();
         List<String> roomnowmembersid=room.getMembersId();
@@ -84,7 +84,7 @@ public class RoomController {
         String userpic=(String) map.get("userpic");
         User u=new User(id,fakename,"");
         u.setUserpic(userpic);
-        if(room.getPassWord()=="88888888"){
+        if(Objects.equals(room.getPassWord(), "88888888")){
             for(String mem:roomnowmembersid){
                 if(Objects.equals(mem, id)){
                     return Result.success(room);

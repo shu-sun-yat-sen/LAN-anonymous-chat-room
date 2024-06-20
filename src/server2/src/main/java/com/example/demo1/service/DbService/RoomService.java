@@ -14,8 +14,6 @@ public class RoomService {
     RoomRepository roomRepository;
     // 保存聊天室
     public void saveRoom(Room room) {
-//        Map<String,Object> map= ThreadLocalUtil.get();
-//        room.setRoomOwnerId((String) map.get("id"));
         roomRepository.save(room);
     }
     //检查id

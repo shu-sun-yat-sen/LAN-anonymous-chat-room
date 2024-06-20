@@ -13,6 +13,7 @@ public class Talk {
     private String chatroomname;
     private String sendername;
     private String senderpic;
+//    private String type;
     private String context;
     public Talk(){}
     public Talk(String context){
