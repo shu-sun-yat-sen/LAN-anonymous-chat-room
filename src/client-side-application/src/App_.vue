@@ -2,12 +2,12 @@
 <template>
   <div id="app">
     <header>
-      <TopBar @log-in="logIn" @log-out="logOut" @createroom="createRoom" id="top-bar"/>
+      <TopBar @log-in="logIn" @log-out="logOut" id="top-bar"/>
     </header>
     <main>
       <SideBar />
       <ChatWindow />
-      <InputWindow @sendtext = "handleSendText" />
+      <InputWindow />
     </main>
     <functions>
       <AllEvent ref="allEvent"/>
@@ -23,7 +23,7 @@ import ChatWindow from './components/ChatWindow.vue'
 import InputWindow from './components/InputWindow.vue'
 import AllEvent from './components/AllEvent.vue'
 
-import {ref,computed, provide} from 'vue';
+import {ref, provide} from 'vue';
 const sideBarText = ref('这里是侧边栏');// 示例
 const inputWindowText = ref('这里是输入窗口');// 示例
 const chatWindowText = ref('这里是显示消息窗口');// 示例
@@ -86,7 +86,7 @@ const serverInfo = ref(
   {
     serverList:[
       {
-        ip: "http://127.0.0.1:8080",
+        ip: "http://localhost:8080",
       }
     ]
   }
@@ -114,17 +114,9 @@ const logOut = () => {
     allEvent.value.logOut();
   }
 };
-const createRoom = (roomName) => {
-  allEvent.value.createRoom(roomName);
-}
-
-const handleSendText = (message) => {
-  allEvent.value.sendMessage(message);
-};
 </script>
 
 <style>
-
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
