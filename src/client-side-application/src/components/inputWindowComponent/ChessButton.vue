@@ -1,6 +1,8 @@
 <template>
     <div>
+        <router-link target="_blank" to="/ChessGame">
         <button @click="playChess" class="button">♟️</button>
+        </router-link>
     </div>
 </template>
 
