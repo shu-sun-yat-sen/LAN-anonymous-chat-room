@@ -18,14 +18,14 @@ public class WebConfig implements WebMvcConfigurer {
                 .excludePathPatterns("/**/*.svg", "/**/*.ico", "/**/*.ttf", "/**/*.woff", "/**/*.woff2")
                 .excludePathPatterns("/favicon.ico")
                 .excludePathPatterns("/error");
+
     }
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:8081")
+                .allowedOrigins("*")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                .allowedHeaders("*")
-                .allowCredentials(true);
+                .allowedHeaders("*");
     }
 }

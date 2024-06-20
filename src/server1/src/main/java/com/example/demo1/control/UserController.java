@@ -83,6 +83,7 @@ public class UserController {
     @GetMapping("/userinfo")
     public Result<User> userinfo(){
         Map<String,Object> map= ThreadLocalUtil.get();
+        System.out.print(map);
         String id=(String)map.get("id");
         User user=userService.findUserById(id).get();
         return Result.success(user);
