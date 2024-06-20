@@ -91,19 +91,19 @@ public class HazelcastConfig {
             config.getNetworkConfig().getJoin().getMulticastConfig().setMulticastPort(multicastport);
 
             MapConfig mapConfigUser=config.getMapConfig("UserMap");
-            mapConfigUser.setBackupCount(1);
+            mapConfigUser.setBackupCount(2);
             mapConfigUser.setReadBackupData(true);
             mapConfigUser.getMapStoreConfig()
                     .setEnabled(true)
                     .setImplementation(new HazelcastH2MapStoreUser(dataSource()));
             MapConfig mapConfigRoom=config.getMapConfig("RoomMap");
-            mapConfigRoom.setBackupCount(1);
+            mapConfigRoom.setBackupCount(2);
             mapConfigRoom.setReadBackupData(true);
             mapConfigRoom.getMapStoreConfig()
                     .setEnabled(true)
                     .setImplementation(new HazelcastH2MapStoreRoom(dataSource()));
             MapConfig mapConfigTalk=config.getMapConfig("TalkMap");
-            mapConfigTalk.setBackupCount(1);
+            mapConfigTalk.setBackupCount(2);
             mapConfigTalk.setReadBackupData(true);
             mapConfigTalk.getMapStoreConfig()
                     .setEnabled(true)
