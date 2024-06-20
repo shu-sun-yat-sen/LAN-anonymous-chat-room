@@ -1,6 +1,7 @@
 <!-- src/App.vue -->
 <template>
-  <div id="app">
+  <router-view />
+  <div id="app" v-if="showExtraContent">
     <header>
       <TopBar @log-in="logIn" @log-out="logOut" @createroom="createRoom" id="top-bar"/>
     </header>
@@ -22,6 +23,7 @@ import SideBar from './components/SideBar.vue'
 import ChatWindow from './components/ChatWindow.vue'
 import InputWindow from './components/InputWindow.vue'
 import AllEvent from './components/AllEvent.vue'
+import { useRoute } from 'vue-router';
 
 import {ref,computed, provide} from 'vue';
 const sideBarText = ref('这里是侧边栏');// 示例
@@ -30,6 +32,13 @@ const chatWindowText = ref('这里是显示消息窗口');// 示例
 provide('side_bar_text', sideBarText); // 示例
 provide('input_window_text', inputWindowText); // 示例
 provide('chat_window_text', chatWindowText); // 示例
+
+// 下棋用
+// 获取当前路由
+const route = useRoute();
+// 根据路由的元字段设置 showExtraContent
+const showExtraContent = ref(route.meta.showExtraContent);
+
 
 // 数据创建函数
 
@@ -121,6 +130,7 @@ const createRoom = (roomName) => {
 const handleSendText = (message) => {
   allEvent.value.sendMessage(message);
 };
+
 </script>
 
 <style>
