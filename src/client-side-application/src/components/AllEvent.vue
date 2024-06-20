@@ -97,6 +97,24 @@ const createInitRoom = (roomName) => {
 const roomInfo = inject('room-info');
 
 
+const joinRoom = (roomName) => {
+  axios({
+      method: 'post',
+      url: serverInfo.value.serverList[0].ip + '/room/roominfo',
+      headers:{
+        Authorization: loginInfo.value.JWT,
+        roomname: roomName
+      },
+      params: {
+        password: '88888888'
+      }
+    }).then(response => {
+      // console.log("加入房间成功：", roomName)
+    }, error => {
+      // console.log("加入房间失败：", roomName)
+    });
+};
+
 const getRoomInfos = () => {
   // console.log('开始拉取房间');
   if(loginInfo.value.isLogIn){
@@ -107,10 +125,9 @@ const getRoomInfos = () => {
         Authorization: loginInfo.value.JWT,
       }
     }).then(response => {
-      // console.log('拉取所有房间成功');
-      // console.log(response.data.data);
       for(let i=0;i<response.data.data.length;i++){
         let roomName = response.data.data[i];
+        joinRoom(roomName);
         if(roomInfo.value.roomList.find(room => room.roomName === roomName) === undefined){
           roomInfo.value.roomList.push(createInitRoom(roomName));
           console.log('添加了一个房间');
@@ -119,32 +136,107 @@ const getRoomInfos = () => {
       }
     }, error => {
       console.log('拉取所有房间失败');
-      // console.log(error);
     });
   }
 }
 
 //消息相关
-const sendMessage = (message) => {
+const sendMessage = (message) => {  //发送文本消息
+  if(loginInfo.value.isLogIn){
+    axios({
+      method: 'post',
+      url: serverInfo.value.serverList[0].ip + '/room/talk',
+      params:{
+        context: message,
+      },
+      headers:{
+        Authorization: loginInfo.value.JWT,
+        roomname: roomInfo.value.currentRoomName
+      }
+    }).then(response => {
+      console.log('通过axios发送消息成功',message);
+    }, error => {
+      console.log('发送消息失败');
+    });
+  }
+};
 
-}
+// {
+//   senderFakeName: "fakeSender",
+//   content: "hello1!",
+//   avatar: 'https://via.placeholder.com/40',
+//   time: "fakeTime"
+// }
 
-let intervalId;
+const createMessage = (senderName, content, avatar, time) => {
+  return {
+    senderFakeName: senderName,
+    content: content,
+    avatar:avatar,
+    time:time
+  }
+};
+
+const createMessageList = (roomName, messageList) => {
+  try{
+    let result = [];
+    for(let i=0;i<messageList.length;i++){
+      let message = messageList[i];
+      let context = message.context;
+      let senderName = message.sendername;
+      let senderpic = message.senderpic;
+      let time = message.time;
+      result.push(createMessage(senderName, context, 'https://via.placeholder.com/40', time));
+    }
+    let index = roomInfo.value.roomList.findIndex(room => room.roomName === roomName);
+    roomInfo.value.roomList[index].messages = result;
+  } catch (error){
+    console.log('处理消息时出现错误', messageList);
+  }
+};
+
+const getMessage = () => {
+  if(loginInfo.value.isLogIn){
+    for(let i=0;i<roomInfo.value.roomList.length;i++){
+      let roomName = roomInfo.value.roomList[i].roomName;
+      axios({
+        method: 'get',
+        url: serverInfo.value.serverList[0].ip + '/room/talk',
+        headers:{
+          Authorization: loginInfo.value.JWT,
+          roomname: roomName
+        }
+      }).then(response => {
+        // console.log('获取消息成功,roomname:', roomName);
+        // console.log(response.data.data);
+        createMessageList(roomName, response.data.data);
+      }, error => {
+        console.log('获取消息失败,roomname:', roomName);
+      });    
+    }
+  };
+};
+
+let intervalIdRoom;
+let intervalIdMessage;
 
 onMounted(() => {
   // 设置定时任务，每秒更新一次时间
-  intervalId = setInterval(getRoomInfos, 1000);
+  intervalIdRoom = setInterval(getRoomInfos, 1000);
+  intervalIdMessage = setInterval(getMessage, 1000);
 });
 
 onBeforeUnmount(() => {
   // 清除定时任务
   clearInterval(intervalId);
+  clearInterval(intervalIdMessage);
 });
 
 defineExpose({
   logIn,
   logOut,
   searchServer,
-  createRoom
+  createRoom,
+  sendMessage
 })
 </script>
