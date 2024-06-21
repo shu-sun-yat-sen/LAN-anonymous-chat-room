@@ -36,7 +36,7 @@ const register = () => {     //注册
 
 
 const logIn = () => {     //登录
-  register();
+  register()
   axios({
     method: 'post',
     url: serverInfo.value.serverList[0].ip + '/user/login',
