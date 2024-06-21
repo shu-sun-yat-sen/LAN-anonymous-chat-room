@@ -31,7 +31,8 @@
         <el-form-item label="密码" prop="password">
           <el-input v-model="ruleForm.password" />
         </el-form-item>
-        <div style="position: relative;left:10%;">
+        <div style="position: relative;left:0%;">
+            <el-button type="warning" @click.prevent="submitForm(ruleFormRef)">注册</el-button>
             <el-button type="primary" @click.prevent="submitForm(ruleFormRef)">登录</el-button>
             <el-button @click="closeDialog">取消</el-button>
         </div>

@@ -4,7 +4,6 @@
         <el-avatar :src="roomAvatar" alt="Avatar" class="avatar" shape="square" fit="fill" :size="52"></el-avatar>
         <div class="info">
             <p class="room-name">{{ truncateString(roomname, 11) }}</p>
-            
             <div class="newest-message">{{ truncateString(newestMessage, 15) }}</div>
         </div>
 

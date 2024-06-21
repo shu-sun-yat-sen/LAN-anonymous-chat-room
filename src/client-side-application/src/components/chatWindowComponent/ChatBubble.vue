@@ -3,9 +3,9 @@
     <el-avatar :src="avatar" alt="Avatar" class="avatar" shape="circle" fit="cover" :size="40"></el-avatar>
     <div class="content-container">
       <div class="username">{{ username }}</div>
-      <div class="chat-left_triangle"></div>
+      <div :class="{'chat-right_triangle': same,'chat-left_triangle': !same}"></div>
       <!-- 向上强制移动 -->
-      <div class="content">{{ text }}</div>
+      <div :class="{'myContent': same, 'content': !same}">{{ text }}</div>
     </div>
   </div>
 
@@ -24,6 +24,10 @@ export default {
     },
     username: {
       type: String,
+      required: true
+    },
+    same: {
+      type: Boolean,
       required: true
     }
   }
@@ -90,14 +94,34 @@ export default {
   z-index: 10;
 }
 
+/* 客户 */
 .chat-right_triangle {
-  height: 0px;
-  width: 0px;
+  height: 5%;
+  width: 5%;
   border-width: 6px;
   border-style: solid;
-  border-color: transparent transparent transparent #b2e281;
-  position: relative;
-  right: -22px;
-  top: 3px;
+  border-color: transparent #67C23A transparent transparent;
+  /* position: relative;
+  left: -22px;
+  top: 3px; */
+
+  transform: translate(-100%, 100%);
+  z-index: 10;
+}
+
+.myContent {
+  background-color: #67C23A;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  /* max-width: 100%; */
+  word-wrap: break-word;
+  width: fit-content;
+  /* height: fit-content; */
+  text-align: left;
+  max-width: 90%;
+  color: #f0f0f0;
+  
+  transform: translate(0, -10px);
 }
 </style>
