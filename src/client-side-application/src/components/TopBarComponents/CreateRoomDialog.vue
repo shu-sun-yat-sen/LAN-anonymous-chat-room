@@ -1,8 +1,8 @@
 <template>
     <div v-if="visible" class="dialog-overlay">
       <div class="dialog">
-        <h3>创建房间</h3>
-        <form @submit.prevent="submitCreate">
+        <h3>Create Room</h3>
+        <!-- <form @submit.prevent="submitCreate">
             <div class="form-group">
                 <label for="roomname">房间名:</label>
                 <input type="text" id="roomname" v-model="roomname" required />
@@ -11,7 +11,17 @@
               <button type="submit">创建</button>
               <button type="button" @click="closeDialog">取消</button>
             </div>
-        </form>
+        </form> -->
+        <el-form ref="ruleFormRef" :rules="rules" :model="ruleForm" label-width="auto" style="max-width: 600px">
+          <el-form-item label="房间名" prop="roomname">
+            <el-input v-model="ruleForm.roomname" />
+          </el-form-item>
+          <div style="position: relative;left:10%;">
+              <el-button type="primary" @click.prevent="submitCreateForm(ruleFormRef)">创建</el-button>
+              <el-button @click="closeDialog">取消</el-button>
+          </div>
+        </el-form>
+
       </div>
     </div>
 </template>
@@ -28,12 +38,38 @@ const props = defineProps({
 
 const emit = defineEmits(['createroom', 'close']);
 
-const roomname = ref('');
 
-const submitCreate = () => {
-  emit('createroom', roomname.value);
-  closeDialog();
+// 改造版本
+const ruleFormRef = ref(null);
+
+const ruleForm = ref({
+  roomname: '',
+});
+
+const rules = {
+  roomname: [
+    { required: true, message: '请输入房间名', trigger: 'blur' },
+  ],
 };
+
+const submitCreateForm = async (formEl) => {
+  if (!formEl) return
+  await formEl.validate((valid) => {
+    if (valid) {
+      console.log('id: ', ruleForm.value.roomname, ' submitted successfully!');
+      emit('createroom', ruleForm.value.roomname);
+      closeDialog();
+    } else {
+      alert('login failed!');
+    }
+  })
+};
+// end
+
+// const submitCreate = () => {
+//   emit('createroom', roomname.value);
+//   closeDialog();
+// };
 
 const closeDialog = () => {
   emit('close');
@@ -44,7 +80,7 @@ const closeDialog = () => {
 .dialog-overlay {
   position: fixed;
   top: 20%;
-  left: 60%;
+  left: 40%;
   
   background: #ffffff80;
   display: flex;

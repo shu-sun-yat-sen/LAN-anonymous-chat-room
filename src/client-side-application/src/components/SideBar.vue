@@ -4,6 +4,7 @@
       <!-- <p>{{ side_bar_text }}</p> -->
       <RoomWindow
           v-for="(room, index) in roomList"
+          :key="index"
           :roomname="room.roomName"
           :newestMessage="newestMessage(room.messages)"
           :roomAvatar="room.roomAvatar"
@@ -12,7 +13,7 @@
 </template>
   
 <script setup>
-    import{ computed, inject, ref } from 'vue';
+    import{ computed, inject} from 'vue';
     import RoomWindow from './SideBarComponent/RoomWindow.vue';
 
     const roomInfo = inject('room-info');

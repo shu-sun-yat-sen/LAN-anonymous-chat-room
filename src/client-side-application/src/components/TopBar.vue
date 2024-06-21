@@ -3,12 +3,15 @@
     <div idd="top-bar">
       <div id="user-bar">
           <img :src="avatar" alt="Avatar" id="avatar" />
-          <button @click="handleLoginClick" id="log-button">{{ buttonLabel }}</button>
-          <button id="create-room-button" @click="handleAddClick">+</button>
+          <div class="mb-4">
+            <el-button type="primary" round @click="handleLoginClick" id="log-button">{{ buttonLabel }}</el-button>
+            <el-button type="primary" round id="create-room-button" @click="handleAddClick">+</el-button>
+          </div>
           <!-- <div id="user-name">用户名:{{ userId }}</div> -->
       </div>
       <div id="room-name-bar">
-        <p id="room-name">{{ currentRoomName }}</p>
+        <!-- <p id="room-name">{{ currentRoomName }}</p> -->
+         <p id="title">🏡{{ currentRoomName }}</p>
       </div>
 
       <LoginDialog
@@ -26,7 +29,7 @@
   
 
   <script setup>
-  import{ inject, computed, ref} from 'vue';
+  import{ inject, computed, ref, defineEmits} from 'vue';
   import LoginDialog from './TopBarComponents/LoginDialog.vue';
   import CreateRoomDialog from './TopBarComponents/CreateRoomDialog.vue';
 
@@ -34,7 +37,7 @@
 
   const avatar = computed(
     () => {
-      return loginInfo.value.headPhoto ? loginInfo.value.headPhoto : 'https://via.placeholder.com/40';
+      return loginInfo.value.headPhoto ? loginInfo.value.headPhoto : 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png';
     }
   );
 
@@ -44,7 +47,7 @@
     return roomInfo.value.currentRoomName ? roomInfo.value.currentRoomName : '';
   });
   const buttonLabel = computed(() => {
-    return loginInfo.value.isLogIn ? '登出' : '登录';
+    return loginInfo.value.isLogIn ? 'logout' : 'login';
 });
 
   const showLoginDialog = ref(false);
@@ -83,6 +86,10 @@
   };
 
   </script>
+
+<script lang="ts" setup>
+
+</script>
   
   <style scoped>
   #user-bar {
@@ -99,42 +106,66 @@
   #room-name-bar {
     position: fixed;
     top: 0%;
-    left: 15%;
+    left: 25%;
     right:0%;
     bottom: 90%;
     border-bottom: 1px solid hsl(0, 3%, 47%);
-    background-color: #f5f5f5;
+    background-color: #544c4c;
   }
 
   #room-name {
     text-align:center;
     color:#000000;
+    font-family: 'Arial';
+    font-size: 1.3vw;
   }
 
   #avatar {
     position: fixed;
     left: 1%;
     top: 1%;
+    /* bottom: 1%; */
     height: 8%;
+  }
+
+  #title {
+    position: relative;
+    top: 10%;
+    bottom: 10%;
+
+    /* display: block; */
+    margin: auto;
+    width: 40%;
+    padding: 10px;
+    font-family: 'Arial';
+    border-radius: 15px; /* 圆角 */
+    background-color: #409EFF; /* 背景颜色，可根据需要调整 */
+    font-weight: bold; /* 字体加粗 */
+    font-size: 1.8vw  ; /* 字体大小，可根据需要调整 */
+    text-align: center; /* 文字居中 */
+    /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 阴影，可选 */
+    color: #f0f0f0; /* 文字颜色，可根据需要调整 */
   }
 
   #log-button {
     position: fixed;
-    background-color: #fffec4;
+    /* background-color: #fffec4; */
     left:8%;
     top:1.5%;
     height: 7%;
-    width: 10%;
-    border-color: #fffec4;
+    width: 7%;
+    font-size: 1.2vw;
+    /* border-color: #fffec4; */
   }
   
   #create-room-button{
     position: fixed;
-    background-color: #fffec4;
-    left:20%;
-    top:1.5%;
+    /* background-color: #fffec4; */
+    left:20.5%;
+    top:2%;
     height: 6%;
-    width: 6%;
-    border-color: #fffec4;
+    font-size: 1.2vw;
+    /* width: 3%; */
+    /* border-color: #fffec4; */
   }
   </style>
