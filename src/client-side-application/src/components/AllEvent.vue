@@ -220,19 +220,40 @@ const getMessage = () => {
   };
 };
 
+const getUserHeadPhoto = () => {
+  if(loginInfo.value.isLogIn){
+    axios({
+      method: 'get',
+      url: serverInfo.value.serverList[0].ip + '/user/userinfo',
+      headers:{
+        Authorization: loginInfo.value.JWT,
+      }
+    }).then(response => {
+      // console.log('获取头像成功');
+      // console.log(response.data.data);
+      loginInfo.value.headPhoto = serverInfo.value.serverList[0].ip + '/' + response.data.data.userpic;
+    }, error => {
+      // console.log('获取t头像');
+    });    
+  };
+};
+
 let intervalIdRoom;
 let intervalIdMessage;
+let intervalIdUserpic;
 
 onMounted(() => {
   // 设置定时任务，每秒更新一次时间
   intervalIdRoom = setInterval(getRoomInfos, 1000);
   intervalIdMessage = setInterval(getMessage, 1000);
+  intervalIdUserpic = setInterval(getUserHeadPhoto, 1000);
 });
 
 onBeforeUnmount(() => {
   // 清除定时任务
-  clearInterval(intervalId);
+  clearInterval(intervalIdRoom);
   clearInterval(intervalIdMessage);
+  clearInterval(intervalIdUserpic);
 });
 
 defineExpose({
