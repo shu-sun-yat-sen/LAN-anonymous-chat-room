@@ -89,14 +89,16 @@ const dynamicStyle = computed(() => (
 
 .room-name {
     margin: 0;
-    font-size: 1em;
+    margin-bottom: 4%;
+    /* margin-top: 1%; */
+    font-size: 1.2em;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     color: black;
 }
 
 .newest-message {
     position: relative;
-    top: 1vh;
+    /* top: 1vh; */
 
     font-size: 1em;
     margin: 0;
