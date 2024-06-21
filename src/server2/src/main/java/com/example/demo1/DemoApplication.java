@@ -21,6 +21,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +31,12 @@ import java.util.Map;
 public class DemoApplication {
 
 	public static void main(String[] args) {
+		File folder = new File("src/main/resources/static/userpic");
+		File[] files = folder.listFiles();
+		System.out.print("sadasadf");
+		for(File i:files){
+			System.out.print(i.getName());
+		}
 		SpringApplication.run(DemoApplication.class, args);
 
 	}
@@ -63,30 +70,40 @@ public class DemoApplication {
 				for (User i : users) {
 					userMap.writeToMap(i.getUserId(), i);
 				}
+				System.out.print(userMap);
 				List<Room> rooms = roomService.findAllRooms();
 				for (Room i : rooms) {
 					roomMap.writeToMap(i.getRoomName(), i);
 				}
+				System.out.print(roomMap);
 				List<Talk> talks = talkService.findalltalk();
 				for (Talk i : talks) {
 					talkMap.writeToMap(i.getTime(), i);
 				}
+				System.out.print(talkMap);
 			}
 			else {
 				userService.deleteAllUsers();
 				roomService.deleteAllRooms();
 				talkService.deleteAllTalks();
 				IMap<String, User> mapUser=hazelcastInstance.getMap("UserMap");
+
 				for (Map.Entry<String, User> entry : mapUser.entrySet()) {
 					userService.saveUser(entry.getValue());
+					System.out.print(entry.getValue());
+					System.out.print("\n");
 				}
 				IMap<String, Room> mapRoom=hazelcastInstance.getMap("RoomMap");
 				for (Map.Entry<String, Room> entry : mapRoom.entrySet()) {
 					roomService.saveRoom(entry.getValue());
+					System.out.print(entry.getValue());
+					System.out.print("\n");
 				}
 				IMap<String, Talk> mapTalk=hazelcastInstance.getMap("TalkMap");
 				for (Map.Entry<String, Talk> entry : mapTalk.entrySet()) {
 					talkService.saveTalk(entry.getValue());
+					System.out.print(entry.getValue());
+					System.out.print("\n");
 				}
 			}
 

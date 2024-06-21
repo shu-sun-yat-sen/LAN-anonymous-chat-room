@@ -20,8 +20,7 @@ public class FileUploadController {
 
     @Autowired
     private ResourceLoader resourceLoader;
-
-    @PostMapping("/upload")
+    @PostMapping("/uploaduser")
     public Result<String> upload(MultipartFile file) throws IOException {
         String originalFilename=file.getOriginalFilename();
         System.out.print("接收到文件请求：");
@@ -29,7 +28,18 @@ public class FileUploadController {
         String filename= UUID.randomUUID().toString()+originalFilename.substring(originalFilename.lastIndexOf("."));
         String projectRootPath = resourceLoader.getResource("classpath:").getFile().getAbsolutePath();
         System.out.println(projectRootPath);
-        file.transferTo(new File(projectRootPath + "/../../src/main/resources/static/"+filename));
+        file.transferTo(new File(projectRootPath + "/../../src/main/resources/static/userpic"+filename));
+        return Result.success();
+    }
+    @PostMapping("/uploadroom")
+    public Result<String> uploadroom(MultipartFile file) throws IOException {
+        String originalFilename=file.getOriginalFilename();
+        System.out.print("接收到文件请求：");
+        System.out.println(originalFilename);
+        String filename= UUID.randomUUID().toString()+originalFilename.substring(originalFilename.lastIndexOf("."));
+        String projectRootPath = resourceLoader.getResource("classpath:").getFile().getAbsolutePath();
+        System.out.println(projectRootPath);
+        file.transferTo(new File(projectRootPath + "/../../src/main/resources/static/roompic"+filename));
         return Result.success();
     }
 }

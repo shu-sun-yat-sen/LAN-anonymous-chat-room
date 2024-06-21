@@ -22,7 +22,7 @@ public class HazelcastH2MapStoreTalk implements MapStore<String,Talk> {
     public void store(String s, Talk talk) {
         try (Connection conn = dataSource.getConnection();
              PreparedStatement checkStmt = conn.prepareStatement("SELECT COUNT(*) FROM TALK WHERE TIME = ?");
-             PreparedStatement insertStmt = conn.prepareStatement("INSERT INTO TALK (TIME, CHATROOMNAME, SENDERNAME,SENDERPIC,CONTEXT) VALUES (?, ?, ?,?,?)")) {
+             PreparedStatement insertStmt = conn.prepareStatement("INSERT INTO TALK (TIME, CHATROOMNAME,SENDERID,SENDERNAME,SENDERPIC,CONTEXT,TYPE) VALUES (?,?,?, ?, ?,?,?)")) {
 
             // 检查是否已经存在相同ID的记录
             checkStmt.setString(1, s);
@@ -37,9 +37,11 @@ public class HazelcastH2MapStoreTalk implements MapStore<String,Talk> {
             // 插入新记录
             insertStmt.setString(1, s);
             insertStmt.setString(2, talk.getChatroomname());
-            insertStmt.setString(3, talk.getSendername());
-            insertStmt.setString(4, talk.getSenderpic());
-            insertStmt.setString(5, talk.getContext());
+            insertStmt.setString(3, talk.getSenderid());
+            insertStmt.setString(4, talk.getSendername());
+            insertStmt.setString(5, talk.getSenderpic());
+            insertStmt.setString(6, talk.getContext());
+            insertStmt.setString(7, talk.getType());
             insertStmt.executeUpdate();
             System.out.print("存入:");
             System.out.println(talk);
