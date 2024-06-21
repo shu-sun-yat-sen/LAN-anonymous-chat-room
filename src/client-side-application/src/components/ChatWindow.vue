@@ -7,6 +7,7 @@
           :text="message.content" 
           :avatar="message.avatar"
           :username="message.senderFakeName"
+          :same="isUser(message)"
         />
       </div>
     </div>
@@ -23,12 +24,19 @@ export default {
   setup() {
     const chat_window_text = inject('chat_window_text');
     const messageInfo = inject('message-info');
+    const loginInfo = inject('login-info');
 
     const items = computed(
       () => {
         return messageInfo.value;
       }
     );
+    
+    // 是否用户发出
+    const isUser = (curMessage) => {
+      console.log(loginInfo.value.userId,' ', curMessage.senderID);
+      return loginInfo.value.userId == curMessage.senderID;
+    };
 
     // 创建一个对 scrollBox 的引用
     const scrollBox = ref(null);
@@ -52,7 +60,8 @@ export default {
       chat_window_text,
       items,
       scrollBox, // 需要返回 scrollBox 引用，使其在模板中可用
-      handleScroll
+      handleScroll,
+      isUser
     };
   }
 };
