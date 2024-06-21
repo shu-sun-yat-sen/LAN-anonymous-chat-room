@@ -83,7 +83,7 @@ export default {
 .chat-left_triangle {
   height: 5%;
   width: 5%;
-  border-width: 6px;
+  border-width: 8px;
   border-style: solid;
   border-color: transparent #409EFF transparent transparent;
   /* position: relative;
@@ -98,7 +98,7 @@ export default {
 .chat-right_triangle {
   height: 5%;
   width: 5%;
-  border-width: 6px;
+  border-width: 8px;
   border-style: solid;
   border-color: transparent #67C23A transparent transparent;
   /* position: relative;

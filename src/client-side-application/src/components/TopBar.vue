@@ -5,8 +5,8 @@
       <!-- <img :src="avatar" alt="Avatar" id="avatar" /> -->
        <el-avatar :src="avatar" alt="Avatar" id="avatar" shape="circle" fit="cover" @dblclick="randomChangeAvatar"></el-avatar>
       <div>
-        <el-button type="primary" round @click="handleLoginClick" id="log-button">{{ buttonLabel }}</el-button>
-        <el-button type="primary" circle id="create-room-button" @click="handleAddClick">+</el-button>
+        <el-button type="primary" round @click.prevent="handleLoginClick" id="log-button">{{ buttonLabel }}</el-button>
+        <el-button type="primary" circle id="create-room-button" @click.prevent="handleAddClick">+</el-button>
       </div>
       <!-- <div id="user-name">用户名:{{ userId }}</div> -->
     </div>
