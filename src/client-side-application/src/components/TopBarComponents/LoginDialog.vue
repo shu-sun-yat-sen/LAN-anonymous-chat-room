@@ -21,7 +21,7 @@
         </div>
       </form> -->
       <!-- <el-form :rules="rules" :model="ruleForm" label-width="auto" style="max-width: 600px"> -->
-      <el-form ref="ruleFormRef" :rules="rules" :model="ruleForm" label-width="auto" style="max-width: 600px">
+      <el-form ref="ruleFormRef" :rules="rules" :model="ruleForm" label-width="auto" style="max-width: 600px;opacity: 1;">
         <el-form-item label="ID" prop="id">
           <el-input v-model="ruleForm.id" />
         </el-form-item>
@@ -119,12 +119,16 @@ const closeDialog = () => {
   display: flex;
   justify-content: center;
   align-items: center;
+
+  opacity: 1;
   z-index: 10000;
 }
 
 .dialog {
-  background: #ffffff80;
+  background: #f0f0f0;
   padding: 20px;
   border-radius: 8px;
+  /* Set opacity to 0 */
+  opacity: 1; 
 }
 </style>

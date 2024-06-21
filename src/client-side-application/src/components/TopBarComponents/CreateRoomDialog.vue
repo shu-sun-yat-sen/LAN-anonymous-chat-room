@@ -90,7 +90,7 @@ const closeDialog = () => {
 }
 
 .dialog {
-  background: #ffffff80;
+  background: #f0f0f0;
   padding: 20px;
   border-radius: 8px;
 }

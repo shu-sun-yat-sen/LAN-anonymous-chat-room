@@ -87,7 +87,7 @@ export default {
   top: 3px; */
 
   transform: translate(-100%, 100%);
-  z-index: 1000;
+  z-index: 10;
 }
 
 .chat-right_triangle {
