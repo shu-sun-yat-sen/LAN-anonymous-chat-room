@@ -66,7 +66,7 @@ const roomInfo = ref(
         messages: [
           {
             senderFakeName: "fakeSender",
-            content: "hello1!",
+            content: "hello1!aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
             avatar: 'https://via.placeholder.com/40',
             time: "fakeTime"
           }
@@ -81,7 +81,7 @@ const roomInfo = ref(
         messages: [
           {
             senderFakeName: "fakeSender",
-            content: "hello2!",
+            content: "hello2!aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
             avatar: 'https://via.placeholder.com/40',
             time: "fakeTime"
           }
