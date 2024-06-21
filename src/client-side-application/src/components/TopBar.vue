@@ -3,7 +3,7 @@
   <div idd="top-bar">
     <div id="user-bar">
       <!-- <img :src="avatar" alt="Avatar" id="avatar" /> -->
-       <el-avatar :src="avatar" alt="Avatar" id="avatar" shape="circle" fit="cover"></el-avatar>
+       <el-avatar :src="avatar" alt="Avatar" id="avatar" shape="circle" fit="cover" @dblclick="randomChangeAvatar"></el-avatar>
       <div>
         <el-button type="primary" round @click="handleLoginClick" id="log-button">{{ buttonLabel }}</el-button>
         <el-button type="primary" circle id="create-room-button" @click="handleAddClick">+</el-button>
@@ -26,7 +26,7 @@ import { inject, computed, ref} from 'vue';
 import LoginDialog from './TopBarComponents/LoginDialog.vue';
 import CreateRoomDialog from './TopBarComponents/CreateRoomDialog.vue';
 
-const emit = defineEmits(['log-in', 'log-out', "createroom"]);
+const emit = defineEmits(['log-in', 'log-out', 'createroom', 'random-change-user-avatar']);
 
 const avatar = computed(
   () => {
@@ -49,7 +49,7 @@ const showCreateDialog = ref(false);
 const handleLoginClick = () => {
   // Logic for handling login click can be added here
   if (loginInfo.value.isLogIn) {
-    emit("log-out");
+    emit('log-out');
   }
   else {
     showLoginDialog.value = true;
@@ -81,6 +81,10 @@ const handleclose = () => {
 
 const handlecloseCreateRoom = () => {
   showCreateDialog.value = false;
+};
+
+const randomChangeAvatar = () => {
+  emit('random-change-user-avatar');
 };
 
 </script>

@@ -3,7 +3,7 @@
   <router-view />
   <div id="app" v-if="showExtraContent">
     <header>
-      <TopBar @log-in="logIn" @register="handleRegister" @log-out="logOut" @createroom="createRoom" id="top-bar"/>
+      <TopBar @log-in="logIn" @register="handleRegister" @log-out="logOut" @createroom="createRoom" @random-change-user-avatar="randomChangeAvatar" id="top-bar"/>
     </header>
     <main>
       <SideBar />
@@ -66,6 +66,7 @@ const roomInfo = ref(
         messages: [
           {
             senderID: '137',
+            type:"text",
             senderFakeName: "fakeSender",
             content: "hello1!aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
             avatar: 'https://via.placeholder.com/40',
@@ -82,6 +83,7 @@ const roomInfo = ref(
         messages: [
           {
             senderID: '137',
+            type:"text",
             senderFakeName: "fakeSender",
             content: "hello2!aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
             avatar: 'https://via.placeholder.com/40',
@@ -89,6 +91,7 @@ const roomInfo = ref(
           },
           {
             senderID: '138',
+            type:"text",
             senderFakeName: "fakeSender",
             content: "hello2!aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
             avatar: 'https://via.placeholder.com/40',
@@ -96,6 +99,7 @@ const roomInfo = ref(
           },
           {
             senderID: '138',
+            type:"text",
             senderFakeName: "fakeSender",
             content: "hello2!aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
             avatar: 'https://via.placeholder.com/40',
@@ -156,6 +160,10 @@ const handleSendText = (message) => {
 
 const handleSendFile = (file) => {
   allEvent.value.handleFileUpload(file);
+};
+
+const randomChangeAvatar = () => {
+  allEvent.value.randomChangeAvatar();
 };
 
 </script>

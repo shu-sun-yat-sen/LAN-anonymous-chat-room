@@ -60,7 +60,25 @@ const logIn = () => {     //登录
     console.log('登录出现了错误');
     console.log(error);
   });
-}
+};
+
+const randomChangeAvatar = () => {
+  axios({
+    method: 'post',
+    url: serverInfo.value.serverList[0].ip + '/user/randomupdate',
+    headers:{
+      Authorization: loginInfo.value.JWT,
+    }
+  }).then(response => {
+    if(response.data.code === 0){
+      console.log('更换用户头像成功成功了');
+    } else{
+      console.log('更换用户头像成功错误');
+    }
+  }, error => {
+    console.log('更换用户头像成功错误');
+  });
+};
 
 const logOut = () => {
   loginInfo.value.isLogIn = false;
@@ -173,8 +191,10 @@ const sendMessage = (message) => {  //发送文本消息
   }
 };
 
-const createMessage = (senderName, content, avatar, time) => {
+const createMessage = (senderID, type, senderName, content, avatar, time) => {
   return {
+    senderID:senderID,
+    type:type,
     senderFakeName: senderName,
     content: content,
     avatar: serverInfo.value.serverList[0].ip + '/' + avatar,
@@ -187,11 +207,13 @@ const createMessageList = (roomName, messageList) => {
     let result = [];
     for(let i=0;i<messageList.length;i++){
       let message = messageList[i];
+      let id = message.senderid;
       let context = message.context;
       let senderName = message.sendername;
       let senderpic = message.senderpic;
       let time = message.time;
-      result.push(createMessage(senderName, context, senderpic, time));
+      let type = message.type;
+      result.push(createMessage(id, type, senderName, context, senderpic, time));
     }
     let index = roomInfo.value.roomList.findIndex(room => room.roomName === roomName);
     roomInfo.value.roomList[index].messages = result;
@@ -282,6 +304,7 @@ defineExpose({
   searchServer,
   createRoom,
   sendMessage,
-  handleFileUpload
+  handleFileUpload,
+  randomChangeAvatar
 })
 </script>

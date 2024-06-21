@@ -154,7 +154,13 @@ public class UserController {
         int count=0;
         for(File i:files){
             if(count==a) {
-                user.setUserpic("userpic/" + i.getName());
+                String newUserpic = "userpic/" + i.getName();
+                user.setUserpic(newUserpic);
+                Map<String, Object> map2 = new HashMap<>();
+                map2.put("userpic", newUserpic);
+                ThreadLocalUtil.set(map2);
+                Map<String,Object> map3= ThreadLocalUtil.get();
+                System.out.print((String) map3.get("userpic"));
                 userMap.updateMap(user.getUserId(),user);
                 userService.updateUser(user);
             }
@@ -162,6 +168,4 @@ public class UserController {
         }
         return Result.success(user);
     }
-
-
 }
