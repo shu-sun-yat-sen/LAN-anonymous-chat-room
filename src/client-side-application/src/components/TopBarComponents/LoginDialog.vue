@@ -32,8 +32,8 @@
           <el-input v-model="ruleForm.password" />
         </el-form-item>
         <div style="position: relative;left:0%;">
-            <el-button type="warning" @click.prevent="submitForm(ruleFormRef)">注册</el-button>
-            <el-button type="primary" @click.prevent="submitForm(ruleFormRef)">登录</el-button>
+            <el-button type="warning" @click.prevent="submitFormRegister(ruleFormRef)">注册</el-button>
+            <el-button type="primary" @click.prevent="submitFormLogin(ruleFormRef)">登录</el-button>
             <el-button @click="closeDialog">取消</el-button>
         </div>
       </el-form>
@@ -43,7 +43,7 @@
 </template>
 
 <script setup>
-import { ref, inject, defineProps, defineEmits } from 'vue';
+import { ref, inject} from 'vue';
 
 const props = defineProps({
   visible: {
@@ -52,7 +52,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(['login', 'close']);
+const emit = defineEmits(['login', 'close', 'register']);
 
 // const id = ref('');
 // const fakename = ref('');
@@ -74,7 +74,7 @@ const rules = {
 
 const loginInfo = inject('login-info');
 
-const submitForm = async (formEl) => {
+const submitFormLogin = async (formEl) => {
   if (!formEl) return
   await formEl.validate((valid) => {
     if (valid) {
@@ -89,16 +89,22 @@ const submitForm = async (formEl) => {
     }
   })
 };
-// end
 
-
-// const submitLogin = () => {
-//   loginInfo.value.userId = id;
-//   loginInfo.value.fakeName = fakename;
-//   loginInfo.value.userPasswd = password;
-//   emit('login');
-//   closeDialog();
-// };
+const submitFormRegister = async (formEl) => {
+  if (!formEl) return
+  await formEl.validate((valid) => {
+    if (valid) {
+      console.log('id: ', ruleForm.value.id, ' submitted successfully!');
+      loginInfo.value.userId = ruleForm.value.id;
+      loginInfo.value.fakeName = ruleForm.value.fakename;
+      loginInfo.value.userPasswd = ruleForm.value.password;
+      emit('register');
+      closeDialog();
+    } else {
+      alert('login failed!');
+    }
+  })
+};
 
 const closeDialog = () => {
   emit('close');

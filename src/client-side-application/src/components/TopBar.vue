@@ -15,14 +15,14 @@
       <p id="title">🏡{{ currentRoomName }}</p>
     </div>
 
-    <LoginDialog :visible="showLoginDialog" @login="handleLogin" @close="handleclose" />
+    <LoginDialog :visible="showLoginDialog" @login="handleLogin" @close="handleclose" @register="handleRegister"/>
     <CreateRoomDialog :visible="showCreateDialog" @close="handlecloseCreateRoom" @createroom="handleCreate" />
   </div>
 </template>
 
 
 <script setup>
-import { inject, computed, ref, defineEmits } from 'vue';
+import { inject, computed, ref} from 'vue';
 import LoginDialog from './TopBarComponents/LoginDialog.vue';
 import CreateRoomDialog from './TopBarComponents/CreateRoomDialog.vue';
 
@@ -62,6 +62,11 @@ const handleAddClick = () => {
 
 const handleLogin = () => {
   emit('log-in');
+  showLoginDialog.value = false;
+};
+
+const handleRegister = () => {
+  emit('register');
   showLoginDialog.value = false;
 };
 

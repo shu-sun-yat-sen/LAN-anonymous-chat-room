@@ -12,7 +12,7 @@
 
 
 <script setup>
-import { computed, inject, defineProps } from 'vue';
+import { computed, inject} from 'vue';
 
 const props = defineProps({
     roomname: {

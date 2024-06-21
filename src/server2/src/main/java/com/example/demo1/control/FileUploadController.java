@@ -15,7 +15,7 @@ public class FileUploadController {
     public Result<String> upload(MultipartFile file) throws IOException {
         String originalFilename=file.getOriginalFilename();
         String filename= UUID.randomUUID().toString()+originalFilename.substring(originalFilename.lastIndexOf("."));
-        file.transferTo(new File("./files/"+filename));
+        file.transferTo(new File("./src/main/resources/static/userpic/"+filename));
         return Result.success();
     }
 }
