@@ -1,6 +1,7 @@
 <template>
     <div :style="dynamicStyle" @click="handleClick" class="room-window">
-        <img :src="roomAvatar" alt="Avatar" class="avatar" />
+        <!-- <img :src="roomAvatar" alt="Avatar" class="avatar" /> -->
+        <el-avatar :src="roomAvatar" alt="Avatar" class="avatar" shape="square" fit="fill" :size="52"></el-avatar>
         <div class="info">
             <p class="room-name">{{ truncateString(roomname, 11) }}</p>
             
@@ -61,17 +62,17 @@ const dynamicStyle = computed(() => (
 <style scoped>
 .room-window {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     left: inherit;
     right: inherit;
-    height: 15%;
+    /* height: 15%; */
     border-bottom: 0.5px solid rgb(83, 76, 76);
     /* background-color: rgb(187, 186, 186); */
-    align-items: center;
+    /* align-items: center; */
 }
 
 .avatar {
-    height: 60%;
+    /* height: 60%; */
     margin-left: 5%;
     margin-top: 0%;
     margin-right: 5%;

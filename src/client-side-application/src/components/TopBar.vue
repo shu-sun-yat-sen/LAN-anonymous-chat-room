@@ -2,7 +2,8 @@
 <template>
   <div idd="top-bar">
     <div id="user-bar">
-      <img :src="avatar" alt="Avatar" id="avatar" />
+      <!-- <img :src="avatar" alt="Avatar" id="avatar" /> -->
+       <el-avatar :src="avatar" alt="Avatar" id="avatar" shape="circle" fit="cover"></el-avatar>
       <div>
         <el-button type="primary" round @click="handleLoginClick" id="log-button">{{ buttonLabel }}</el-button>
         <el-button type="primary" circle id="create-room-button" @click="handleAddClick">+</el-button>
@@ -118,9 +119,9 @@ const handlecloseCreateRoom = () => {
 #avatar {
   position: fixed;
   left: 1%;
-  top: 1%;
+  top: 2%;
   /* bottom: 1%; */
-  height: 8%;
+  /* height: 8%; */
 }
 
 #title {
