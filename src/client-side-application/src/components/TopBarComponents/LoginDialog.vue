@@ -21,7 +21,8 @@
         </div>
       </form> -->
       <!-- <el-form :rules="rules" :model="ruleForm" label-width="auto" style="max-width: 600px"> -->
-      <el-form ref="ruleFormRef" :rules="rules" :model="ruleForm" label-width="auto" style="max-width: 600px;opacity: 1;">
+      <el-form ref="ruleFormRef" :rules="rules" :model="ruleForm" label-width="auto"
+        style="max-width: 600px;opacity: 1;">
         <el-form-item label="ID" prop="id">
           <el-input v-model="ruleForm.id" />
         </el-form-item>
@@ -31,11 +32,13 @@
         <el-form-item label="密码" prop="password">
           <el-input v-model="ruleForm.password" />
         </el-form-item>
-        <div style="position: relative;left:0%;">
+
+          <div style="position: relative;left:0%;">
             <el-button type="warning" @click.prevent="submitFormRegister(ruleFormRef)">注册</el-button>
             <el-button type="primary" @click.prevent="submitFormLogin(ruleFormRef)">登录</el-button>
             <el-button @click="closeDialog">取消</el-button>
-        </div>
+          </div>
+
       </el-form>
 
     </div>
@@ -43,7 +46,7 @@
 </template>
 
 <script setup>
-import { ref, inject} from 'vue';
+import { ref, inject } from 'vue';
 
 const props = defineProps({
   visible: {
@@ -101,7 +104,7 @@ const submitFormRegister = async (formEl) => {
       emit('register');
       closeDialog();
     } else {
-      alert('login failed!');
+      alert('Register failed!');
     }
   })
 };
@@ -136,6 +139,6 @@ const closeDialog = () => {
   padding: 20px;
   border-radius: 8px;
   /* Set opacity to 0 */
-  opacity: 1; 
+  opacity: 1;
 }
 </style>

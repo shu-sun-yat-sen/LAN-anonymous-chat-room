@@ -43,7 +43,13 @@ export default {
     methods: {
         handleSendText(text) {
             // console.log('发送文本:', text);
-            this.$emit('sendtext', text);
+            // 注意要判断长度为不为0
+            if(text.length <= 0){
+                alert('发送内容不能为空');
+            }
+            else{
+                this.$emit('sendtext', text);
+            }
         },
         handleUploadFile(file) {
             // console.log('上传文件:', file);

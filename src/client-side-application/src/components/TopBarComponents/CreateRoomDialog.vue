@@ -1,8 +1,8 @@
 <template>
-    <div v-if="visible" class="dialog-overlay">
-      <div class="dialog">
-        <h3>Create Room</h3>
-        <!-- <form @submit.prevent="submitCreate">
+  <div v-if="visible" class="dialog-overlay">
+    <div class="dialog">
+      <h3>Create Room</h3>
+      <!-- <form @submit.prevent="submitCreate">
             <div class="form-group">
                 <label for="roomname">房间名:</label>
                 <input type="text" id="roomname" v-model="roomname" required />
@@ -12,22 +12,25 @@
               <button type="button" @click="closeDialog">取消</button>
             </div>
         </form> -->
-        <el-form ref="ruleFormRef" :rules="rules" :model="ruleForm" label-width="auto" style="max-width: 600px">
-          <el-form-item label="房间名" prop="roomname">
-            <el-input v-model="ruleForm.roomname" />
-          </el-form-item>
-          <div style="position: relative;left:10%;">
-              <el-button type="primary" @click.prevent="submitCreateForm(ruleFormRef)">创建</el-button>
-              <el-button @click="closeDialog">取消</el-button>
-          </div>
-        </el-form>
+      <el-form ref="ruleFormRef" :rules="rules" :model="ruleForm" label-width="auto" style="max-width: 600px">
+        <el-form-item label="房间名" prop="roomname">
+          <el-input v-model="ruleForm.roomname" @keyup.enter="handleEnterKey" />
+          <!-- <input type="text"> -->
+        </el-form-item>
+        
 
-      </div>
+        <div style="position: relative;left:10%;">
+          <el-button type="primary" @click.prevent="submitCreateForm(ruleFormRef)">创建</el-button>
+          <el-button @click.prevent="closeDialog">取消</el-button>
+        </div>
+      </el-form>
+
     </div>
+  </div>
 </template>
 
 <script setup>
-import { ref, inject} from 'vue';
+import { ref, inject } from 'vue';
 
 const props = defineProps({
   visible: {
@@ -50,6 +53,10 @@ const rules = {
   roomname: [
     { required: true, message: '请输入房间名', trigger: 'blur' },
   ],
+};
+
+const handleEnterKey = (event) => {
+  event.preventDefault();
 };
 
 const submitCreateForm = async (formEl) => {
@@ -81,7 +88,7 @@ const closeDialog = () => {
   position: fixed;
   top: 20%;
   left: 40%;
-  
+
   background: #ffffff80;
   display: flex;
   justify-content: center;
@@ -94,5 +101,4 @@ const closeDialog = () => {
   padding: 20px;
   border-radius: 8px;
 }
-
 </style>

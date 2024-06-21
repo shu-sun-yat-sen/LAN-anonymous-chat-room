@@ -7,9 +7,21 @@
 
 <script>
 export default {
+    setup() {
+        const sleep = (ms) => {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        };
+
+
+        return {
+            sleep,
+        };
+    },
     data() {
         return {
-            text: ''
+            text: '',
+            counter : 1,
+            coolDown : false
         };
     },
     props: {
@@ -17,26 +29,44 @@ export default {
     },
     watch: {
         emojiMessage(newVal) {
-            if(newVal){
+            if (newVal) {
                 this.handleMessage();
             }
         }
     },
     methods: {
         sendText() {
+            // 拒绝发送
+            if(this.text.length <= 0){
+                return;
+            }
             this.$emit('send-text', this.text);
             this.text = '';
         },
         handleKeydown(event) {
+            if (this.coolDown) {
+                return;
+            }
+            // 禁止其他事件
+            this.coolDown = true;
+
             if (event.key === "Enter" && !event.ctrlKey) {
                 event.preventDefault(); // 防止默认的换行行为
-                this.sendText();
+                if(this.text.length > 0){
+                    // console.log('curCounter: ', this.counter++);
+                    this.sendText();
+                }
+                else{
+                    alert('发送内容不能为空');
+                }
             } else if (event.key === "Enter" && event.ctrlKey) {
                 // 插入换行符
                 this.text += "\n";
             }
+            this.sleep(500);
+            this.coolDown = false;
         },
-        handleMessage(){
+        handleMessage() {
             this.text += this.emojiMessage;
             this.$emit('clearEmojiMessage');
         }
@@ -81,7 +111,7 @@ export default {
 .button {
     border: none;
     position: absolute;
-    
+
     right: 1%;
     bottom: 30%;
     padding: 0.8% 1.2%;
@@ -90,7 +120,7 @@ export default {
     font-size: 1vw;
     margin: 0.3%;
     cursor: pointer;
-    
+
     width: 10%;
     /* 可选：添加阴影来增加视觉效果 */
     /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); */
