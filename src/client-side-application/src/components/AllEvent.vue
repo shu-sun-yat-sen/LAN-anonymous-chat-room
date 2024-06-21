@@ -238,6 +238,27 @@ const getUserHeadPhoto = () => {
   };
 };
 
+const handleFileUpload = async (file) => {
+    console.log('File name:', file.name);
+    console.log('File size:', file.size);
+    console.log('File type:', file.type);
+    console.log('Last modified:', file.lastModified);
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+        const response = await axios.post(serverInfo.value.serverList[0].ip +'/upload', formData, {
+          headers:{
+          Authorization: loginInfo.value.JWT,
+        }
+        });
+        console.log('File uploaded successfully', response.data);
+    } catch (error) {
+        console.error('Error uploading file', error);
+    }
+};
+
 let intervalIdRoom;
 let intervalIdMessage;
 let intervalIdUserpic;
@@ -262,6 +283,7 @@ defineExpose({
   logOut,
   searchServer,
   createRoom,
-  sendMessage
+  sendMessage,
+  handleFileUpload
 })
 </script>

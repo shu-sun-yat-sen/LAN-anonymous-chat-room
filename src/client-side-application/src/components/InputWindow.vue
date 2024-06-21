@@ -42,14 +42,15 @@ export default {
     },
     methods: {
         handleSendText(text) {
-            console.log('发送文本:', text);
+            // console.log('发送文本:', text);
             this.$emit('sendtext', text);
         },
         handleUploadFile(file) {
-            console.log('上传文件:', file);
+            // console.log('上传文件:', file);
+            this.$emit('send-file', file);
         },
         handleSendEmoji(emoji) {
-            console.log('发送表情:', emoji);
+            // console.log('发送表情:', emoji);
             this.emojiMessage = emoji;
         },
         handleChess(chess){

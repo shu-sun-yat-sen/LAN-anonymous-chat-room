@@ -8,7 +8,7 @@
     <main>
       <SideBar />
       <ChatWindow />
-      <InputWindow @sendtext = "handleSendText" />
+      <InputWindow @sendtext = "handleSendText" @send-file = "handleSendFile"/>
     </main>
     <functions>
       <AllEvent ref="allEvent"/>
@@ -152,6 +152,10 @@ const createRoom = (roomName) => {
 
 const handleSendText = (message) => {
   allEvent.value.sendMessage(message);
+};
+
+const handleSendFile = (file) => {
+  allEvent.value.handleFileUpload(file);
 };
 
 </script>
