@@ -36,7 +36,6 @@ const register = () => {     //注册
 
 
 const logIn = () => {     //登录
-  register()
   axios({
     method: 'post',
     url: serverInfo.value.serverList[0].ip + '/user/login',
@@ -46,10 +45,14 @@ const logIn = () => {     //登录
       password:loginInfo.value.userPasswd
     }
   }).then(response => {
-    console.log('登录成功了');
-    loginInfo.value.JWT = response.data.data;
-    loginInfo.value.isLogIn = true;
-    console.log('JWT: ' + loginInfo.value.JWT);
+    if(response.data.data != null){
+      console.log('登录成功了');
+      loginInfo.value.JWT = response.data.data;
+      loginInfo.value.isLogIn = true;
+      console.log('JWT: ' + loginInfo.value.JWT);
+    } else{
+      console.log('登录出现了错误');
+    }
   }, error => {
     console.log('登录出现了错误');
     console.log(error);
@@ -172,7 +175,7 @@ const createMessage = (senderName, content, avatar, time) => {
   return {
     senderFakeName: senderName,
     content: content,
-    avatar:avatar,
+    avatar: serverInfo.value.serverList[0].ip + '/' + avatar,
     time:time
   }
 };
@@ -186,7 +189,7 @@ const createMessageList = (roomName, messageList) => {
       let senderName = message.sendername;
       let senderpic = message.senderpic;
       let time = message.time;
-      result.push(createMessage(senderName, context, 'https://via.placeholder.com/40', time));
+      result.push(createMessage(senderName, context, senderpic, time));
     }
     let index = roomInfo.value.roomList.findIndex(room => room.roomName === roomName);
     roomInfo.value.roomList[index].messages = result;
@@ -234,6 +237,7 @@ onBeforeUnmount(() => {
 
 defineExpose({
   logIn,
+  register,
   logOut,
   searchServer,
   createRoom,

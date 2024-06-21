@@ -34,7 +34,7 @@ export default {
     
     // 是否用户发出
     const isUser = (curMessage) => {
-      console.log(loginInfo.value.userId,' ', curMessage.senderID);
+      // console.log(loginInfo.value.userId,' ', curMessage.senderID);
       return loginInfo.value.userId == curMessage.senderID;
     };
 

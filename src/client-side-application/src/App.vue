@@ -3,7 +3,7 @@
   <router-view />
   <div id="app" v-if="showExtraContent">
     <header>
-      <TopBar @log-in="logIn" @log-out="logOut" @createroom="createRoom" id="top-bar"/>
+      <TopBar @log-in="logIn" @register="handleRegister" @log-out="logOut" @createroom="createRoom" id="top-bar"/>
     </header>
     <main>
       <SideBar />
@@ -134,6 +134,13 @@ const logIn = () => {
     allEvent.value.logIn();
   }
 };
+
+const handleRegister = () => {
+  if (allEvent.value) {
+    allEvent.value.register();
+  }
+};
+
 const logOut = () => {
   if (allEvent.value) {
     allEvent.value.logOut();

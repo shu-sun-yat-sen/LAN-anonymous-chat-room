@@ -27,7 +27,7 @@
 </template>
 
 <script setup>
-import { ref, inject, defineProps, defineEmits } from 'vue';
+import { ref, inject} from 'vue';
 
 const props = defineProps({
   visible: {
