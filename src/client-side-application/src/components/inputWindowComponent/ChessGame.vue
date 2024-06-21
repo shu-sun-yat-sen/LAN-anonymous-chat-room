@@ -171,6 +171,7 @@ export default {
       }
       this.drawChess(x, y);
       if(this.winGame){
+        // 已经结束了
         this.drawResult();
         return;
       }

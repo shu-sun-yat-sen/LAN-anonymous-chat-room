@@ -48,7 +48,7 @@ const loginInfo = ref(
   userId: '13738414202',       //用户账户
   userPasswd: 'sdsdsdf33',      //密码
   fakeName: 'sss', //当前假名
-  headPhoto: 'https://via.placeholder.com/40',       //头像
+  headPhoto: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png',       //头像
   JWT: null    //身份验证
   }
 );
@@ -59,7 +59,7 @@ const roomInfo = ref(
     roomList: [
       {
         roomName: "sampleRoom1",
-        roomAvatar: 'https://via.placeholder.com/40',
+        roomAvatar: 'https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png',
         isLocked: false,
         isIn:true,
         password: "123456",
@@ -74,7 +74,7 @@ const roomInfo = ref(
       },
       {
         roomName: "sampleRoom2",
-        roomAvatar: 'https://via.placeholder.com/40',
+        roomAvatar: 'https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png',
         isLocked: false,
         isIn:true,
         password: "123456",

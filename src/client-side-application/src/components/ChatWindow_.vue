@@ -14,7 +14,7 @@
   
 <script>
 import { inject, onMounted, ref } from 'vue';
-import ChatBubble from './ChatBubble.vue';
+import ChatBubble from './chatWindowComponent/ChatBubble.vue';
 
 export default {
   components: {
