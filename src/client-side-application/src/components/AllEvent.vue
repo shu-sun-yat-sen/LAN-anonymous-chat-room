@@ -27,10 +27,13 @@ const register = () => {     //注册
       password:loginInfo.value.userPasswd
     }
   }).then(response => {
-    console.log('注册成功了');
+    if(response.data.code === 0){
+      console.log('注册成功了', response);
+    } else{
+      console.log('注册出现了错误');
+    }
   }, error => {
-    console.log('注册出现了错误');
-    console.log(error);
+    console.log('注册出现了错误', response.data.message);
   })
 }
 
@@ -84,10 +87,10 @@ const createRoom = (roomName) => { //创建房间
   });
 };
 
-const createInitRoom = (roomName) => {
+const createInitRoom = (roomName, roomAvatar) => {
   return {
         roomName: roomName,
-        roomAvatar: 'https://via.placeholder.com/40',
+        roomAvatar: roomAvatar,
         isLocked: null,
         isIn:null,
         password: null,
@@ -128,13 +131,19 @@ const getRoomInfos = () => {
         Authorization: loginInfo.value.JWT,
       }
     }).then(response => {
+      // console.log(response.data);
       for(let i=0;i<response.data.data.length;i++){
-        let roomName = response.data.data[i];
+        let currentRoom = response.data.data[i];
+        let roomName = currentRoom.roomName;
+        let pic = serverInfo.value.serverList[0].ip + '/' +currentRoom.roompic;
         joinRoom(roomName);
         if(roomInfo.value.roomList.find(room => room.roomName === roomName) === undefined){
-          roomInfo.value.roomList.push(createInitRoom(roomName));
+          roomInfo.value.roomList.push(createInitRoom(roomName, pic));
           console.log('添加了一个房间');
           console.log(roomName);
+        } else{
+          let index = roomInfo.value.roomList.findIndex(room => room.roomName === roomName);
+          roomInfo.value.roomList[index].roomAvatar = pic;
         }
       }
     }, error => {
@@ -163,13 +172,6 @@ const sendMessage = (message) => {  //发送文本消息
     });
   }
 };
-
-// {
-//   senderFakeName: "fakeSender",
-//   content: "hello1!",
-//   avatar: 'https://via.placeholder.com/40',
-//   time: "fakeTime"
-// }
 
 const createMessage = (senderName, content, avatar, time) => {
   return {
@@ -210,8 +212,6 @@ const getMessage = () => {
           roomname: roomName
         }
       }).then(response => {
-        // console.log('获取消息成功,roomname:', roomName);
-        // console.log(response.data.data);
         createMessageList(roomName, response.data.data);
       }, error => {
         console.log('获取消息失败,roomname:', roomName);
@@ -229,11 +229,9 @@ const getUserHeadPhoto = () => {
         Authorization: loginInfo.value.JWT,
       }
     }).then(response => {
-      // console.log('获取头像成功');
-      // console.log(response.data.data);
       loginInfo.value.headPhoto = serverInfo.value.serverList[0].ip + '/' + response.data.data.userpic;
     }, error => {
-      // console.log('获取t头像');
+      console.log('获取头像失败');
     });    
   };
 };

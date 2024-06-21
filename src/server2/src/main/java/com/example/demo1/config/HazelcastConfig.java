@@ -47,8 +47,8 @@ public class HazelcastConfig {
             Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
             for (NetworkInterface networkInterface : Collections.list(networkInterfaces)) {
                 // 过滤掉不是WLAN的接口
+                System.out.println(networkInterface.getName());
                 if (networkInterface.getName().contains("wireless")) {
-                    System.out.println(networkInterface.getName());
                     Enumeration<InetAddress> inetAddresses = networkInterface.getInetAddresses();
                     for (InetAddress inetAddress : Collections.list(inetAddresses)) {
                         // 只获取IPv4地址，并且排除回环地址
@@ -82,7 +82,7 @@ public class HazelcastConfig {
             Config config = new Config();
             config.setClusterName("my-cluster");
             config.getJetConfig().setEnabled(true);
-            if("error".equals(getip()))
+            if(Objects.equals(getip(), "error"))
                 config.getNetworkConfig().getInterfaces().setEnabled(true).addInterface(ip);
             else
                 config.getNetworkConfig().getInterfaces().setEnabled(true).addInterface(getip());
