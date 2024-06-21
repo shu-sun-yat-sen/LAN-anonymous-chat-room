@@ -86,7 +86,7 @@ export default {
   left: -22px;
   top: 3px; */
 
-  transform: translate(-98%, 100%);
+  transform: translate(-100%, 100%);
   z-index: 1000;
 }
 

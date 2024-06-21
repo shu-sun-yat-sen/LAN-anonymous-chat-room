@@ -5,7 +5,7 @@
         <div class="info">
             <p class="room-name">{{ truncateString(roomname, 11) }}</p>
             
-            <div class="newest-message">{{ truncateString(newestMessage, 9) }}</div>
+            <div class="newest-message">{{ truncateString(newestMessage, 15) }}</div>
         </div>
 
     </div>
