@@ -3,12 +3,12 @@
   <router-view />
   <div id="app" v-if="showExtraContent">
     <header>
-      <TopBar @log-in="logIn" @log-out="logOut" @createroom="createRoom" id="top-bar"/>
+      <TopBar @log-in="logIn" @register="handleRegister" @log-out="logOut" @createroom="createRoom" @random-change-user-avatar="randomChangeAvatar" id="top-bar"/>
     </header>
     <main>
       <SideBar />
       <ChatWindow />
-      <InputWindow @sendtext = "handleSendText" />
+      <InputWindow @sendtext = "handleSendText" @send-file = "handleSendFile"/>
     </main>
     <functions>
       <AllEvent ref="allEvent"/>
@@ -45,10 +45,10 @@ const showExtraContent = ref(route.meta.showExtraContent);
 const loginInfo = ref(
   {
   isLogIn: false,         //登录状态
-  userId: '13738414202',       //用户账户
+  userId: '137',       //用户账户
   userPasswd: 'sdsdsdf33',      //密码
   fakeName: 'sss', //当前假名
-  headPhoto: 'https://via.placeholder.com/40',       //头像
+  headPhoto: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png',       //头像
   JWT: null    //身份验证
   }
 );
@@ -59,14 +59,16 @@ const roomInfo = ref(
     roomList: [
       {
         roomName: "sampleRoom1",
-        roomAvatar: 'https://via.placeholder.com/40',
+        roomAvatar: 'https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png',
         isLocked: false,
         isIn:true,
         password: "123456",
         messages: [
           {
+            senderID: '137',
+            type:"text",
             senderFakeName: "fakeSender",
-            content: "hello1!",
+            content: "hello1!aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
             avatar: 'https://via.placeholder.com/40',
             time: "fakeTime"
           }
@@ -74,14 +76,32 @@ const roomInfo = ref(
       },
       {
         roomName: "sampleRoom2",
-        roomAvatar: 'https://via.placeholder.com/40',
+        roomAvatar: 'https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png',
         isLocked: false,
         isIn:true,
         password: "123456",
         messages: [
           {
+            senderID: '137',
+            type:"text",
             senderFakeName: "fakeSender",
-            content: "hello2!",
+            content: "hello2!aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            avatar: 'https://via.placeholder.com/40',
+            time: "fakeTime"
+          },
+          {
+            senderID: '138',
+            type:"text",
+            senderFakeName: "fakeSender",
+            content: "hello2!aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            avatar: 'https://via.placeholder.com/40',
+            time: "fakeTime"
+          },
+          {
+            senderID: '138',
+            type:"text",
+            senderFakeName: "fakeSender",
+            content: "hello2!aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
             avatar: 'https://via.placeholder.com/40',
             time: "fakeTime"
           }
@@ -118,6 +138,13 @@ const logIn = () => {
     allEvent.value.logIn();
   }
 };
+
+const handleRegister = () => {
+  if (allEvent.value) {
+    allEvent.value.register();
+  }
+};
+
 const logOut = () => {
   if (allEvent.value) {
     allEvent.value.logOut();
@@ -129,6 +156,14 @@ const createRoom = (roomName) => {
 
 const handleSendText = (message) => {
   allEvent.value.sendMessage(message);
+};
+
+const handleSendFile = (file) => {
+  allEvent.value.handleFileUpload(file);
+};
+
+const randomChangeAvatar = () => {
+  allEvent.value.randomChangeAvatar();
 };
 
 </script>

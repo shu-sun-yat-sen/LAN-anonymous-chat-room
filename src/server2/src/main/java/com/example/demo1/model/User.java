@@ -29,7 +29,7 @@ public class User {
         this.Id=id;
         this.fakeName = fakeName;
         this.passwd = passwd;
-        this.userpic ="src/userpic/little_bear.jpg";
+        this.userpic ="userpic/little_bear.jpg";
     }
 
     public void setCookie(String cookie) {

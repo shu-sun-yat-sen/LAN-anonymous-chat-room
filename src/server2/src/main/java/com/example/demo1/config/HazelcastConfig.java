@@ -47,8 +47,8 @@ public class HazelcastConfig {
             Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
             for (NetworkInterface networkInterface : Collections.list(networkInterfaces)) {
                 // 过滤掉不是WLAN的接口
+                System.out.println(networkInterface.getName());
                 if (networkInterface.getName().contains("wireless")) {
-                    System.out.println(networkInterface.getName());
                     Enumeration<InetAddress> inetAddresses = networkInterface.getInetAddresses();
                     for (InetAddress inetAddress : Collections.list(inetAddresses)) {
                         // 只获取IPv4地址，并且排除回环地址
@@ -82,7 +82,7 @@ public class HazelcastConfig {
             Config config = new Config();
             config.setClusterName("my-cluster");
             config.getJetConfig().setEnabled(true);
-            if("error".equals(getip()))
+            if(Objects.equals(getip(), "error"))
                 config.getNetworkConfig().getInterfaces().setEnabled(true).addInterface(ip);
             else
                 config.getNetworkConfig().getInterfaces().setEnabled(true).addInterface(getip());
@@ -91,19 +91,19 @@ public class HazelcastConfig {
             config.getNetworkConfig().getJoin().getMulticastConfig().setMulticastPort(multicastport);
 
             MapConfig mapConfigUser=config.getMapConfig("UserMap");
-            mapConfigUser.setBackupCount(1);
+            mapConfigUser.setBackupCount(2);
             mapConfigUser.setReadBackupData(true);
             mapConfigUser.getMapStoreConfig()
                     .setEnabled(true)
                     .setImplementation(new HazelcastH2MapStoreUser(dataSource()));
             MapConfig mapConfigRoom=config.getMapConfig("RoomMap");
-            mapConfigRoom.setBackupCount(1);
+            mapConfigRoom.setBackupCount(2);
             mapConfigRoom.setReadBackupData(true);
             mapConfigRoom.getMapStoreConfig()
                     .setEnabled(true)
                     .setImplementation(new HazelcastH2MapStoreRoom(dataSource()));
             MapConfig mapConfigTalk=config.getMapConfig("TalkMap");
-            mapConfigTalk.setBackupCount(1);
+            mapConfigTalk.setBackupCount(2);
             mapConfigTalk.setReadBackupData(true);
             mapConfigTalk.getMapStoreConfig()
                     .setEnabled(true)

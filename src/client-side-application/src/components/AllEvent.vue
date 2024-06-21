@@ -27,16 +27,18 @@ const register = () => {     //注册
       password:loginInfo.value.userPasswd
     }
   }).then(response => {
-    console.log('注册成功了');
+    if(response.data.code === 0){
+      console.log('注册成功了', response);
+    } else{
+      console.log('注册出现了错误');
+    }
   }, error => {
-    console.log('注册出现了错误');
-    console.log(error);
+    console.log('注册出现了错误', response.data.message);
   })
 }
 
 
 const logIn = () => {     //登录
-  register();
   axios({
     method: 'post',
     url: serverInfo.value.serverList[0].ip + '/user/login',
@@ -46,15 +48,37 @@ const logIn = () => {     //登录
       password:loginInfo.value.userPasswd
     }
   }).then(response => {
-    console.log('登录成功了');
-    loginInfo.value.JWT = response.data.data;
-    loginInfo.value.isLogIn = true;
-    console.log('JWT: ' + loginInfo.value.JWT);
+    if(response.data.data != null){
+      console.log('登录成功了');
+      loginInfo.value.JWT = response.data.data;
+      loginInfo.value.isLogIn = true;
+      console.log('JWT: ' + loginInfo.value.JWT);
+    } else{
+      console.log('登录出现了错误');
+    }
   }, error => {
     console.log('登录出现了错误');
     console.log(error);
   });
-}
+};
+
+const randomChangeAvatar = () => {
+  axios({
+    method: 'post',
+    url: serverInfo.value.serverList[0].ip + '/user/randomupdate',
+    headers:{
+      Authorization: loginInfo.value.JWT,
+    }
+  }).then(response => {
+    if(response.data.code === 0){
+      console.log('更换用户头像成功成功了');
+    } else{
+      console.log('更换用户头像成功错误');
+    }
+  }, error => {
+    console.log('更换用户头像成功错误');
+  });
+};
 
 const logOut = () => {
   loginInfo.value.isLogIn = false;
@@ -81,10 +105,10 @@ const createRoom = (roomName) => { //创建房间
   });
 };
 
-const createInitRoom = (roomName) => {
+const createInitRoom = (roomName, roomAvatar) => {
   return {
         roomName: roomName,
-        roomAvatar: 'https://via.placeholder.com/40',
+        roomAvatar: roomAvatar,
         isLocked: null,
         isIn:null,
         password: null,
@@ -125,13 +149,19 @@ const getRoomInfos = () => {
         Authorization: loginInfo.value.JWT,
       }
     }).then(response => {
+      // console.log(response.data);
       for(let i=0;i<response.data.data.length;i++){
-        let roomName = response.data.data[i];
+        let currentRoom = response.data.data[i];
+        let roomName = currentRoom.roomName;
+        let pic = serverInfo.value.serverList[0].ip + '/' +currentRoom.roompic;
         joinRoom(roomName);
         if(roomInfo.value.roomList.find(room => room.roomName === roomName) === undefined){
-          roomInfo.value.roomList.push(createInitRoom(roomName));
+          roomInfo.value.roomList.push(createInitRoom(roomName, pic));
           console.log('添加了一个房间');
           console.log(roomName);
+        } else{
+          let index = roomInfo.value.roomList.findIndex(room => room.roomName === roomName);
+          roomInfo.value.roomList[index].roomAvatar = pic;
         }
       }
     }, error => {
@@ -161,18 +191,13 @@ const sendMessage = (message) => {  //发送文本消息
   }
 };
 
-// {
-//   senderFakeName: "fakeSender",
-//   content: "hello1!",
-//   avatar: 'https://via.placeholder.com/40',
-//   time: "fakeTime"
-// }
-
-const createMessage = (senderName, content, avatar, time) => {
+const createMessage = (senderID, type, senderName, content, avatar, time) => {
   return {
+    senderID:senderID,
+    type:type,
     senderFakeName: senderName,
     content: content,
-    avatar:avatar,
+    avatar: serverInfo.value.serverList[0].ip + '/' + avatar,
     time:time
   }
 };
@@ -182,11 +207,13 @@ const createMessageList = (roomName, messageList) => {
     let result = [];
     for(let i=0;i<messageList.length;i++){
       let message = messageList[i];
+      let id = message.senderid;
       let context = message.context;
       let senderName = message.sendername;
       let senderpic = message.senderpic;
       let time = message.time;
-      result.push(createMessage(senderName, context, 'https://via.placeholder.com/40', time));
+      let type = message.type;
+      result.push(createMessage(id, type, senderName, context, senderpic, time));
     }
     let index = roomInfo.value.roomList.findIndex(room => room.roomName === roomName);
     roomInfo.value.roomList[index].messages = result;
@@ -207,8 +234,6 @@ const getMessage = () => {
           roomname: roomName
         }
       }).then(response => {
-        // console.log('获取消息成功,roomname:', roomName);
-        // console.log(response.data.data);
         createMessageList(roomName, response.data.data);
       }, error => {
         console.log('获取消息失败,roomname:', roomName);
@@ -217,26 +242,69 @@ const getMessage = () => {
   };
 };
 
+const getUserHeadPhoto = () => {
+  if(loginInfo.value.isLogIn){
+    axios({
+      method: 'get',
+      url: serverInfo.value.serverList[0].ip + '/user/userinfo',
+      headers:{
+        Authorization: loginInfo.value.JWT,
+      }
+    }).then(response => {
+      loginInfo.value.headPhoto = serverInfo.value.serverList[0].ip + '/' + response.data.data.userpic;
+    }, error => {
+      console.log('获取头像失败');
+    });    
+  };
+};
+
+const handleFileUpload = async (file) => {
+    console.log('File name:', file.name);
+    console.log('File size:', file.size);
+    console.log('File type:', file.type);
+    console.log('Last modified:', file.lastModified);
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+        const response = await axios.post(serverInfo.value.serverList[0].ip +'/upload', formData, {
+          headers:{
+          Authorization: loginInfo.value.JWT,
+        }
+        });
+        console.log('File uploaded successfully', response.data);
+    } catch (error) {
+        console.error('Error uploading file', error);
+    }
+};
+
 let intervalIdRoom;
 let intervalIdMessage;
+let intervalIdUserpic;
 
 onMounted(() => {
   // 设置定时任务，每秒更新一次时间
   intervalIdRoom = setInterval(getRoomInfos, 1000);
   intervalIdMessage = setInterval(getMessage, 1000);
+  intervalIdUserpic = setInterval(getUserHeadPhoto, 1000);
 });
 
 onBeforeUnmount(() => {
   // 清除定时任务
-  clearInterval(intervalId);
+  clearInterval(intervalIdRoom);
   clearInterval(intervalIdMessage);
+  clearInterval(intervalIdUserpic);
 });
 
 defineExpose({
   logIn,
+  register,
   logOut,
   searchServer,
   createRoom,
-  sendMessage
+  sendMessage,
+  handleFileUpload,
+  randomChangeAvatar
 })
 </script>

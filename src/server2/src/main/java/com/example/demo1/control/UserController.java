@@ -123,12 +123,12 @@ public class UserController {
 
     }
     @GetMapping("/updateAvatar")
-    public Result<List<File>> show(){
-        File folder = new File("src/userpic");
+    public Result<List<String>> show(){
+        File folder = new File("src/main/resources/static/userpic");
         File[] files = folder.listFiles();
-        List<File> out=new ArrayList<File>();
+        List<String> out=new ArrayList<String>();
         for(File i:files){
-            out.add(i);
+            out.add("userpic/"+i.getName());
         }
         return Result.success(out);
     }
@@ -140,8 +140,32 @@ public class UserController {
        u.setUserpic(avatarUrl);
        userMap.updateMap(u.getUserId(),u);
        return Result.success();
-
     }
-
-
+    @PostMapping("/randomupdate")
+    public Result randomshow(){
+        Map<String,Object> map= ThreadLocalUtil.get();
+        System.out.print(map);
+        String id=(String)map.get("id");
+        User user=userService.findUserById(id).get();
+        Random random = new Random();
+        File folder = new File("src/main/resources/static/userpic");
+        File[] files = folder.listFiles();
+        int a= random.nextInt(files.length);
+        int count=0;
+        for(File i:files){
+            if(count==a) {
+                String newUserpic = "userpic/" + i.getName();
+                user.setUserpic(newUserpic);
+                Map<String, Object> map2 = new HashMap<>();
+                map2.put("userpic", newUserpic);
+                ThreadLocalUtil.set(map2);
+                Map<String,Object> map3= ThreadLocalUtil.get();
+                System.out.print((String) map3.get("userpic"));
+                userMap.updateMap(user.getUserId(),user);
+                userService.updateUser(user);
+            }
+            count+=1;
+        }
+        return Result.success(user);
+    }
 }

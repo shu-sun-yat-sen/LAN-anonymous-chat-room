@@ -29,7 +29,7 @@ export default {
     /* 为按钮留出空间 */
     border: 1px solid rgb(83, 76, 76);
     
-    transform: translateX(-1px) translateY(-2.23vw);
+    transform: translateX(-0.5px) translateY(-2.9vw);
     /* 确保弹出窗口在其他内容上方显示 */
     font-size: 1vw;
 }
