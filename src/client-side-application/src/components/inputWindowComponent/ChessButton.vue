@@ -1,33 +1,68 @@
 <template>
     <div>
-        <!-- <p>{{ myUserId }}</p> -->
-        <!-- <router-link :target="'_blank'" :to="`/ChessGame/${myUserId}`"> -->
-        <router-link target="_blank" :to="{ name: 'ChessGame' }">
-            <button @click="playChess" class="button">♟️</button>
-            <div class="chessAcceptWindow" v-if="showChessAcceptWindow">
-                user "{{ curUser.fakeName }}" invite you to play chess. 
-                <el-button type="danger" round @click="closeWindow">acccept</el-button>
-            </div>
-        </router-link>
+
+        <button @click="playChess" class="button">♟️</button>
+
+        <div class="chessAcceptWindow" v-if="showChessAcceptWindow">
+            <!-- user "{{ curUser.fakeName }}" invite you to play chess. 
+                <el-button type="danger" round @click="closeWindow">acccept</el-button> -->
+            <h3>Game</h3>
+            <el-form ref="ruleFormRef" :rules="rules" :model="ruleForm" label-width="auto" style="max-width: 600px;">
+                <el-form-item label="RoomID" prop="roomID">
+                    <el-input v-model="ruleForm.roomID" />
+                </el-form-item>
+                <el-form-item label="游戏类型" prop="type">
+                    <el-input v-model="ruleForm.type" />
+                </el-form-item>
+
+                <div style="display: flex; gap: 10px; position: relative; left: 15%;">
+                    <router-link target="_blank" :to="{ name: 'ChessGame' }">
+                        <el-button type="warning" @click="submitFormCreate($event, ruleFormRef)">创建</el-button>
+                    </router-link>
+                    <router-link target="_blank" :to="{ name: 'ChessGame' }">
+                        <el-button type="primary" @click="submitFormLogin($event, ruleFormRef)">加入</el-button>
+                    </router-link>
+                    <el-button @click.prevent="closeWindow">取消</el-button>
+                </div>
+
+            </el-form>
+        </div>
+
     </div>
 </template>
 
-<script setup>
-import { inject, computed} from 'vue';
-
-const loginInfo = inject('login-info');
-
-// 待加入不登录不开启棋局设置
-const curUser = computed(() => {
-    // console.log(loginInfo.value.userId);
-    return loginInfo.value ? loginInfo.value : '';
-});
-
-</script>
-
 <script>
+import { ref, inject, computed } from 'vue';
 
 export default {
+    setup() {
+        const loginInfo = inject('login-info');
+
+        // 待加入不登录不开启棋局设置
+        const curUser = computed(() => {
+            // console.log(loginInfo.value.userId);
+            return loginInfo.value ? loginInfo.value : '';
+        });
+
+        const ruleFormRef = ref(null);
+
+        const ruleForm = ref({
+            roomID: '',
+            type: '',
+        });
+
+        const rules = {
+            roomID: [{ required: true, message: '请输入ID', trigger: 'blur' }],
+            type: [{ required: true, message: '请输入假名', trigger: 'blur' }]
+        };
+
+        return {
+            curUser,
+            ruleFormRef,
+            ruleForm,
+            rules
+        }
+    },
     data() {
         return {
             showChessAcceptWindow: false,
@@ -36,27 +71,50 @@ export default {
     methods: {
         playChess() {
             this.$emit('start-chess', 'chess');
-
-            // 这里要加入一个判断，如果对方不在线，不显示;如果发起邀请的用户的ID和当前用户ID相同，不显示
-            // 只有两个用户ID不同时候才显示
-            if(1 == 1){
-                this.showChessAcceptWindow = true; 
-            }
-
+            this.showChessAcceptWindow = true;
             this.broadcastRequest();
         },
-        broadcastRequest(){
+        broadcastRequest() {
             // 棋局已经开始，广播该消息到同一聊天室其他所有玩家聊天框中
             // 具体来说就是将他们的showChessAcceptWindow设置为true，邀请他们进来
 
             // 这里应该要告诉后端有哪些用户进入了棋局
             // 如果检测到房间内人数=2，那么将showChessAcceptWindow设置为false，同时开始游戏
         },
-        closeWindow(){
+        closeWindow() {
+            // 这里还要通知后端，对方已经接受了邀请
             this.showChessAcceptWindow = false;
+        },
+        submitFormCreate(event, formEl) {
+            if (!formEl) return
+            formEl.validate((valid) => {
+                if (valid) {
+                    console.log('roomID: ', this.ruleForm.roomID, ' create successfully!');
+
+                    // 创建房间，与后端通信
+                    this.closeWindow();
+                } else {
+                    event.preventDefault();
+                    alert('create failed!');
+                }
+            })
+        },
+        submitFormLogin(event, formEl) {
+            if (!formEl) return
+            formEl.validate((valid) => {
+                if (valid) {
+                    console.log('roomID: ', this.ruleForm.roomID, ' join successfully!');
+
+                    // 加入房间与后端通信
+                    this.closeWindow();
+                } else {
+                    event.preventDefault();
+                    alert('join the game failed!');
+                }
+            })
         }
     },
-    
+
 };
 </script>
 
@@ -91,19 +149,19 @@ export default {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
-.chessAcceptWindow{
+.chessAcceptWindow {
     position: absolute;
-    right:10%;
+    left: 20%;
 
-    z-index: 1000; 
-    background-color: #f5f5f5;
+    z-index: 1000;
+    background-color: #f0f0f0;
     margin: 0px;
-    padding: 10px 10px;
+    padding: 15px 15px;
     /* 为按钮留出空间 */
-    border: 1px solid rgb(83, 76, 76);
-    
-    transform: translateX(0) translateY(-102%);
+    border: 0px solid rgb(83, 76, 76);
+
+    transform: translateX(0) translateY(-50vh);
     /* 确保弹出窗口在其他内容上方显示 */
-    font-size: 1vw;
+    /* font-size: 1vw; */
 }
 </style>
