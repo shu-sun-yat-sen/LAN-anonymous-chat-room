@@ -8,7 +8,9 @@ import dev.langchain4j.service.spring.AiService;
 @AiService
 interface Assistant {
 
-    @Moderate
+    //todo: to test
+    //@Moderate
+    //MemoryId
     @SystemMessage("You are a polite assistant in an anonymous chat room")
-    String chat(@MemoryId int memoryId,  String userMessage);
+    String chat(  String userMessage);
 }
