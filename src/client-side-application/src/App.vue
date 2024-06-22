@@ -6,7 +6,7 @@
       <TopBar @log-in="logIn" @register="handleRegister" @log-out="logOut" @createroom="createRoom" @random-change-user-avatar="randomChangeAvatar" id="top-bar"/>
     </header>
     <main>
-      <SideBar />
+      <SideBar @random-update-room-avatar="randomUpdataRoomAvatar"/>
       <ChatWindow />
       <InputWindow @sendtext = "handleSendText" @send-file = "handleSendFile"/>
     </main>
@@ -164,6 +164,10 @@ const handleSendFile = (file) => {
 
 const randomChangeAvatar = () => {
   allEvent.value.randomChangeAvatar();
+};
+
+const randomUpdataRoomAvatar = (roomName) => {
+  allEvent.value.randomUpdataRoomAvatar(roomName);
 };
 
 </script>

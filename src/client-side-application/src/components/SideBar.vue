@@ -8,6 +8,7 @@
           :roomname="room.roomName"
           :newestMessage="newestMessage(room.messages)"
           :roomAvatar="room.roomAvatar"
+          @random-update-room-avatar = "randomUpdateRoomAvatar"
         />
     </div>
 </template>
@@ -16,6 +17,7 @@
     import{ computed, inject} from 'vue';
     import RoomWindow from './SideBarComponent/RoomWindow.vue';
 
+    const emit = defineEmits(['random-update-room-avatar']);
     const roomInfo = inject('room-info');
     const roomList = computed(() => roomInfo.value.roomList);
     const newestMessage = (messages) => {
@@ -25,7 +27,9 @@
         return "";
     };
 
-    console.log(roomInfo.value.roomList);
+    const randomUpdateRoomAvatar = (roomName) =>{
+        emit('random-update-room-avatar', roomName);
+    }
 
 </script>
 
