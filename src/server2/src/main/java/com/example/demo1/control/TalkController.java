@@ -53,8 +53,8 @@ public class TalkController {
             out.add(talk);
             talkMap.writeToMap(talk.getTime(),talk);
             talkService.saveTalk(talk);
-            int memoryId = Integer.parseInt(senderid);
-            Talk talk1=new Talk(assistantmyService.assistant(memoryId, newcontext));
+            //int memoryId = Integer.parseInt(senderid);
+            Talk talk1=new Talk(assistantmyService.assistant(newcontext));
             talk1.setChatroomname(roomname);
             talk1.setSendername("chatai");
             talk1.setSenderpic("/robot.jpg");

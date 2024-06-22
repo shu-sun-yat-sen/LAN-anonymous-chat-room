@@ -9,7 +9,7 @@ public class AssistantmyService {
     @Autowired
     Assistant assistant;
     
-    public String assistant(@MemoryId int memoryId,String message) {
-        return assistant.chat(memoryId, message);
+    public String assistant(String message) {
+        return assistant.chat(message);
     }
 }
