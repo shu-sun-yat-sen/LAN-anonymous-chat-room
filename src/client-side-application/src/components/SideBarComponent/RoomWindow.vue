@@ -1,7 +1,7 @@
 <template>
     <div :style="dynamicStyle" @click="handleClick" class="room-window">
         <!-- <img :src="roomAvatar" alt="Avatar" class="avatar" /> -->
-        <el-avatar :src="roomAvatar" alt="Avatar" class="avatar" shape="square" fit="fill" :size="52"></el-avatar>
+        <el-avatar :src="roomAvatar" alt="Avatar" class="avatar" shape="square" fit="fill" :size="52" @dblclick="randomUpdataRoomAvatar"></el-avatar>
         <div class="info">
             <p class="room-name">{{ truncateString(roomname, 11) }}</p>
             <div class="newest-message">{{ truncateString(newestMessage, 15) }}</div>
@@ -12,6 +12,8 @@
 
 <script setup>
 import { computed, inject} from 'vue';
+
+const emit = defineEmits(['random-update-room-avatar']);
 
 const props = defineProps({
     roomname: {
@@ -41,7 +43,11 @@ const roomInfo = inject("room-info");
 
 const handleClick = () => {
     roomInfo.value.currentRoomName = props.roomname;
-}
+};
+
+const randomUpdataRoomAvatar = () => {
+    emit('random-update-room-avatar', props.roomname);
+};
 
 const dynamicStyle = computed(() => (
     {
