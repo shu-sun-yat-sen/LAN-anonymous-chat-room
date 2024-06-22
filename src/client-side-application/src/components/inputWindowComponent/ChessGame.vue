@@ -10,7 +10,7 @@ import { computed, inject } from 'vue';
  *  写在前面：
  * 棋盘大小为15*15
  *  drawCheckerboard根据chessBoard,chessBoardHeight,chessBoardWidth，画棋盘和上面的棋子
- *  drawChess,drawChess都是工具函数，不用理
+ *  drawChess,drawText都是工具函数，不用理
  * drawResult当isOver为true时调用就行
  * handleClick(event)会发送棋子信息给后端，然后等待后端处理
  * 前端有用的就这些
@@ -53,6 +53,11 @@ export default {
 
     _this.ctx = container.getContext("2d");
     _this.ctx.translate(70, 70);
+
+    for (var i = 0; i < this.curGame.chessBoardHeight; i++) {
+      _this.resultArr.push(new Array(this.curGame.chessBoardWidth).fill(0));
+    }
+
     _this.drawCheckerboard();
 
     // 告诉后端我要开始下棋了
@@ -83,7 +88,7 @@ export default {
         _this.ctx.lineTo(29 * this.curGame.chessBoardWidth, 15 + i * 30);
         _this.ctx.stroke();
 
-        _this.resultArr.push(new Array(15).fill(0));
+        
         for(var j = 0; j < this.curGame.chessBoardWidth; j++){
           _this.resultArr[i][j] = this.curGame.chessBoard[i * this.curGame.chessBoardWidth + j];
           this.drawChess(i, j);
@@ -210,7 +215,6 @@ export default {
       // 监听后端其他用户下的棋子
       //...
 
-      
       
     }
   }
