@@ -83,7 +83,7 @@ public class UserController {
     @GetMapping("/userinfo")
     public Result<User> userinfo(){
         Map<String,Object> map= ThreadLocalUtil.get();
-        System.out.print(map);
+//        System.out.print(map);
         String id=(String)map.get("id");
         User user=userService.findUserById(id).get();
         return Result.success(user);
@@ -107,11 +107,21 @@ public class UserController {
             if (phoneMatcher.matches()){
                 userMap.updateMap(user.getUserId(),user);
                 userService.updateUser(user);
-                return Result.success();
+                Map<String,Object> map2=new HashMap<>();
+                map2.put("id",user.getUserId());
+                map2.put("fakename",user.getFakeName());
+                map2.put("userpic",user.getUserpic());
+                String token=JwtUtil.genToken(map2);
+                return Result.success(token);
             } //匹配邮箱
             else if (emailMatcher.matches()) {
                 userMap.updateMap(user.getUserId(),user);
                 userService.updateUser(user);
+                Map<String,Object> map2=new HashMap<>();
+                map2.put("id",user.getUserId());
+                map2.put("fakename",user.getFakeName());
+                map2.put("userpic",user.getUserpic());
+                String token=JwtUtil.genToken(map2);
                 return Result.success();
             }
             else {
@@ -138,8 +148,13 @@ public class UserController {
        String id=(String) map.get("id");
        User u= userService.findUserById(id).get();
        u.setUserpic(avatarUrl);
+        Map<String,Object> map2=new HashMap<>();
+        map2.put("id",u.getUserId());
+        map2.put("fakename",u.getFakeName());
+        map2.put("userpic",u.getUserpic());
+        String token=JwtUtil.genToken(map2);
        userMap.updateMap(u.getUserId(),u);
-       return Result.success();
+       return Result.success(token);
     }
     @PostMapping("/randomupdate")
     public Result randomshow(){
@@ -154,18 +169,20 @@ public class UserController {
         int count=0;
         for(File i:files){
             if(count==a) {
-                String newUserpic = "userpic/" + i.getName();
-                user.setUserpic(newUserpic);
-                Map<String, Object> map2 = new HashMap<>();
-                map2.put("userpic", newUserpic);
-                ThreadLocalUtil.set(map2);
-                Map<String,Object> map3= ThreadLocalUtil.get();
-                System.out.print((String) map3.get("userpic"));
+                user.setUserpic("userpic/" + i.getName());
+                Map<String,Object> map2=new HashMap<>();
+                map2.put("id",user.getUserId());
+                map2.put("fakename",user.getFakeName());
+                map2.put("userpic",user.getUserpic());
+                String token=JwtUtil.genToken(map2);
                 userMap.updateMap(user.getUserId(),user);
                 userService.updateUser(user);
+                return Result.success(token);
             }
             count+=1;
         }
-        return Result.success(user);
+        return Result.success();
     }
+
+
 }

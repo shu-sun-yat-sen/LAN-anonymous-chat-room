@@ -22,7 +22,7 @@ public class FileUploadController {
     private ResourceLoader resourceLoader;
     @PostMapping("/uploaduser")
     public Result<String> upload(MultipartFile file) throws IOException {
-        String originalFilename = file.getOriginalFilename();
+        String originalFilename=file.getOriginalFilename();
         System.out.print("接收到文件请求：");
         System.out.println(originalFilename);
         String filename= UUID.randomUUID().toString()+originalFilename.substring(originalFilename.lastIndexOf("."));

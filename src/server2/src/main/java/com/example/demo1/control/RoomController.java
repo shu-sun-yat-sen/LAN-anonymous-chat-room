@@ -7,6 +7,7 @@ import com.example.demo1.model.Room;
 import com.example.demo1.model.User;
 import com.example.demo1.service.CacheService.RoomMap;
 import com.example.demo1.service.DbService.RoomService;
+import com.example.demo1.service.DbService.UserService;
 import com.example.demo1.utils.JwtUtil;
 import com.example.demo1.utils.Md5Util;
 import com.example.demo1.utils.ThreadLocalUtil;
@@ -28,6 +29,8 @@ public class RoomController {
     @Autowired
     private RoomService roomService;
     @Autowired
+    private UserService userService;
+    @Autowired
     private RoomMap roomMap;
     @PostMapping
     public Result add(String roomName){
@@ -48,10 +51,11 @@ public class RoomController {
     }
     @PostMapping("/randomupdate")
     public Result randomshow(HttpServletRequest request){
-        Map<String,Object> map= ThreadLocalUtil.get();
-        System.out.print(map);
-        String id=(String)map.get("id");
+        System.out.print("获取随机更新房间头像请求,roomName: ");
         String roomname=request.getHeader("roomname");
+        System.out.println(roomname);
+        Map<String,Object> map= ThreadLocalUtil.get();
+        String id=(String)map.get("id");
         Room room=roomService.findRoomByRoomName(roomname).get();
         Random random = new Random();
         File folder = new File("src/main/resources/static/roompic");
@@ -60,7 +64,7 @@ public class RoomController {
         int count=0;
         for(File i:files){
             if(count==a) {
-                room.setRoompic("userpic/" + i.getName());
+                room.setRoompic("roompic/" + i.getName());
                 roomMap.updateMap(room.getRoomName(),room);
                 roomService.updateRoom(room);
             }
@@ -73,11 +77,10 @@ public class RoomController {
         List<Room> medie=roomService.findAllRooms();
         return Result.success(medie);
     }
-
     @GetMapping("/roominfo")
     public  Result<Room> roomshow(String roomName){
-        System.out.println("接收到获取房间信息请求");
-        System.out.println(roomName);
+//        System.out.println("接收到获取房间信息请求");
+//        System.out.println(roomName);
         Map<String,Object> map =ThreadLocalUtil.get();
         String id=(String) map.get("id");
         if(Objects.equals(roomService.findRoomByRoomName(roomName).get().getRoomOwnerId(), id))
@@ -88,20 +91,20 @@ public class RoomController {
             room.setRoomOwnerId(roomnow.getRoomOwnerId());
             room.setNumofpeople(roomnow.getNumofpeople());
             return Result.success(room);}
+
     }
     @PostMapping("/roominfo")
     public Result join(HttpServletRequest request, String password){
-//        System.out.print("接收到更新房间信息请求, request: ");
-//        System.out.println(request);
-//        System.out.print("password: ");
-//        System.out.println(password);
+//        System.out.print("接收到加入房间请求,id：");
         String roomname=request.getHeader("roomname");
         Room room=roomService.findRoomByRoomName(roomname).get();
         List<String> roomnowmembersid=room.getMembersId();
         Map<String,Object> map =ThreadLocalUtil.get();
         String id=(String) map.get("id");
-        String fakename=(String) map.get("fakename");
-        String userpic=(String) map.get("userpic");
+//        System.out.println(id);
+        User user=userService.findUserById(id).get();
+        String fakename=user.getFakeName();
+        String userpic=user.getUserpic();
         User u=new User(id,fakename,"");
         u.setUserpic(userpic);
         if(Objects.equals(room.getPassWord(), "88888888")){
@@ -136,8 +139,8 @@ public class RoomController {
 
     @PutMapping("/roominfo")
     public Result update(HttpServletRequest request,String newroomname,String owenerid,String password){
-//        System.out.print("接收到更新房间信息请求, request: ");
-//        System.out.println(request);
+        System.out.print("接收到更新房间信息请求, request: ");
+        System.out.println(request);
         String roomname=request.getHeader("roomname");
         Room room=roomService.findRoomByRoomName(roomname).get();
         String id=room.getRoomOwnerId();
