@@ -1,13 +1,11 @@
 package com.example.demo1.control;
 
 import com.example.demo1.Alservice.AssistantmyService;
-import com.example.demo1.model.Gomoku;
-import com.example.demo1.model.Result;
-import com.example.demo1.model.Room;
-import com.example.demo1.model.Talk;
+import com.example.demo1.model.*;
 import com.example.demo1.service.CacheService.TalkMap;
 import com.example.demo1.service.DbService.RoomService;
 import com.example.demo1.service.DbService.TalkService;
+import com.example.demo1.service.DbService.UserService;
 import com.example.demo1.utils.ThreadLocalUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,16 +13,15 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @RestController
 @RequestMapping("/room/talk")
 public class TalkController {
     @Autowired
     private TalkService talkService;
+    @Autowired
+    private UserService userService;
     @Autowired
     private TalkMap talkMap;
     @Autowired
@@ -39,8 +36,10 @@ public class TalkController {
         String roomname=request.getHeader("roomname");
         Map<String,Object> map = ThreadLocalUtil.get();
         String senderid=(String) map.get("id");
-        String sendername=(String) map.get("fakename");
-        String senderpic=(String) map.get("userpic");
+        User user=userService.findUserById(senderid).get();
+        String sendername=user.getFakeName();
+        String senderpic=user.getUserpic();
+//        System.out.print(map);
         Talk talk=new Talk(context);
         talk.setChatroomname(roomname);
         talk.setSendername(sendername);
@@ -69,10 +68,9 @@ public class TalkController {
     }
     @GetMapping
     public Result<List<Talk>> list(HttpServletRequest request){
-        System.out.println("获取获取信息请求");
-        System.out.println(request);
+//        System.out.print("获取获取信息请求, roomname: ");
         String roomname=request.getHeader("roomname");
-        System.out.println(request.getHeader("roomname"));
+//        System.out.println(request.getHeader("roomname"));
         String time=request.getHeader("time");
         if(time==null){
         List<Talk> alltalk=talkService.findalltalk();
@@ -107,6 +105,7 @@ public class TalkController {
     public Result add5game(HttpServletRequest request,String player){
 
         Map<String,Object> map = ThreadLocalUtil.get();
+
         String id=(String) map.get("id");
         Gomoku gomoku=new Gomoku(id,player);
         String roomname=request.getHeader("roomname");

@@ -1,6 +1,7 @@
 package com.example.demo1.control;
 
 import com.example.demo1.Alservice.AssistantmyService;
+import com.example.demo1.model.Gomoku;
 import com.example.demo1.model.Result;
 import com.example.demo1.model.Room;
 import com.example.demo1.model.User;
@@ -16,6 +17,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.HttpRequestHandler;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -38,21 +40,40 @@ public class RoomController {
         Room room=new Room(roomName);
         room.setRoomOwnerId(id);
         room.setMembersId(id);
+        room.setRoompic("roompic/room.jpg");
         room.setPassWord("88888888");
         roomMap.writeToMap(room.getRoomName(),room);
         roomService.saveRoom(room);
         return Result.success();
     }
-    @GetMapping
-    public Result<List<String>> list(){
-        System.out.println("接收到获取房间请求");
-        List<String> output=new ArrayList<String>();
-        List<Room> medie=roomService.findAllRooms();
-        for (Room room:medie){
-            output.add(room.getRoomName());
+    @PostMapping("/randomupdate")
+    public Result randomshow(HttpServletRequest request){
+        Map<String,Object> map= ThreadLocalUtil.get();
+        System.out.print(map);
+        String id=(String)map.get("id");
+        String roomname=request.getHeader("roomname");
+        Room room=roomService.findRoomByRoomName(roomname).get();
+        Random random = new Random();
+        File folder = new File("src/main/resources/static/roompic");
+        File[] files = folder.listFiles();
+        int a= random.nextInt(files.length);
+        int count=0;
+        for(File i:files){
+            if(count==a) {
+                room.setRoompic("userpic/" + i.getName());
+                roomMap.updateMap(room.getRoomName(),room);
+                roomService.updateRoom(room);
+            }
+            count+=1;
         }
-        return Result.success(output);
+        return Result.success(room);
     }
+    @GetMapping
+    public Result<List<Room>> list(){
+        List<Room> medie=roomService.findAllRooms();
+        return Result.success(medie);
+    }
+
     @GetMapping("/roominfo")
     public  Result<Room> roomshow(String roomName){
         System.out.println("接收到获取房间信息请求");
@@ -67,14 +88,13 @@ public class RoomController {
             room.setRoomOwnerId(roomnow.getRoomOwnerId());
             room.setNumofpeople(roomnow.getNumofpeople());
             return Result.success(room);}
-
     }
     @PostMapping("/roominfo")
     public Result join(HttpServletRequest request, String password){
-        System.out.print("接收到更新房间信息请求, request: ");
-        System.out.println(request);
-        System.out.print("password: ");
-        System.out.println(password);
+//        System.out.print("接收到更新房间信息请求, request: ");
+//        System.out.println(request);
+//        System.out.print("password: ");
+//        System.out.println(password);
         String roomname=request.getHeader("roomname");
         Room room=roomService.findRoomByRoomName(roomname).get();
         List<String> roomnowmembersid=room.getMembersId();
@@ -116,8 +136,8 @@ public class RoomController {
 
     @PutMapping("/roominfo")
     public Result update(HttpServletRequest request,String newroomname,String owenerid,String password){
-        System.out.print("接收到更新房间信息请求, request: ");
-        System.out.println(request);
+//        System.out.print("接收到更新房间信息请求, request: ");
+//        System.out.println(request);
         String roomname=request.getHeader("roomname");
         Room room=roomService.findRoomByRoomName(roomname).get();
         String id=room.getRoomOwnerId();
@@ -252,6 +272,7 @@ public class RoomController {
         return Result.error("没有该用户");
 
     }
+
 
 
 }

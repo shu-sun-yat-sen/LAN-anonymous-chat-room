@@ -11,9 +11,11 @@ public class Talk {
     @Id
     private String time;
     private String chatroomname;
+    private String senderid;
     private String sendername;
     private String senderpic;
     private String context;
+    private String type;
     public Talk(){}
     public Talk(String context){
         this.context=context;
@@ -24,7 +26,7 @@ public class Talk {
 
     }
     //GET函数
-
+    public String getType(){return type;}
     public String getChatroomname() {
         return chatroomname;
     }
@@ -41,10 +43,22 @@ public class Talk {
         return senderpic;
     }
 
+    public String getSenderid() {
+        return senderid;
+    }
+
     public String getTime() {
         return time;
     }
     //SET函数
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setSenderid(String senderid) {
+        this.senderid = senderid;
+    }
 
     public void setChatroomname(String chatroomname) {
         this.chatroomname = chatroomname;

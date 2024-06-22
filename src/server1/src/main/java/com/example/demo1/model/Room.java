@@ -19,6 +19,7 @@ public class Room {
     private String roomName;
     @NotEmpty(groups = Update.class)
     private String roomOwnerId;
+    private String roompic;
     private Integer numofpeople;
     private String passWord;
     private String membersId;
@@ -33,6 +34,10 @@ public class Room {
 
     public void setPassWord(String passWord) {
         this.passWord = passWord;
+    }
+
+    public void setRoompic(@NotEmpty(groups = Update.class) String roompic) {
+        this.roompic = roompic;
     }
 
     public void setNumofpeople(Integer numofpeople) {
@@ -55,6 +60,11 @@ public class Room {
     }
 
     // Getter 方法
+
+    public  String getRoompic() {
+        return roompic;
+    }
+
     public Integer getNumofpeople(){return numofpeople;}
     public String getRoomName() {
         return roomName;

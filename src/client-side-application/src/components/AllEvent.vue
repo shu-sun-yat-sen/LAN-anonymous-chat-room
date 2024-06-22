@@ -80,6 +80,8 @@ const randomChangeAvatar = () => {
   });
 };
 
+
+
 const logOut = () => {
   loginInfo.value.isLogIn = false;
 }
@@ -135,7 +137,7 @@ const joinRoom = (roomName) => {
     }).then(response => {
       // console.log("加入房间成功：", roomName)
     }, error => {
-      // console.log("加入房间失败：", roomName)
+      // console.log("加入房间失败：", roomName,loginInfo.value.JWT )
     });
 };
 
@@ -149,19 +151,21 @@ const getRoomInfos = () => {
         Authorization: loginInfo.value.JWT,
       }
     }).then(response => {
-      // console.log(response.data);
-      for(let i=0;i<response.data.data.length;i++){
-        let currentRoom = response.data.data[i];
-        let roomName = currentRoom.roomName;
-        let pic = serverInfo.value.serverList[0].ip + '/' +currentRoom.roompic;
-        joinRoom(roomName);
-        if(roomInfo.value.roomList.find(room => room.roomName === roomName) === undefined){
-          roomInfo.value.roomList.push(createInitRoom(roomName, pic));
-          console.log('添加了一个房间');
-          console.log(roomName);
-        } else{
-          let index = roomInfo.value.roomList.findIndex(room => room.roomName === roomName);
-          roomInfo.value.roomList[index].roomAvatar = pic;
+      if (response.data != null && response.data.data != null){
+        // console.log(response.data);
+        for(let i=0;i<response.data.data.length;i++){
+          let currentRoom = response.data.data[i];
+          let roomName = currentRoom.roomName;
+          let pic = serverInfo.value.serverList[0].ip + '/' +currentRoom.roompic;
+          joinRoom(roomName);
+          if(roomInfo.value.roomList.find(room => room.roomName === roomName) === undefined){
+            roomInfo.value.roomList.push(createInitRoom(roomName, pic));
+            console.log('添加了一个房间');
+            console.log(roomName);
+          } else{
+            let index = roomInfo.value.roomList.findIndex(room => room.roomName === roomName);
+            roomInfo.value.roomList[index].roomAvatar = pic;
+          }
         }
       }
     }, error => {
@@ -169,6 +173,30 @@ const getRoomInfos = () => {
     });
   }
 }
+
+const randomUpdataRoomAvatar = (roomName) => {
+  let index = roomInfo.value.roomList.findIndex(room => room.roomName === roomName);
+  let oldPic = roomInfo.value.roomList[index].roomAvatar;
+  axios({
+      method: 'post',
+      url: serverInfo.value.serverList[0].ip + '/room/randomupdate',
+      headers:{
+        Authorization: loginInfo.value.JWT,
+        roomname: roomName
+      }
+    }).then(response => {
+      if(response.data.code === 0){
+        let index = roomInfo.value.roomList.findIndex(room => room.roomName === roomName);
+        let newPic = roomInfo.value.roomList[index].roomAvatar;
+        console.log("更改房间头像成功, roomName:", roomName, oldPic, newPic);
+      } else{
+        console.log("更改房间头像失败, roomName:", roomName);
+      }
+
+    }, error => {
+      console.log("更改房间头像失败, roomName:", roomName);
+    });
+};
 
 //消息相关
 const sendMessage = (message) => {  //发送文本消息
@@ -305,6 +333,7 @@ defineExpose({
   createRoom,
   sendMessage,
   handleFileUpload,
-  randomChangeAvatar
+  randomChangeAvatar,
+  randomUpdataRoomAvatar
 })
 </script>

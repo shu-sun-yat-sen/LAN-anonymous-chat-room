@@ -34,6 +34,23 @@ public class TalkService {
         return out;
 
     }
+    public Talk findbyroomnameandtype(String roomname,String type){
+        List<Talk> alltalks=findalltalk();
+        for (Talk talk:alltalks){
+            if(talk.getChatroomname()==roomname&&talk.getType()==type){
+                return talk;
+            }
+        }
+        return null;
+    }
+    public void updateTalk(Talk talk){
+        Talk oldtalk=findbyroomnameandtype(talk.getChatroomname(),talk.getType());
+        oldtalk.setContext(talk.getContext());
+    }
+    public void deletetalk(Talk talk){
+        Talk oldtalk=findbyroomnameandtype(talk.getChatroomname(),talk.getType());
+        talkRepository.delete(oldtalk);
+    }
     public static boolean hasIntersection(String s1, String s2) {
         Set<Character> set1 = new HashSet<>();
         Set<Character> set2 = new HashSet<>();
