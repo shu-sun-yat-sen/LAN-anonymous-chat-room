@@ -3,55 +3,40 @@
     <canvas id="gobang" width="800" height="600"></canvas>
   </div>
 </template>
-
+ 
 <script>
-import { useRoute } from 'vue-router';
-import { computed } from 'vue';
+
 /**
  *  写在前面：
  * 棋盘大小为15*15
- *  在渲染完毕棋盘后，告诉后端，我已经准备好了，可以开始下棋了
- *  给进来的用户随机分配黑边白边，黑边先手
+ *  挂载前，前端发送一个信息给后端，初始化后端空棋盘
+ 
  */
 
 const CheckStrWhite = "11111";
 const CheckStrBlack = "22222";
 export default {
   name: "ChessGame",
-  setup() {
-    const route = useRoute();
-
-    const getUserId = computed(() => {
-      return route.query.id;
-    });
-
-    return {
-      getUserId
-    }
-  },
   data() {
     return {
       ctx: null,
       winGame: false,
       whiteTurn: false, // 白棋轮；true-黑棋轮
-      userTurn: false, // 当前用户轮, 只有userTurn==whiteTurn时才能下棋, 一开始要分配谁黑白
       resultArr: [] // 记录棋子位置的数组, 棋盘
     };
   },
   mounted() {
     let _this = this;
     let container = document.getElementById("gobang");
-
+    
     container.addEventListener("click", _this.handleClick);
-
+ 
     _this.ctx = container.getContext("2d");
-    _this.ctx.translate(70, 70);
+    _this.ctx.translate(70,70);
     _this.drawCheckerboard();
-
-    // 告诉后端我要开始下棋了
   },
-  computed: {
-    chessText() {
+  computed:{
+    chessText(){
       return this.whiteTurn ? '白棋' : '黑棋';
     }
   },
@@ -72,7 +57,7 @@ export default {
         _this.ctx.moveTo(15, 15 + i * 30); //水平方向画15根线，相距30px;棋盘为14*14；
         _this.ctx.lineTo(435, 15 + i * 30);
         _this.ctx.stroke();
-
+ 
         _this.resultArr.push(new Array(15).fill(0));
       }
       _this.drawText();
@@ -81,7 +66,7 @@ export default {
       let _this = this;
       let xLine = Math.round((x - 15) / 30); // 竖线第x条
       let yLine = Math.round((y - 15) / 30); // 横线第y条
-      if (_this.resultArr[xLine][yLine] !== 0) {
+      if(_this.resultArr[xLine][yLine] !== 0){
         return;
       }
       let grd = _this.ctx.createRadialGradient(
@@ -106,86 +91,80 @@ export default {
       );
       _this.ctx.fill();
       _this.ctx.closePath();
-
+ 
       _this.setResultArr(xLine, yLine);
-      // 将检查胜负逻辑转移到后端
-      // _this.checkResult(xLine, yLine); 
+      _this.checkResult(xLine, yLine);
     },
     setResultArr(m, n) {
       let _this = this;
       _this.resultArr[m][n] = _this.whiteTurn ? 1 : 2; // 白棋为1；黑棋为2
-
+ 
     },
-
-    checkResult(m, n) { // 判断是否有5子相连
+    
+    checkResult(m ,n){ // 判断是否有5子相连
       let _this = this;
       let checkStr = _this.whiteTurn ? CheckStrWhite : CheckStrBlack;
       // 取出[m,n]横竖斜四条线的一维数组
       let lineVertical = _this.resultArr[m].join('');
-      if (lineVertical.indexOf(checkStr) > -1) {
+      if(lineVertical.indexOf(checkStr) > -1){
         _this.winGame = true;
         return;
       }
       let lineHorizontal = [];
-      for (let i = 0; i < 15; i++) {
+      for(let i = 0; i<15; i++){
         lineHorizontal.push(_this.resultArr[i][n]);
       }
       lineHorizontal = lineHorizontal.join('');
-      if (lineHorizontal.indexOf(checkStr) > -1) {
+      if(lineHorizontal.indexOf(checkStr) > -1){
         _this.winGame = true;
         return;
       }
       let line135 = [];
-      for (let j = 0; j < 15; j++) {
-        if (m - j >= 0 && n - j >= 0) { // 左上角
-          line135.unshift(_this.resultArr[m - j][n - j]);
+      for(let j = 0; j < 15; j++){
+        if(m - j >= 0 && n - j >= 0){ // 左上角
+          line135.unshift(_this.resultArr[m - j][n -j]);
         }
-        if (j > 0 && m + j < 15 && n + j < 15) { // 右下角
+        if(j > 0 && m + j < 15 && n + j < 15){ // 右下角
           line135.push(_this.resultArr[m + j][n + j]);
         }
       }
       line135 = line135.join('');
-      if (line135.indexOf(checkStr) > -1) {
+      if(line135.indexOf(checkStr) > -1){
         _this.winGame = true;
         return;
       }
       let line45 = [];
-      for (let j = 0; j < 15; j++) {
-        if (m + j < 15 && n - j >= 0) { // 右上角
-          line45.unshift(_this.resultArr[m + j][n - j]);
+      for(let j = 0; j < 15; j++){
+        if(m + j < 15 && n - j >= 0){ // 右上角
+          line45.unshift(_this.resultArr[m + j][n -j]);
         }
-        if (j > 0 && m - j >= 0 && n + j < 15) { // 左下角
+        if(j > 0 && m - j >=0 && n + j < 15){ // 左下角
           line45.push(_this.resultArr[m - j][n + j]);
         }
       }
       line45 = line45.join('');
-      if (line45.indexOf(checkStr) > -1) {
+      if(line45.indexOf(checkStr) > -1){
         _this.winGame = true;
         return;
       }
     },
-    drawText() {
+    drawText(){
       let _this = this;
       _this.ctx.clearRect(435 + 60, 0, 100, 70);
       _this.ctx.fillStyle = "#fff";
-      _this.ctx.font = "20px Arial";
-      _this.ctx.fillText('本轮：' + _this.chessText, 435 + 70, 35);
+      _this.ctx.font="20px Arial";
+      _this.ctx.fillText('本轮：' + _this.chessText, 435 + 70,  35);
     },
-    drawResult() {
+    drawResult(){
       let _this = this;
       _this.ctx.fillStyle = "#ff2424";
-      _this.ctx.font = "20px Arial";
-      _this.ctx.fillText(_this.chessText + '胜！', 435 + 70, 70);
-
+      _this.ctx.font="20px Arial";
+      _this.ctx.fillText(_this.chessText+'胜！', 435 + 70,  70);
+      
       // 游戏胜利后移除点击事件监听器
       document.getElementById("gobang").removeEventListener("click", _this.handleClick);
     },
     handleClick(event) {
-      // 还没到自己的轮，不能下棋
-      // if (this.whiteTurn !== this.userTurn) {
-      //   return;
-      // }
-
       let x = event.offsetX - 70;
       let y = event.offsetY - 70;
       if (x < 15 || x > 435 || y < 15 || y > 435) {
@@ -198,47 +177,19 @@ export default {
         // 点已经有棋子的位置
         return;
       }
-
       this.drawChess(x, y);
-
-      // 告诉后端这里下了棋子
-      this.tellChessLocation();
-
-      if (this.winGame) {
+      if(this.winGame){
         // 已经结束了
         this.drawResult();
         return;
       }
       this.whiteTurn = !this.whiteTurn;
       this.drawText();
-
-      // 等待对方下棋
-      this.listenOtherChessLocation();
-    },
-
-    // to-do: 前后端通信
-    tellChessLocation() {
-      // 告诉后端我下了一步棋
-
-    },
-
-    listenWhichUserWin() {
-      // 监听后端哪个用户赢了
-      // 将this.winGame设置为true
-
-    },
-
-    listenOtherChessLocation() {
-      // 监听后端其他用户下的棋子
-      //...
-
-      // 将this.whiteTurn设置为反过来，因为轮到自己了
-      this.whiteTurn = !this.whiteTurn;
     }
   }
 };
 </script>
-
+ 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .gobang {
