@@ -22,7 +22,7 @@ public class HazelcastH2MapStoreRoom implements MapStore<String,Room> {
     public void store(String s, Room room) {
         try (Connection conn = dataSource.getConnection();
              PreparedStatement checkStmt = conn.prepareStatement("SELECT COUNT(*) FROM ROOM WHERE ROOM_NAME = ?");
-             PreparedStatement insertStmt = conn.prepareStatement("INSERT INTO ROOM (ROOM_NAME,ROOM_OWNER_ID,ROOMPIC, NUMOFPEOPLE,PASS_WORD,MEMBERS_ID) VALUES (?,?,?, ?,?,?)")) {
+             PreparedStatement insertStmt = conn.prepareStatement("INSERT INTO ROOM (ROOM_NAME,ROOM_OWNER_ID,ROOMPIC, NUMOFPEOPLE,PASS_WORD,MEMBERS_ID) VALUES (?,?, ?, ?,?,?)")) {
 
             // 检查是否已经存在相同ID的记录
             checkStmt.setString(1, s);
