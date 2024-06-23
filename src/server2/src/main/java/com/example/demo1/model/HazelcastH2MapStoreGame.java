@@ -1,6 +1,7 @@
 package com.example.demo1.model;
 
 import com.hazelcast.map.MapStore;
+import org.hibernate.boot.model.relational.Database;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -11,18 +12,18 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class HazelcastH2MapStoreRoom implements MapStore<String,Room> {
+public class HazelcastH2MapStoreGame implements MapStore<String,GAME> {
     private final DataSource dataSource;
 
-    public HazelcastH2MapStoreRoom(DataSource dataSource) {
+    public HazelcastH2MapStoreGame(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
     @Override
-    public void store(String s, Room room) {
+    public void store(String s, GAME game) {
         try (Connection conn = dataSource.getConnection();
-             PreparedStatement checkStmt = conn.prepareStatement("SELECT COUNT(*) FROM ROOM WHERE ROOM_NAME = ?");
-             PreparedStatement insertStmt = conn.prepareStatement("INSERT INTO ROOM (ROOM_NAME,ROOM_OWNER_ID,ROOMPIC, NUMOFPEOPLE,PASS_WORD,MEMBERS_ID) VALUES (?,?,?, ?,?,?)")) {
+             PreparedStatement checkStmt = conn.prepareStatement("SELECT COUNT(*) FROM GAME WHERE TIME = ?");
+             PreparedStatement insertStmt = conn.prepareStatement("INSERT INTO GAME (ID,CHATROOM,TIME,GAMEID,WINNER,TURN,BOARD,PLAYERS,ISEND) VALUES (?,?,?,?,? ?, ?,?,?)")) {
 
             // 检查是否已经存在相同ID的记录
             checkStmt.setString(1, s);
@@ -36,22 +37,23 @@ public class HazelcastH2MapStoreRoom implements MapStore<String,Room> {
 
             // 插入新记录
             insertStmt.setString(1, s);
-            insertStmt.setString(2, room.getRoomOwnerId());
-            insertStmt.setString(3,room.getRoompic());
-            insertStmt.setInt(4, room.getNumofpeople());
-            insertStmt.setString(5, room.getPassWord());
-            insertStmt.setString(6, room.gettureMemberid());
+            insertStmt.setInt(2, game.getGameid());
+            insertStmt.setInt(3,game.getWinner());
+            insertStmt.setInt(4, game.getWinner());
+            insertStmt.setString(5, game.getBoard());
+            insertStmt.setString(6,game.getPlayers());
+            insertStmt.setInt(7, game.getIsend());
             insertStmt.executeUpdate();
             System.out.print("存入:");
-            System.out.println(room);
+            System.out.println(game);
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public void storeAll(Map<String, Room> map) {
-        for (Map.Entry<String, Room> entry : map.entrySet()) {
+    public void storeAll(Map<String, GAME> map) {
+        for (Map.Entry<String, GAME> entry : map.entrySet()) {
             store(entry.getKey(), entry.getValue());
             System.out.print("存入:");
             System.out.println(entry.getValue());
@@ -61,7 +63,7 @@ public class HazelcastH2MapStoreRoom implements MapStore<String,Room> {
     @Override
     public void delete(String s) {
         try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement("DELETE FROM ROOM WHERE ROOM_NAME = ?")) {
+             PreparedStatement stmt = conn.prepareStatement("DELETE FROM GAME WHERE TIME = ?")) {
             stmt.setString(1, s);
             stmt.executeUpdate();
             System.out.print("删除:");
@@ -81,13 +83,13 @@ public class HazelcastH2MapStoreRoom implements MapStore<String,Room> {
     }
 
     @Override
-    public Room load(String s) {
+    public GAME load(String s) {
         try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM ROOM WHERE ROOM_NAME = ?")) {
+             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM GAME WHERE TIME = ?")) {
             stmt.setString(1, s);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    Room customer = new Room(rs.getString("ROOM_NAME"));
+                    GAME customer = new GAME(rs.getInt("TIME"));
                     System.out.print("读取:");
                     System.out.println(customer);
                     return customer;
@@ -100,10 +102,10 @@ public class HazelcastH2MapStoreRoom implements MapStore<String,Room> {
     }
 
     @Override
-    public Map<String, Room> loadAll(Collection<String> collection) {
-        Map<String, Room> result = new HashMap<>();
+    public Map<String, GAME> loadAll(Collection<String> collection) {
+        Map<String, GAME> result = new HashMap<>();
         for (String key : collection) {
-            Room customer = load(key);
+            GAME customer = load(key);
             if (customer != null) {
                 System.out.print("读取:");
                 System.out.println(customer);

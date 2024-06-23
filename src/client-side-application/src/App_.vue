@@ -119,7 +119,7 @@ const serverInfo = ref(
       }
     ]
   }
-)
+);
 
 // 消息类型
 const messageinfo = computed(() => { 
