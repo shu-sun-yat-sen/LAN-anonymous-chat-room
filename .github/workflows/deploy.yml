@@ -1,4 +1,4 @@
-name: vue-spring
+name: Vue-Spring CI/CD
 
 on:
   push:
@@ -8,20 +8,22 @@ on:
       - 'v*'
 
 jobs:
-  build:
-    if: github.event_name == 'push'
+  build-and-release:
     runs-on: ubuntu-latest
     permissions:
       contents: write
       actions: write
       packages: write
+    
     steps:
       - uses: actions/checkout@v4
+
       - name: Set up JDK 21
         uses: actions/setup-java@v3
         with:
           java-version: '21'
           distribution: 'temurin'
+
       - name: Build Backend
         run: mvn clean package --file src/server2/pom.xml
 
@@ -29,12 +31,12 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '20'
-      - name: Install Frontend Dependencies
-        run: npm install
+
+      - name: Install and Build Frontend
         working-directory: src/client-side-application
-      - name: Build Frontend
-        run: npm run build
-        working-directory: src/client-side-application
+        run: |
+          npm install
+          npm run build
 
       - name: Create Combined ZIP
         run: |
@@ -43,41 +45,19 @@ jobs:
           cp -r src/client-side-application/dist/* release-package/frontend/
           cd release-package
           zip -r ../release-package.zip .
+
       - name: Upload Combined ZIP Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: combined-artifact
+          name: release-package
           path: release-package.zip
 
-  release:
-    if: github.event_name == 'push' && startsWith(github.ref_name, 'v')
-    needs: build
-    permissions: write-all
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download Combined Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: combined-artifact
-          path: ./artifacts
-
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
+      - name: Create and Upload Release
+        if: startsWith(github.ref, 'refs/tags/v')
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref_name }}
-          release_name: Release ${{ github.ref_name }}
-          body: |
-            Release notes for ${{ github.ref_name }}
-          draft: false
-          prerelease: false
-
-      - name: Upload Combined ZIP to Release
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./artifacts/release-package.zip
-          asset_name: release-package.zip
-          asset_content_type: application/zip
+        run: |
+          gh release create ${{ github.ref_name }} \
+            --title "Release ${{ github.ref_name }}" \
+            --notes "Release notes for ${{ github.ref_name }}" \
+            release-package.zip
