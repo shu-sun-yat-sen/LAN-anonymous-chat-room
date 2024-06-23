@@ -60,7 +60,8 @@ export default {
             curUser,
             ruleFormRef,
             ruleForm,
-            rules
+            rules,
+            loginInfo
         }
     },
     data() {
@@ -75,7 +76,9 @@ export default {
             query: {
             roomID: this.ruleForm.roomID,
             type: this.ruleForm.type,
-            action: action
+            action: action,
+            JWT: this.loginInfo.JWT,
+            playerID: this.loginInfo.userId
             }
         };
         },
@@ -99,7 +102,7 @@ export default {
             if (!formEl) return
             formEl.validate((valid) => {
                 if (valid) {
-                    this.$emit('create-game', this.ruleForm.roomID);
+                    this.$emit('create-game', this.ruleForm.roomID, this.ruleForm.type);
                     this.closeWindow();
                 } else {
                     event.preventDefault();

@@ -27,7 +27,13 @@ public class GAMEController {
     @Autowired
     private GameMap gameMap;
     @PostMapping("/addgame")
-    public Result addgame(String id,String chatroom,int gameid){
+    public Result addgame(String id, String chatroom, int gameid){
+        System.out.print("收到创建游戏请求：");
+        System.out.print(id);
+        System.out.print(" chatroom:");
+        System.out.print(chatroom);
+        System.out.print(" gameid:");
+        System.out.println(gameid);
         if(gameService.checkid(id))
             return Result.error("该游戏唯一标识已存在");
         Map<String, Object> map = ThreadLocalUtil.get();
@@ -59,11 +65,15 @@ public class GAMEController {
         }
         gameService.saveGame(game);
         gameMap.writeToMap(game.getId(),game);
+        System.out.print("创建游戏成功：");
+        System.out.println(id);
         return Result.success(game);
     }
     @PostMapping("/joingame")
     public Result joingame(String id){
         //这id是游戏的唯一标识
+        System.out.print("收到加入游戏请求：");
+        System.out.println(id);
         GAME game=gameService.findbyid(id).get();
         String[] players=game.getPlayers().split(",");
         if(players.length>1)
@@ -73,6 +83,8 @@ public class GAMEController {
         game.setPlayers(players[0]+","+sender);
         gameService.updateUser(game);
         gameMap.updateMap(game.getId(),game);
+        System.out.print("加入游戏成功：");
+        System.out.println(id);
         return Result.success(game);
     }
     @PostMapping("/leavegame")
@@ -93,6 +105,10 @@ public class GAMEController {
     }
     @PostMapping("/play")
     public Result play(String id,int row,int col){
+        System.out.print("接收到落子请求: ");
+        System.out.print(row);
+        System.out.print(",");
+        System.out.println(col);
         GAME game=gameService.findbyid(id).get();
         Map<String, Object> map = ThreadLocalUtil.get();
         String sender=(String) map.get("id");
@@ -102,7 +118,7 @@ public class GAMEController {
         String[] player1s=game.getPlayers().split(",");
         if(player1s.length<2)
             return Result.error("人都没到齐");
-        if((Objects.equals(players[0], sender) &&game.getTurn()==1)||((Objects.equals(players[1], sender) &&game.getTurn()==0))){
+        if((!Objects.equals(players[0], sender) && game.getTurn()==0)||((!Objects.equals(players[1], sender) &&game.getTurn()==1))){
             return Result.error("不是你下现在");
         }
         game.setPlayers(players[0]+","+players[1]);

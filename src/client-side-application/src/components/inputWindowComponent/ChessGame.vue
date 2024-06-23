@@ -5,6 +5,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 import { computed, inject ,ref} from 'vue';
 /**
  *  写在前面：
@@ -15,13 +16,14 @@ import { computed, inject ,ref} from 'vue';
  * handleClick(event)会发送棋子信息给后端，然后等待后端处理
  * 前端有用的就这些
  */
-
-const CheckStrWhite = "11111";
-const CheckStrBlack = "22222";
 export default {
   name: "ChessGame",
   setup() {
-    const loginInfo = inject('login-info');
+    const playerInfo = ref({
+      JWT:null,
+      playerID: null
+    });
+    const serverInfo = inject('server-info');
     // 待加入不登录不开启棋局设置
 
     const curGame = ref(
@@ -32,21 +34,21 @@ export default {
         isIn: true, //自己是否在房间内
         //一维存储的棋盘格，1代表黑子，0无，-1白子
         chessBoard: [
-          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
         ],
         chessBoardHeight: 15,
         chessBoardWidth: 15,
@@ -60,7 +62,8 @@ export default {
     return {
       // 游戏信息
       curGame,
-      loginInfo
+      playerInfo,
+      serverInfo
     }
   },
   data() {
@@ -74,7 +77,11 @@ export default {
   mounted() {
     this.curGame.gameId = this.$route.query.roomID;
     this.curGame.gameType = this.$route.query.type;
+    this.playerInfo.JWT = this.$route.query.JWT;
+    this.playerInfo.playerID = this.$route.query.playerID;
     console.log("启动：", this.curGame.gameId, this.curGame.gameType);
+    console.log("JWT", this.playerInfo.JWT);
+    console.log("playerID", this.playerInfo.playerID);
     let _this = this;
     let container = document.getElementById("gobang");
 
@@ -90,7 +97,14 @@ export default {
     _this.drawCheckerboard();
 
     // 告诉后端我要开始下棋了
-    console.log(this.loginInfo.fakeName, '准备好了，可以开始下棋了');
+    console.log('准备好了，可以开始下棋了');
+    this.intervalId = setInterval(this.listenOtherChessLocation, 300);
+  },
+  beforeDestroy() {
+    // 清除定时器
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+    }
   },
   computed: {
     chessText() {
@@ -106,7 +120,7 @@ export default {
       _this.ctx.rect(0, 0, 30 * this.curGame.chessBoardHeight, 30 * this.curGame.chessBoardWidth);
       _this.ctx.fill();
 
-      console.log(this.curGame.chessBoardHeight, this.curGame.chessBoardWidth);
+      // console.log(this.curGame.chessBoardHeight, this.curGame.chessBoardWidth);
       for (var i = 0; i < this.curGame.chessBoardHeight; i++) {
         _this.ctx.beginPath();
         _this.ctx.strokeStyle = "#D6D1D1";
@@ -214,10 +228,8 @@ export default {
 
       // this.drawChess(x, y);
 
-      console.log("尝试落子", xLine, yLine);
-
       // 告诉后端这里下了棋子
-      this.tellChessLocation();
+      this.tellChessLocation(xLine, yLine);
 
       // if (this.winGame) {
       //   // 已经结束了
@@ -226,27 +238,101 @@ export default {
       // }
       // this.whiteTurn = !this.whiteTurn;
       // this.drawText();
-
-      // 等待对方下棋
-      this.listenOtherChessLocation();
     },
 
     // to-do: 前后端通信
-    tellChessLocation() {
+    tellChessLocation(xLine, yLine) {
       // 告诉后端我下了一步棋
-
+      console.log("尝试落子", xLine, yLine);
+      axios({
+        method: 'post',
+        url: this.serverInfo.serverList[0].ip + '/game/play',
+        headers:{
+          Authorization: this.playerInfo.JWT,
+        },
+        params:{
+          id: this.curGame.gameId,
+          row: yLine,
+          col:xLine
+        }
+      }).then(response => {
+        if(response.data.code === 0){
+          console.log('落子成功');
+        } else{
+          console.log('落子失败');
+          alert(response.data.message);
+        }
+      }, error => {
+        console.log('落子失败');
+        alert(error);
+      });
     },
 
-    listenWhichUserWin() {
-      // 监听后端哪个用户赢了
-      // 调用drawResult即可
+    parseBoard(boardString) {
+      try {
+        // 将字符串解析为JavaScript对象
+        let boardArray = JSON.parse(boardString);
+        let h = boardArray.length;
+        let w = boardArray[0].length;
+        let output = [];
+        for(let i=0;i<w;i++){
+          for(let j=0;j<h;j++){
+            let value = boardArray[j][i];
+            if(value === -1){
+              output.push(0);
+            }
+            if(value === 0){
+              output.push(-1);
+            }
+            if(value === 1){
+              output.push(1);
+            }
+          }
+        }
+        return output;
+      } catch (error) {
+        console.error("Error parsing board string:", error);
+        return null;
+      }
     },
-
+    
+    splitStringByComma(str) {
+      return str.split(',');
+    },
+    // turntoId: "id1", //当前轮到谁走
+    // whiteTurn: false, //当前是否轮到白子走,true是白子
+    // isOver: false, //游戏是否结束
+    // winnerId: "id1", //获胜者的id
     listenOtherChessLocation() {
-      // 监听后端其他用户下的棋子
-      //...
-
-      
+      // console.log("JWT", this.playerInfo.JWT);
+      axios({
+        method: 'get',
+        url: this.serverInfo.serverList[0].ip + '/game/showgame',
+        headers:{
+          Authorization: this.playerInfo.JWT,
+        },
+        params:{
+          id: this.curGame.gameId
+        }
+      }).then(response => {
+        if(response.data.code === 0){
+          // console.log('获取棋面成功', this.curGame.gameId);
+          // console.log(response.data.data)
+          let newGameInfo = response.data.data;
+          this.curGame.chessBoard = this.parseBoard(newGameInfo.board);
+          this.drawCheckerboard();
+          this.curGame.turntoId = this.splitStringByComma(newGameInfo.players)[newGameInfo.turn];
+          this.curGame.isOver = newGameInfo.winner === -1 ? true:false;
+          this.curGame.winnerId = newGameInfo.winner === -1 ? null:this.splitStringByComma(newGameInfo.players)[newGameInfo.winner];
+          // console.log(this.curGame.turntoId);
+        } else{
+          console.log('获取棋面失败', this.curGame.gameId, response.data.message);
+          alert(response.data.message);
+        }
+      }, error => {
+        console.log('获取棋面失败');
+        alert(error);
+      });
     }
   }
 };

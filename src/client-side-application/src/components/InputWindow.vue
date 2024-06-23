@@ -4,7 +4,7 @@
         <div class="topWindow">
             <EmojiButton @send-emoji="handleSendEmoji"/>
             <FileUploadButton @upload-file="handleUploadFile"/> 
-            <ChessButton @start-chess="handleChess"/>
+            <ChessButton @start-chess="handleChess" @create-game="handleCreateGame" @join-game="handleJoinGame"/>
         </div>
         <div class="bottomWindow">
             <TextInput @send-text="handleSendText" :emojiMessage="emojiMessage" @clearEmojiMessage="clearEmojiMessage"/>
@@ -64,6 +64,12 @@ export default {
         },
         clearEmojiMessage(){
             this.emojiMessage = '';
+        },
+        handleCreateGame(gameRoomID, gameType){
+            this.$emit('create-game', gameRoomID, gameType);
+        },
+        handleJoinGame(gameRoomID){
+            this.$emit('join-game', gameRoomID);
         }
     }
 }

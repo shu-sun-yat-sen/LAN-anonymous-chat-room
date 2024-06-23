@@ -8,7 +8,7 @@
     <main>
       <SideBar @random-update-room-avatar="randomUpdataRoomAvatar"/>
       <ChatWindow />
-      <InputWindow @sendtext = "handleSendText" @send-file = "handleSendFile"/>
+      <InputWindow @sendtext = "handleSendText" @send-file = "handleSendFile" @create-game="handleCreateGame" @join-game="handleJoinGame"/>
     </main>
     <functions>
       <AllEvent ref="allEvent"/>
@@ -18,11 +18,11 @@
 
 
 <script setup>
-import TopBar from './components/TopBar.vue'
-import SideBar from './components/SideBar.vue'
-import ChatWindow from './components/ChatWindow.vue'
-import InputWindow from './components/InputWindow.vue'
-import AllEvent from './components/AllEvent.vue'
+import TopBar from './components/TopBar.vue';
+import SideBar from './components/SideBar.vue';
+import ChatWindow from './components/ChatWindow.vue';
+import InputWindow from './components/InputWindow.vue';
+import AllEvent from './components/AllEvent.vue';
 import { useRoute } from 'vue-router';
 
 import {ref,computed, provide} from 'vue';
@@ -170,26 +170,13 @@ const randomUpdataRoomAvatar = (roomName) => {
   allEvent.value.randomUpdataRoomAvatar(roomName);
 };
 
+const handleCreateGame = (gameRoomID, gameType) => {
+  allEvent.value.createGame(gameRoomID, gameType);
+};
 
-// // 游戏交互
-// const gameRooms = ref(
-//   [
-//     {
-//       gameId: "id1",  //唯一标识一个游戏
-//       gameType: "1", //游戏类型
-//       roomName: "room1", //所属的房间
-//       isIn: true, //自己是否在房间内
-//       chessBoard: [1, -1, 0], //一维存储的棋盘格，1代表黑子，0无，-1白子
-//       chessBoardHeight: 15,
-//       chessBoardWidth: 15,
-//       turntoId: "id1", //当前轮到谁走
-//       whiteTurn: false, //当前是否轮到白子走,true是白子
-//       isOver: false, //游戏是否结束
-//       winnerId: "id1", //获胜者的id
-//     },
-//   ]
-// );
-// provide('game-rooms', gameRooms);
+const handleJoinGame = (gameRoomID) => {
+  allEvent.value.joinGame(gameRoomID);
+};
 
 </script>
 
