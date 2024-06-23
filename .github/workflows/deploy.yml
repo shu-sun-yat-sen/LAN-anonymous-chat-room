@@ -7,6 +7,8 @@ on:
   push:
     branches:
       - AI-service
+    tags:
+      - 'v*' # 添加这行以触发以v开头的标签推送
   release:
     types: [created]
 
@@ -42,7 +44,7 @@ jobs:
         working-directory: ./src/client-side-application # 指定前端项目的目录
 
   release:
-    if: github.event_name == 'release' && github.event.action == 'created'
+    if: github.event_name == 'push' && startsWith(github.ref_name, 'v')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -52,8 +54,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          tag_name: ${{ github.ref_name }}
+          release_name: Release ${{ github.ref_name }}
           draft: false
           prerelease: false
       - name: Upload Release Asset
