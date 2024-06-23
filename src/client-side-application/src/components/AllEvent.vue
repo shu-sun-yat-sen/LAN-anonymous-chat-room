@@ -346,9 +346,10 @@ const handleFileUpload = async (file) => {
     formData.append('file', file);
 
     try {
-        const response = await axios.post(serverInfo.value.serverList[0].ip +'/upload', formData, {
+        const response = await axios.post(serverInfo.value.serverList[0].ip +'/room/talk/upload', formData, {
           headers:{
           Authorization: loginInfo.value.JWT,
+          roomName: roomInfo.value.currentRoomName
         }
         });
         console.log('File uploaded successfully', response.data);

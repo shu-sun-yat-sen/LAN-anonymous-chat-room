@@ -1,4 +1,4 @@
-package com.example.demo1.model.GameCore;
+
 
 import com.example.demo1.model.GameCore.BoardGame;
 import com.example.demo1.model.GameCore.Reversi;

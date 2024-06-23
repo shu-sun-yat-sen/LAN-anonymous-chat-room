@@ -6,11 +6,18 @@ import com.example.demo1.service.CacheService.TalkMap;
 import com.example.demo1.service.DbService.RoomService;
 import com.example.demo1.service.DbService.TalkService;
 import com.example.demo1.service.DbService.UserService;
+import com.example.demo1.utils.Getip;
 import com.example.demo1.utils.ThreadLocalUtil;
+import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -24,8 +31,13 @@ public class TalkController {
     private UserService userService;
     @Autowired
     private TalkMap talkMap;
+
+    @Autowired
+    private ServletContext servletContext;
     @Autowired
     private AssistantmyService assistantmyService;
+    @Autowired
+    private ResourceLoader resourceLoader;
     @PostMapping
     public Result show(HttpServletRequest request, String context){
         System.out.print("获取发送信息请求,内容：");
@@ -102,7 +114,42 @@ public class TalkController {
         List<Talk> out=talkService.searchbycontextinroom(roomname,context);
         return Result.success(out);
     }
+    @PostMapping("/upload")
+    public Result upload(HttpServletRequest request, MultipartFile file) throws IOException {
+        String originalFilename=file.getOriginalFilename();
+        System.out.print("接收到文件请求：");
 
+        System.out.println(originalFilename);
+        String filename= UUID.randomUUID().toString()+originalFilename.substring(originalFilename.lastIndexOf("."));
+        String projectRootPath = resourceLoader.getResource("classpath:").getFile().getAbsolutePath();
+        System.out.println(projectRootPath);
+        file.transferTo(new File(projectRootPath + "/../../src/main/resources/static/"+filename));
+        Getip getip=new Getip();
+        String context=getip.getip()+":8080"+ '/' + filename;
+        System.out.println(context);
+        String roomname=request.getHeader("roomname");
+        Map<String,Object> map = ThreadLocalUtil.get();
+        String senderid=(String) map.get("id");
+        User user=userService.findUserById(senderid).get();
+        String sendername=user.getFakeName();
+        String senderpic=user.getUserpic();
+        System.out.print(map);
+        Talk talk=new Talk(context);
+        talk.setChatroomname(roomname);
+        talk.setSendername(sendername);
+        talk.setSenderpic(senderpic);
+        talk.setSenderid(senderid);
+        if(filename.contains(".jfif") ||
+                filename.contains(".jpg")||filename.contains(".jpeg")||
+                filename.contains(".png")||filename.contains(".gif")||
+                filename.contains(".bmp")||filename.contains(".tiff"))
+            talk.setType("img");
+        else
+            talk.setType("doc");
+        talkService.saveTalk(talk);
+        talkMap.writeToMap(talk.getTime(),talk);
+        return Result.success(talk);
+    }
 
 
 }

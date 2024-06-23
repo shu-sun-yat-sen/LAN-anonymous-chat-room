@@ -2,6 +2,7 @@ package com.example.demo1.config;
 import com.example.demo1.model.HazelcastH2MapStoreRoom;
 import com.example.demo1.model.HazelcastH2MapStoreTalk;
 import com.example.demo1.model.HazelcastH2MapStoreUser;
+import com.example.demo1.utils.Getip;
 import com.hazelcast.cluster.Cluster;
 import com.hazelcast.cluster.Member;
 import com.hazelcast.config.Config;
@@ -41,32 +42,6 @@ public class HazelcastConfig {
 
     @Value("${multicastport}")
     private Integer multicastport;
-    public String getip(){
-        try {
-            // 获取所有网络接口的枚举
-            Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
-            for (NetworkInterface networkInterface : Collections.list(networkInterfaces)) {
-                // 过滤掉不是WLAN的接口
-                System.out.println(networkInterface.getName());
-                if (networkInterface.getName().contains("wireless")) {
-                    Enumeration<InetAddress> inetAddresses = networkInterface.getInetAddresses();
-                    for (InetAddress inetAddress : Collections.list(inetAddresses)) {
-                        // 只获取IPv4地址，并且排除回环地址
-                        if (!inetAddress.isLoopbackAddress() && inetAddress instanceof java.net.Inet4Address) {
-                            if(inetAddress.getHostAddress().startsWith("169.254")){
-                                continue;
-                            }
-                            System.out.println("Wireless LAN adapter WLAN IP address: " + inetAddress.getHostAddress());
-                            return inetAddress.getHostAddress();
-                        }
-                    }
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return "error";
-    }
     @Bean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
@@ -82,10 +57,11 @@ public class HazelcastConfig {
             Config config = new Config();
             config.setClusterName("my-cluster");
             config.getJetConfig().setEnabled(true);
-            if(Objects.equals(getip(), "error"))
+            Getip ip1=new Getip();
+            if(Objects.equals(ip1.getip(), "error"))
                 config.getNetworkConfig().getInterfaces().setEnabled(true).addInterface(ip);
             else
-                config.getNetworkConfig().getInterfaces().setEnabled(true).addInterface(getip());
+                config.getNetworkConfig().getInterfaces().setEnabled(true).addInterface(ip1.getip());
             config.getNetworkConfig().getJoin().getMulticastConfig().setEnabled(true);
             config.getNetworkConfig().getJoin().getMulticastConfig().setMulticastGroup(multicastIp);
             config.getNetworkConfig().getJoin().getMulticastConfig().setMulticastPort(multicastport);
