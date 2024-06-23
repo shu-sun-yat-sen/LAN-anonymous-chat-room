@@ -52,7 +52,6 @@ jobs:
   release:
     if: github.event_name == 'push' && startsWith(github.ref_name, 'v')
     needs: build
-    permissions: read-all
     permissions: write-all
     runs-on: ubuntu-latest
     steps:
