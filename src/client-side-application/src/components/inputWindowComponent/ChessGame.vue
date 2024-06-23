@@ -21,7 +21,7 @@ const CheckStrBlack = "22222";
 export default {
   name: "ChessGame",
   setup() {
-    const adc = inject('login-info');
+    const loginInfo = inject('login-info');
     // 待加入不登录不开启棋局设置
 
     const curGame = ref(
@@ -57,14 +57,10 @@ export default {
       }
     );
 
-    const curUser = computed(() => {
-      return adc.value ? adc.value : '';
-    });
-
     return {
       // 游戏信息
       curGame,
-      curUser
+      loginInfo
     }
   },
   data() {
@@ -94,7 +90,7 @@ export default {
     _this.drawCheckerboard();
 
     // 告诉后端我要开始下棋了
-    console.log(this.curUser.fakeName, '准备好了，可以开始下棋了');
+    console.log(this.loginInfo.fakeName, '准备好了，可以开始下棋了');
   },
   computed: {
     chessText() {
@@ -217,6 +213,8 @@ export default {
       }
 
       // this.drawChess(x, y);
+
+      console.log("尝试落子", xLine, yLine);
 
       // 告诉后端这里下了棋子
       this.tellChessLocation();
