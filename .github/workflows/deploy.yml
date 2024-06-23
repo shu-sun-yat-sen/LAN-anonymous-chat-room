@@ -7,8 +7,6 @@ on:
   push:
     branches:
       - AI-service
-    tags:
-      - 'v*' # 添加这行以触发以v开头的标签推送
   release:
     types: [created]
 
@@ -45,6 +43,7 @@ jobs:
 
   release:
     if: github.event_name == 'push' && startsWith(github.ref_name, 'v')
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
