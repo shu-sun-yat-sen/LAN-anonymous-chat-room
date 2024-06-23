@@ -52,10 +52,6 @@ public class TalkController {
             out.add(talk);
             talkMap.writeToMap(talk.getTime(),talk);
             talkService.saveTalk(talk);
-<<<<<<< HEAD
-            //int memoryId = Integer.parseInt(senderid);
-=======
->>>>>>> 9dd573ae20ab1b223266a7b9c175fcdef6ecdcda
             Talk talk1=new Talk(assistantmyService.assistant(newcontext));
             talk1.setChatroomname(roomname);
             talk1.setSendername("chatai");
@@ -72,10 +68,10 @@ public class TalkController {
     }
     @GetMapping
     public Result<List<Talk>> list(HttpServletRequest request){
-        System.out.println("获取获取信息请求");
-        System.out.println(request);
+//        System.out.println("获取获取信息请求");
+//        System.out.println(request);
         String roomname=request.getHeader("roomname");
-        System.out.println(request.getHeader("roomname"));
+//        System.out.println(request.getHeader("roomname"));
         String time=request.getHeader("time");
         if(time==null){
         List<Talk> alltalk=talkService.findalltalk();
