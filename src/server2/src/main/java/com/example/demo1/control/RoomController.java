@@ -66,15 +66,15 @@ public class RoomController {
     }
     @GetMapping
     public Result<List<Room>> list(){
-        System.out.println("接收到获取房间请求");
+//        System.out.println("接收到获取房间请求");
         List<Room> medie=roomService.findAllRooms();
 
         return Result.success(medie);
     }
     @GetMapping("/roominfo")
     public  Result<Room> roomshow(String roomName){
-        System.out.println("接收到获取房间信息请求");
-        System.out.println(roomName);
+//        System.out.println("接收到获取房间信息请求");
+//        System.out.println(roomName);
         Map<String,Object> map =ThreadLocalUtil.get();
         String id=(String) map.get("id");
         if(Objects.equals(roomService.findRoomByRoomName(roomName).get().getRoomOwnerId(), id))

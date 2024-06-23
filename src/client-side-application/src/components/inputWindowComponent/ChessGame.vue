@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { computed, inject } from 'vue';
+import { computed, inject ,ref} from 'vue';
 /**
  *  写在前面：
  * 棋盘大小为15*15
@@ -21,20 +21,46 @@ const CheckStrBlack = "22222";
 export default {
   name: "ChessGame",
   setup() {
-    const adc = inject('login-info');
-    const gameRoom = inject('game-rooms');
+    const loginInfo = inject('login-info');
     // 待加入不登录不开启棋局设置
-    const curGame = computed(() => {
-      return gameRoom.value[0] ? gameRoom.value[0] : '';
-    });
 
-    const curUser = computed(() => {
-      return adc.value ? adc.value : '';
-    });
+    const curGame = ref(
+      {
+        gameId: "id1",  //唯一标识一个游戏
+        gameType: "1", //游戏类型
+        roomName: "room1", //所属的房间
+        isIn: true, //自己是否在房间内
+        //一维存储的棋盘格，1代表黑子，0无，-1白子
+        chessBoard: [
+          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        ],
+        chessBoardHeight: 15,
+        chessBoardWidth: 15,
+        turntoId: "id1", //当前轮到谁走
+        whiteTurn: false, //当前是否轮到白子走,true是白子
+        isOver: false, //游戏是否结束
+        winnerId: "id1", //获胜者的id
+      }
+    );
+
     return {
       // 游戏信息
       curGame,
-      curUser
+      loginInfo
     }
   },
   data() {
@@ -46,6 +72,9 @@ export default {
     };
   },
   mounted() {
+    this.curGame.gameId = this.$route.query.roomID;
+    this.curGame.gameType = this.$route.query.type;
+    console.log("启动：", this.curGame.gameId, this.curGame.gameType);
     let _this = this;
     let container = document.getElementById("gobang");
 
@@ -61,7 +90,7 @@ export default {
     _this.drawCheckerboard();
 
     // 告诉后端我要开始下棋了
-    console.log(this.curUser.fakeName, '准备好了，可以开始下棋了');
+    console.log(this.loginInfo.fakeName, '准备好了，可以开始下棋了');
   },
   computed: {
     chessText() {
@@ -184,6 +213,8 @@ export default {
       }
 
       // this.drawChess(x, y);
+
+      console.log("尝试落子", xLine, yLine);
 
       // 告诉后端这里下了棋子
       this.tellChessLocation();
