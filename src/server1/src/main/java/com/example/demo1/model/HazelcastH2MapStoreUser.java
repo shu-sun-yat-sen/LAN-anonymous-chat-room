@@ -2,7 +2,6 @@ package com.example.demo1.model;
 
 import com.hazelcast.map.MapStore;
 
-import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,19 +9,18 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import javax.sql.DataSource;
 
-public class HazelcastH2MapStoreRoom implements MapStore<String,Room> {
+public class HazelcastH2MapStoreUser implements MapStore<String,User> {
     private final DataSource dataSource;
-
-    public HazelcastH2MapStoreRoom(DataSource dataSource) {
+    public HazelcastH2MapStoreUser(DataSource dataSource) {
         this.dataSource = dataSource;
     }
-
     @Override
-    public void store(String s, Room room) {
+    public void store(String s, User user) {
         try (Connection conn = dataSource.getConnection();
-             PreparedStatement checkStmt = conn.prepareStatement("SELECT COUNT(*) FROM ROOM WHERE ROOM_NAME = ?");
-             PreparedStatement insertStmt = conn.prepareStatement("INSERT INTO ROOM (ROOM_NAME,ROOM_OWNER_ID,ROOMPIC, NUMOFPEOPLE,PASS_WORD,MEMBERS_ID) VALUES (?,?,?, ?,?,?)")) {
+             PreparedStatement checkStmt = conn.prepareStatement("SELECT COUNT(*) FROM T_USER WHERE ID = ?");
+             PreparedStatement insertStmt = conn.prepareStatement("INSERT INTO T_USER (ID, FAKE_NAME, PASSWD,COOKIE,USERPIC) VALUES (?, ?, ?,?,?)")) {
 
             // 检查是否已经存在相同ID的记录
             checkStmt.setString(1, s);
@@ -36,22 +34,21 @@ public class HazelcastH2MapStoreRoom implements MapStore<String,Room> {
 
             // 插入新记录
             insertStmt.setString(1, s);
-            insertStmt.setString(2, room.getRoomOwnerId());
-            insertStmt.setString(3,room.getRoompic());
-            insertStmt.setInt(4, room.getNumofpeople());
-            insertStmt.setString(5, room.getPassWord());
-            insertStmt.setString(6, room.gettureMemberid());
+            insertStmt.setString(2, user.getFakeName());
+            insertStmt.setString(3, user.getPasswd());
+            insertStmt.setString(4,user.getCookie());
+            insertStmt.setString(5, user.getUserpic());
             insertStmt.executeUpdate();
             System.out.print("存入:");
-            System.out.println(room);
+            System.out.println(user);
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public void storeAll(Map<String, Room> map) {
-        for (Map.Entry<String, Room> entry : map.entrySet()) {
+    public void storeAll(Map<String, User> map) {
+        for (Map.Entry<String, User> entry : map.entrySet()) {
             store(entry.getKey(), entry.getValue());
             System.out.print("存入:");
             System.out.println(entry.getValue());
@@ -61,7 +58,7 @@ public class HazelcastH2MapStoreRoom implements MapStore<String,Room> {
     @Override
     public void delete(String s) {
         try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement("DELETE FROM ROOM WHERE ROOM_NAME = ?")) {
+             PreparedStatement stmt = conn.prepareStatement("DELETE FROM T_USER WHERE ID = ?")) {
             stmt.setString(1, s);
             stmt.executeUpdate();
             System.out.print("删除:");
@@ -81,13 +78,13 @@ public class HazelcastH2MapStoreRoom implements MapStore<String,Room> {
     }
 
     @Override
-    public Room load(String s) {
+    public User load(String s) {
         try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM ROOM WHERE ROOM_NAME = ?")) {
+             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM T_USER WHERE ID = ?")) {
             stmt.setString(1, s);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    Room customer = new Room(rs.getString("ROOM_NAME"));
+                    User customer = new User(rs.getString("ID"), rs.getString("FAKE_NAME"), rs.getString("PASSWD"));
                     System.out.print("读取:");
                     System.out.println(customer);
                     return customer;
@@ -100,10 +97,10 @@ public class HazelcastH2MapStoreRoom implements MapStore<String,Room> {
     }
 
     @Override
-    public Map<String, Room> loadAll(Collection<String> collection) {
-        Map<String, Room> result = new HashMap<>();
+    public Map<String, User> loadAll(Collection<String> collection) {
+        Map<String, User> result = new HashMap<>();
         for (String key : collection) {
-            Room customer = load(key);
+            User customer = load(key);
             if (customer != null) {
                 System.out.print("读取:");
                 System.out.println(customer);
