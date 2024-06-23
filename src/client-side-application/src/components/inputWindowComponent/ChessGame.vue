@@ -1,6 +1,6 @@
 <template>
   <div class="gobang">
-    <canvas id="gobang" width="1200" height="900"></canvas>
+    <canvas id="gobang" width="900" height="600"></canvas>
   </div>
 </template>
 
@@ -187,12 +187,12 @@ export default {
 
     drawText() {
       let _this = this;
-      _this.ctx.clearRect(29 * this.curGame.chessBoardWidth + 60, 0, 100, 70);
+      _this.ctx.clearRect(29 * this.curGame.chessBoardWidth + 60, 0, 300, 70);
       _this.ctx.fillStyle = "#fff";
       _this.ctx.font = "20px Arial";
       const turnToId = this.curGame.turntoId;
 
-      _this.ctx.fillText('本轮：' +turnToId+" ( " +_this.chessText + " ) ", 29 * this.curGame.chessBoardWidth + 70, 35);
+      _this.ctx.fillText('本轮：' + turnToId + "("+ _this.chessText + ")" , 29 * this.curGame.chessBoardWidth + 70, 35);
     },
     
     drawResult() {
