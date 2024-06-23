@@ -1,0 +1,63 @@
+name: Vue-Spring CI/CD
+
+on:
+  push:
+    branches:
+      - feature
+    tags:
+      - 'v*'
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: write
+      packages: write
+    
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Build Backend
+        run: mvn clean package --file src/server2/pom.xml
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'
+
+      - name: Install and Build Frontend
+        working-directory: src/client-side-application
+        run: |
+          npm install
+          npm run build
+
+      - name: Create Combined ZIP
+        run: |
+          mkdir -p release-package/frontend
+          cp src/server2/target/SYSU_LACR.jar release-package/
+          cp -r src/client-side-application/dist/* release-package/frontend/
+          cd release-package
+          zip -r ../release-package.zip .
+
+      - name: Upload Combined ZIP Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-package
+          path: release-package.zip
+
+      - name: Create and Upload Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create ${{ github.ref_name }} \
+            --title "Release ${{ github.ref_name }}" \
+            --notes "Release notes for ${{ github.ref_name }}" \
+            release-package.zip
