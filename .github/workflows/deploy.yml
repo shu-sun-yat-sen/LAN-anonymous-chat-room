@@ -29,6 +29,17 @@ jobs:
       - name: Build with Maven
         run: mvn clean package --file $GITHUB_WORKSPACE/src/server2/pom.xml
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18' # 指定Node.js的版本
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./src/client-side-application # 指定前端项目的目录
+      - name: Build frontend
+        run: npm run build
+        working-directory: ./src/client-side-application # 指定前端项目的目录
+
   release:
     if: github.event_name == 'release' && github.event.action == 'created'
     runs-on: ubuntu-latest
