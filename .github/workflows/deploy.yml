@@ -28,7 +28,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '18'
+          node-version: '20'
       - name: Install Frontend Dependencies
         run: npm install
         working-directory: src/client-side-application
@@ -44,7 +44,7 @@ jobs:
           cd release-package
           zip -r ../release-package.zip .
       - name: Upload Combined ZIP Artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: combined-artifact
           path: release-package.zip
@@ -55,7 +55,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download Combined Artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: combined-artifact
           path: ./artifacts
