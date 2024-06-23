@@ -119,7 +119,7 @@ const serverInfo = ref(
       }
     ]
   }
-)
+);
 
 // 消息类型
 const messageinfo = computed(() => { 
@@ -169,6 +169,27 @@ const randomChangeAvatar = () => {
 const randomUpdataRoomAvatar = (roomName) => {
   allEvent.value.randomUpdataRoomAvatar(roomName);
 };
+
+
+// 游戏交互
+const gameRooms = ref(
+  [
+    {
+      gameId: "id1",  //唯一标识一个游戏
+      gameType: "1", //游戏类型
+      roomName: "room1", //所属的房间
+      isIn: true, //自己是否在房间内
+      chessBoard: [1, -1, 0], //一维存储的棋盘格，1代表黑子，0无，-1白子
+      chessBoardHeight: 15,
+      chessBoardWidth: 15,
+      turntoId: "id1", //当前轮到谁走
+      whiteTurn: false, //当前是否轮到白子走,true是白子
+      isOver: false, //游戏是否结束
+      winnerId: "id1", //获胜者的id
+    },
+  ]
+);
+provide('game-rooms', gameRooms);
 
 </script>
 

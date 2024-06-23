@@ -12,7 +12,6 @@ export default {
             return new Promise(resolve => setTimeout(resolve, ms));
         };
 
-
         return {
             sleep,
         };

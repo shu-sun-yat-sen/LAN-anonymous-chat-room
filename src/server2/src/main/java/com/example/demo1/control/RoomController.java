@@ -1,21 +1,14 @@
 package com.example.demo1.control;
 
-import com.example.demo1.Alservice.AssistantmyService;
-import com.example.demo1.model.Gomoku;
 import com.example.demo1.model.Result;
 import com.example.demo1.model.Room;
 import com.example.demo1.model.User;
 import com.example.demo1.service.CacheService.RoomMap;
 import com.example.demo1.service.DbService.RoomService;
 import com.example.demo1.service.DbService.UserService;
-import com.example.demo1.utils.JwtUtil;
-import com.example.demo1.utils.Md5Util;
 import com.example.demo1.utils.ThreadLocalUtil;
 import jakarta.servlet.http.HttpServletRequest;
-import org.h2.command.dml.Update;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.HttpRequestHandler;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
@@ -51,11 +44,10 @@ public class RoomController {
     }
     @PostMapping("/randomupdate")
     public Result randomshow(HttpServletRequest request){
-        System.out.print("获取随机更新房间头像请求,roomName: ");
-        String roomname=request.getHeader("roomname");
-        System.out.println(roomname);
         Map<String,Object> map= ThreadLocalUtil.get();
+        System.out.print(map);
         String id=(String)map.get("id");
+        String roomname=request.getHeader("roomname");
         Room room=roomService.findRoomByRoomName(roomname).get();
         Random random = new Random();
         File folder = new File("src/main/resources/static/roompic");
@@ -74,7 +66,9 @@ public class RoomController {
     }
     @GetMapping
     public Result<List<Room>> list(){
+//        System.out.println("接收到获取房间请求");
         List<Room> medie=roomService.findAllRooms();
+
         return Result.success(medie);
     }
     @GetMapping("/roominfo")
@@ -95,13 +89,15 @@ public class RoomController {
     }
     @PostMapping("/roominfo")
     public Result join(HttpServletRequest request, String password){
-//        System.out.print("接收到加入房间请求,id：");
+        System.out.print("接收到更新房间信息请求, request: ");
+        System.out.println(request);
+        System.out.print("password: ");
+        System.out.println(password);
         String roomname=request.getHeader("roomname");
         Room room=roomService.findRoomByRoomName(roomname).get();
         List<String> roomnowmembersid=room.getMembersId();
         Map<String,Object> map =ThreadLocalUtil.get();
         String id=(String) map.get("id");
-//        System.out.println(id);
         User user=userService.findUserById(id).get();
         String fakename=user.getFakeName();
         String userpic=user.getUserpic();
