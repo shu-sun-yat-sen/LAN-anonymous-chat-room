@@ -39,7 +39,7 @@ public class TalkController {
         User user=userService.findUserById(senderid).get();
         String sendername=user.getFakeName();
         String senderpic=user.getUserpic();
-        System.out.print(map);
+//        System.out.print(map);
         Talk talk=new Talk(context);
         talk.setChatroomname(roomname);
         talk.setSendername(sendername);
@@ -68,10 +68,9 @@ public class TalkController {
     }
     @GetMapping
     public Result<List<Talk>> list(HttpServletRequest request){
-        System.out.println("获取获取信息请求");
-        System.out.println(request);
+//        System.out.print("获取获取信息请求, roomname: ");
         String roomname=request.getHeader("roomname");
-        System.out.println(request.getHeader("roomname"));
+//        System.out.println(request.getHeader("roomname"));
         String time=request.getHeader("time");
         if(time==null){
         List<Talk> alltalk=talkService.findalltalk();
@@ -102,7 +101,87 @@ public class TalkController {
         List<Talk> out=talkService.searchbycontextinroom(roomname,context);
         return Result.success(out);
     }
+    @PostMapping("/addgame")
+    public Result add5game(HttpServletRequest request,String player){
 
+        Map<String,Object> map = ThreadLocalUtil.get();
+
+        String id=(String) map.get("id");
+        Gomoku gomoku=new Gomoku(id,player);
+        String roomname=request.getHeader("roomname");
+        List<Talk> alltalks=talkService.findalltalk();
+        for(Talk talk:alltalks){
+            if(talk.getType()=="game"&&talk.getChatroomname()==roomname)
+                return Result.success(talk);
+        }
+        String sendername=(String) map.get("fakename");
+        String senderpic=(String) map.get("userpic");
+        Talk talk=new Talk(gomoku.toString());
+        talk.setChatroomname(roomname);
+        talk.setSendername(sendername);
+        talk.setSenderpic(senderpic);
+        talk.setSenderid(id);
+        talk.setType("game");
+        talkMap.writeToMap(talk.getTime(),talk);
+        talkService.saveTalk(talk);
+        return Result.success(talk);
+    }
+    @GetMapping("/getgame")
+    public Result getgame(HttpServletRequest request){
+        String roomname=request.getHeader("roomname");
+        List<Talk> alltalks=talkService.findalltalk();
+        for(Talk talk:alltalks){
+            if(Objects.equals(talk.getType(), "game") && Objects.equals(talk.getChatroomname(), roomname))
+                return Result.success(talk);
+        }
+        return Result.error("游戏结束了");
+    }
+    @DeleteMapping("/deletegame")
+    public Result deletegame(HttpServletRequest request){
+        String roomname=request.getHeader("roomname");
+        Map<String,Object> map = ThreadLocalUtil.get();
+        String id=(String) map.get("id");
+        List<Talk> alltalks=talkService.findalltalk();
+        for(Talk talk:alltalks){
+            if(Objects.equals(talk.getType(), "game") && Objects.equals(talk.getChatroomname(), roomname))
+            {
+                Gomoku gomoku=Gomoku.fromString(talk.getContext());
+                String[]s=gomoku.getPlayers();
+                if (s[0]!=id&&s[1]!=id){
+                    return Result.error("你无权删除这个游戏");
+                }
+                else {
+                    talkService.deletetalk(talk);
+                    talkMap.deletefromMap(talk.getTime());
+                    return Result.success();
+                }
+            }
+        }
+        return Result.error("");
+    }
+    @PostMapping("/changegame")
+    public Result changegame(HttpServletRequest request,String context){
+    Gomoku gomoku=Gomoku.fromString(context);
+    String[] players=gomoku.getPlayers();
+    Map<String,Object> map = ThreadLocalUtil.get();
+    String id=(String) map.get("id");
+    if(id==players[0]||id==players[1]){
+        String roomname=request.getHeader("roomname");
+        List<Talk> alltalks=talkService.findalltalk();
+        for(Talk talk:alltalks) {
+            if (Objects.equals(talk.getType(), "game") && Objects.equals(talk.getChatroomname(), roomname)) {
+                talk.setContext(context);
+                talkService.updateTalk(talk);
+                talkMap.updateMap(talk.getTime(), talk);
+                return Result.success();
+            }
+
+        }
+
+    }
+
+        return Result.success();
+    }
 
 
 }
