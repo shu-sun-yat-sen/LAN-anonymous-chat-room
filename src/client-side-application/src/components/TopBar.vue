@@ -26,7 +26,7 @@ import { inject, computed, ref} from 'vue';
 import LoginDialog from './TopBarComponents/LoginDialog.vue';
 import CreateRoomDialog from './TopBarComponents/CreateRoomDialog.vue';
 
-const emit = defineEmits(['log-in', 'log-out', 'createroom', 'random-change-user-avatar']);
+const emit = defineEmits(['log-in', 'log-out', 'createroom', 'random-change-user-avatar', 'register']);
 
 const avatar = computed(
   () => {

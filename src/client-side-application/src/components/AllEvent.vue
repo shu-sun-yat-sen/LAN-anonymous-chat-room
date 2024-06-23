@@ -13,6 +13,56 @@ const searchServer = () => {
 
 }
 
+// 游戏相关
+const createGame = (gameRoomId, gameType) => {
+  axios({
+    method: 'post',
+    url: serverInfo.value.serverList[0].ip + '/game/addgame',
+    headers:{
+      Authorization: loginInfo.value.JWT,
+    },
+    params:{
+      id:gameRoomId,
+      chatroom:roomInfo.value.currentRoomName,
+      gameid:gameType
+    }
+  }).then(response => {
+    if(response.data.code === 0){
+      console.log('创建游戏成功', gameRoomId);
+    } else{
+      console.log('创建游戏失败', gameRoomId);
+      alert(response.data.message);
+    }
+  }, error => {
+    console.log('创建游戏失败');
+    alert(error);
+  });
+};
+
+const joinGame = (gameRoomId) => {
+  axios({
+    method: 'post',
+    url: serverInfo.value.serverList[0].ip + '/game/joingame',
+    headers:{
+      Authorization: loginInfo.value.JWT,
+    },
+    params:{
+      id:gameRoomId
+    }
+  }).then(response => {
+    if(response.data.code === 0){
+      console.log('加入游戏成功', gameRoomId);
+    } else{
+      console.log('加入游戏失败', gameRoomId);
+      alert(response.data.message);
+    }
+  }, error => {
+    console.log('加入游戏失败');
+    alert(error);
+  });
+};
+
+
 // 登录相关
 const loginInfo = inject('login-info');
 
@@ -334,6 +384,8 @@ defineExpose({
   sendMessage,
   handleFileUpload,
   randomChangeAvatar,
-  randomUpdataRoomAvatar
+  randomUpdataRoomAvatar,
+  joinGame,
+  createGame
 })
 </script>

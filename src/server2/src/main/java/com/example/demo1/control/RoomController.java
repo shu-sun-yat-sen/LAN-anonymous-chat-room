@@ -89,10 +89,10 @@ public class RoomController {
     }
     @PostMapping("/roominfo")
     public Result join(HttpServletRequest request, String password){
-        System.out.print("接收到更新房间信息请求, request: ");
-        System.out.println(request);
-        System.out.print("password: ");
-        System.out.println(password);
+//        System.out.print("接收到更新房间信息请求, request: ");
+//        System.out.println(request);
+//        System.out.print("password: ");
+//        System.out.println(password);
         String roomname=request.getHeader("roomname");
         Room room=roomService.findRoomByRoomName(roomname).get();
         List<String> roomnowmembersid=room.getMembersId();

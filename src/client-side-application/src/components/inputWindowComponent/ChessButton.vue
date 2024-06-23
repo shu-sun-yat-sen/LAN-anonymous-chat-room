@@ -19,7 +19,7 @@
                     <router-link target="_blank" :to="generateLink('create')">
                         <el-button type="warning" @click="submitFormCreate($event, ruleFormRef)">创建</el-button>
                     </router-link>
-                    <router-link target="_blank" :to="{ name: 'ChessGame' }">
+                    <router-link target="_blank" :to="generateLink('create')">
                         <el-button type="primary" @click="submitFormLogin($event, ruleFormRef)">加入</el-button>
                     </router-link>
                     <el-button @click.prevent="closeWindow">取消</el-button>
@@ -60,7 +60,8 @@ export default {
             curUser,
             ruleFormRef,
             ruleForm,
-            rules
+            rules,
+            loginInfo
         }
     },
     data() {
@@ -75,7 +76,9 @@ export default {
             query: {
             roomID: this.ruleForm.roomID,
             type: this.ruleForm.type,
-            action: action
+            action: action,
+            JWT: this.loginInfo.JWT,
+            playerID: this.loginInfo.userId
             }
         };
         },
@@ -99,9 +102,7 @@ export default {
             if (!formEl) return
             formEl.validate((valid) => {
                 if (valid) {
-                    console.log('roomID: ', this.ruleForm.roomID, ' create successfully!');
-                    
-                    // 创建房间，与后端通信
+                    this.$emit('create-game', this.ruleForm.roomID, this.ruleForm.type);
                     this.closeWindow();
                 } else {
                     event.preventDefault();
@@ -113,9 +114,7 @@ export default {
             if (!formEl) return
             formEl.validate((valid) => {
                 if (valid) {
-                    console.log('roomID: ', this.ruleForm.roomID, ' join successfully!');
-
-                    // 加入房间与后端通信
+                    this.$emit('join-game', this.ruleForm.roomID);
                     this.closeWindow();
                 } else {
                     event.preventDefault();

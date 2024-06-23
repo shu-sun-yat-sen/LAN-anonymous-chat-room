@@ -11,7 +11,7 @@
 
 
 <script setup>
-import { computed, inject} from 'vue';
+import { computed, inject, defineEmits, defineProps} from 'vue';
 
 const emit = defineEmits(['random-update-room-avatar']);
 
