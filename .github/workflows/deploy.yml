@@ -41,40 +41,33 @@ jobs:
         run: npm run build
         working-directory: ./src/client-side-application # 指定前端项目的目录
 
+      - name: Upload Backend Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: backend-artifact
+          path: ./release/SYSU_LACR.jar
+
+      - name: Archive and Upload Frontend Artifact
+        run: zip -r build-frontend.zip ./src/client-side-application/build
+        - uses: actions/upload-artifact@v2
+          with:
+            name: frontend-artifact
+            path: ./release/build-frontend.zip
+
   release:
     if: github.event_name == 'push' && startsWith(github.ref_name, 'v')
     needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Download Backend Artifact
+        uses: actions/download-artifact@v2
         with:
-          tag_name: ${{ github.ref_name }}
-          release_name: Release ${{ github.ref_name }}
-          draft: false
-          prerelease: false
-      - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./src/server2/target/SYSU_LACR.jar
-          asset_name: SYSU_LACR.jar
-          asset_content_type: application/java-archive
+          name: backend-artifact
+          path: ./release
 
-      - name: Archive Frontend Build
-        run: zip -r build-frontend.zip ./src/client-side-application/build
-      - name: Upload Frontend Release Asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Download Frontend Artifact
+        uses: actions/download-artifact@v2
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./build-frontend.tar.gz
-          asset_name: build-frontend.tar.gz
-          asset_content_type: application/gzip
+          name: frontend-artifact
+          path: ./release
