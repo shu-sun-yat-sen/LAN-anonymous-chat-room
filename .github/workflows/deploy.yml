@@ -40,7 +40,7 @@ jobs:
         run: |
           mkdir -p release-package/frontend
           cp src/server2/target/SYSU_LACR.jar release-package/
-          cp -r src/client-side-application/build/* release-package/frontend/
+          cp -r src/client-side-application/dist/* release-package/frontend/
           cd release-package
           zip -r ../release-package.zip .
       - name: Upload Combined ZIP Artifact
