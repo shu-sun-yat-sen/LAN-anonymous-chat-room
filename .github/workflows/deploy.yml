@@ -52,6 +52,7 @@ jobs:
   release:
     if: github.event_name == 'push' && startsWith(github.ref_name, 'v')
     needs: build
+    contents: write
     runs-on: ubuntu-latest
     steps:
       - name: Download Combined Artifact
