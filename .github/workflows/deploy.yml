@@ -1,6 +1,3 @@
-# This workflow will build a package using Maven and then publish it to GitHub packages when a release is created
-# For more information see: https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#apache-maven-with-a-settings-path
-
 name: vue-spring
 
 on:
@@ -25,33 +22,27 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
-          server-id: github
-          settings-path: ${{ github.workspace }}/src/server2
-      - name: Build with Maven
-        run: mvn clean package --file $GITHUB_WORKSPACE/src/server2/pom.xml
+      - name: Build Backend
+        run: mvn clean package --file src/server2/pom.xml
 
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
           node-version: '18'
-      - name: Install dependencies
+      - name: Install Frontend Dependencies
         run: npm install
-        working-directory: ./src/client-side-application
-      - name: Build frontend
+        working-directory: src/client-side-application
+      - name: Build Frontend
         run: npm run build
-        working-directory: ./src/client-side-application
-
-      - name: Prepare Artifacts for Packaging
-        run: |
-          mkdir -p ./release-package/frontend
-          cp ./src/server2/target/SYSU_LACR.jar ./release-package/
-          cp -r ./src/client-side-application/build/* ./release-package/frontend/
+        working-directory: src/client-side-application
 
       - name: Create Combined ZIP
         run: |
+          mkdir -p release-package/frontend
+          cp src/server2/target/SYSU_LACR.jar release-package/
+          cp -r src/client-side-application/build/* release-package/frontend/
           cd release-package
           zip -r ../release-package.zip .
-
       - name: Upload Combined ZIP Artifact
         uses: actions/upload-artifact@v2
         with:
