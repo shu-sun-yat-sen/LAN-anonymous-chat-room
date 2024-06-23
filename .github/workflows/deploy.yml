@@ -7,8 +7,8 @@ on:
   push:
     branches:
       - AI-service
-  release:
-    types: [created]
+    tags:
+      - 'v*'
 
 jobs:
   build:
