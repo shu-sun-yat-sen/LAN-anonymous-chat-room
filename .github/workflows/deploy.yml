@@ -61,6 +61,18 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./target/SYSU_LACR.jar
+          asset_path: ./src/server2/target/SYSU_LACR.jar
           asset_name: SYSU_LACR.jar
           asset_content_type: application/java-archive
+
+      - name: Archive Frontend Build
+          run: zip -r build-frontend.zip ./src/client-side-application/build
+      - name: Upload Frontend Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./build-frontend.tar.gz
+          asset_name: build-frontend.tar.gz
+          asset_content_type: application/gzip
