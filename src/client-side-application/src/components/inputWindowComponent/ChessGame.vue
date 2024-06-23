@@ -46,6 +46,7 @@ export default {
     };
   },
   mounted() {
+    console.log("启动：",this.$route.query.roomID, this.$route.query.type);
     let _this = this;
     let container = document.getElementById("gobang");
 

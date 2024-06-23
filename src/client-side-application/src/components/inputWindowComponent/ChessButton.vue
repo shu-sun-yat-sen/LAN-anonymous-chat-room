@@ -16,7 +16,7 @@
                 </el-form-item>
 
                 <div style="display: flex; gap: 10px; position: relative; left: 15%;">
-                    <router-link target="_blank" :to="{ name: 'ChessGame' }">
+                    <router-link target="_blank" :to="generateLink('create')">
                         <el-button type="warning" @click="submitFormCreate($event, ruleFormRef)">创建</el-button>
                     </router-link>
                     <router-link target="_blank" :to="{ name: 'ChessGame' }">
@@ -69,6 +69,16 @@ export default {
         };
     },
     methods: {
+        generateLink(action) {
+        return {
+            name: 'ChessGame',
+            query: {
+            roomID: this.ruleForm.roomID,
+            type: this.ruleForm.type,
+            action: action
+            }
+        };
+        },
         playChess() {
             this.$emit('start-chess', 'chess');
             this.showChessAcceptWindow = true;
@@ -90,7 +100,7 @@ export default {
             formEl.validate((valid) => {
                 if (valid) {
                     console.log('roomID: ', this.ruleForm.roomID, ' create successfully!');
-
+                    
                     // 创建房间，与后端通信
                     this.closeWindow();
                 } else {
