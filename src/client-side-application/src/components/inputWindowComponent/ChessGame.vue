@@ -6,7 +6,7 @@
 
 <script>
 import axios from 'axios';
-import { computed, inject ,ref} from 'vue';
+import { inject ,ref} from 'vue';
 /**
  *  写在前面：
  * 棋盘大小为15*15
@@ -100,12 +100,6 @@ export default {
     console.log('准备好了，可以开始下棋了');
     this.intervalId = setInterval(this.listenOtherChessLocation, 300);
   },
-  beforeDestroy() {
-    // 清除定时器
-    if (this.intervalId) {
-      clearInterval(this.intervalId);
-    }
-  },
   computed: {
     chessText() {
       return this.curGame.whiteTurn ? '白棋' : '黑棋';
@@ -178,12 +172,6 @@ export default {
       // 将检查胜负逻辑转移到后端
       // _this.checkResult(xLine, yLine); 
     },
-
-    // setResultArr(m, n) {
-    //   let _this = this;
-    //   _this.resultArr[m][n] = _this.whiteTurn ? 1 : 2; // 白棋为-1；黑棋为1
-
-    // },
 
     drawText() {
       let _this = this;
@@ -322,8 +310,12 @@ export default {
           this.curGame.chessBoard = this.parseBoard(newGameInfo.board);
           this.drawCheckerboard();
           this.curGame.turntoId = this.splitStringByComma(newGameInfo.players)[newGameInfo.turn];
-          this.curGame.isOver = newGameInfo.winner === -1 ? true:false;
+          this.curGame.isOver = newGameInfo.winner === -1 ? false:true;
           this.curGame.winnerId = newGameInfo.winner === -1 ? null:this.splitStringByComma(newGameInfo.players)[newGameInfo.winner];
+          if(this.curGame.isOver){
+            // 游戏结束
+            this.drawResult();
+          }
           // console.log(this.curGame.turntoId);
         } else{
           console.log('获取棋面失败', this.curGame.gameId, response.data.message);
