@@ -85,4 +85,9 @@
 		</plugins>
 	</build>
 
+
+	<build>
+	    <finalName>SYSU_LACR</finalName>
+	</build>
+
 </project>

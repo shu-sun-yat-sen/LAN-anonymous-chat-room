@@ -3,36 +3,53 @@
 
 name: Maven Package
 
-##on:
-##  release:
-##    types: [created]
-
 on:
   push:
     branches:
       - AI-service
+  release:
+    types: [created]
+
 jobs:
   build:
-
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
-
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up JDK 21
-      uses: actions/setup-java@v3
-      with:
-        java-version: '21'
-        distribution: 'temurin'
-        server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
-        settings-path: ${{ github.workspace }}/src/server2 # location for the settings.xml file
+      - uses: actions/checkout@v4
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          server-id: github
+          settings-path: ${{ github.workspace }}/src/server2
+      - name: Build with Maven
+        run: mvn clean package --file $GITHUB_WORKSPACE/src/server2/pom.xml
 
-    - name: Build with Maven
-      run: mvn -B package --file ./src/server2/pom.xml
-
-    - name: Publish to GitHub Packages Apache Maven
-      run: mvn deploy -s $GITHUB_WORKSPACE/src/server2/settings.xml --file $GITHUB_WORKSPACE/src/server2/pom.xml
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
+  release:
+    if: github.event_name == 'release' && github.event.action == 'created'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./target/SYSU_LACR.jar
+          asset_name: SYSU_LACR.jar
+          asset_content_type: application/java-archive
