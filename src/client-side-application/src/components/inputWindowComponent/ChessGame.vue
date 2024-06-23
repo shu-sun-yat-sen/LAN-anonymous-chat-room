@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { computed, inject } from 'vue';
+import { computed, inject ,ref} from 'vue';
 /**
  *  写在前面：
  * 棋盘大小为15*15
@@ -22,15 +22,45 @@ export default {
   name: "ChessGame",
   setup() {
     const adc = inject('login-info');
-    const gameRoom = inject('game-rooms');
     // 待加入不登录不开启棋局设置
-    const curGame = computed(() => {
-      return gameRoom.value[0] ? gameRoom.value[0] : '';
-    });
+
+    const curGame = ref(
+      {
+        gameId: "id1",  //唯一标识一个游戏
+        gameType: "1", //游戏类型
+        roomName: "room1", //所属的房间
+        isIn: true, //自己是否在房间内
+        //一维存储的棋盘格，1代表黑子，0无，-1白子
+        chessBoard: [
+          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        ],
+        chessBoardHeight: 15,
+        chessBoardWidth: 15,
+        turntoId: "id1", //当前轮到谁走
+        whiteTurn: false, //当前是否轮到白子走,true是白子
+        isOver: false, //游戏是否结束
+        winnerId: "id1", //获胜者的id
+      }
+    );
 
     const curUser = computed(() => {
       return adc.value ? adc.value : '';
     });
+
     return {
       // 游戏信息
       curGame,
@@ -46,7 +76,9 @@ export default {
     };
   },
   mounted() {
-    console.log("启动：",this.$route.query.roomID, this.$route.query.type);
+    this.curGame.gameId = this.$route.query.roomID;
+    this.curGame.gameType = this.$route.query.type;
+    console.log("启动：", this.curGame.gameId, this.curGame.gameType);
     let _this = this;
     let container = document.getElementById("gobang");
 
