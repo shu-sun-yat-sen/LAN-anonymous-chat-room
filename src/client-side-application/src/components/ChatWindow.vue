@@ -4,10 +4,11 @@
         <ChatBubble
           v-for="(message, index) in items"
           :key="index"
-          :text="message.content" 
+          :content="message.content" 
           :avatar="message.avatar"
           :username="message.senderFakeName"
           :same="isUser(message)"
+          :type="message.type"
         />
       </div>
     </div>
@@ -44,8 +45,10 @@ export default {
     const handleScroll = (e) => {
       // 使用 scrollBox.value 访问 DOM 元素
       if (scrollBox.value) {
+        // 阻止默认的水平滚动行为
+        e.preventDefault();
         // deltaY 属性在向下滚动时返回正值，向上滚动时返回负值，否则为0
-        scrollBox.value.scrollLeft += e.deltaY;
+        scrollBox.value.scrollTop += e.deltaY;
       }
     };
     
@@ -98,6 +101,7 @@ export default {
   width: 100%;
   max-height: 90%;
   overflow-y: scroll;
+  overflow-x: hidden; 
   padding: 0px;
   background-color: transparent;
 }

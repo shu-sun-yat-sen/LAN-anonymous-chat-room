@@ -1,20 +1,38 @@
 <template>
-  <div class="chat-bubble">
+  <div :class="{'chat-bubble': !same,'chat-bubble-reverse': same}">
     <el-avatar :src="avatar" alt="Avatar" class="avatar" shape="circle" fit="cover" :size="40"></el-avatar>
-    <div class="content-container">
+    <div :class="{'c1': !same,'c1-reverse': same}">
       <div class="username">{{ username }}</div>
       <div :class="{'chat-right_triangle': same,'chat-left_triangle': !same}"></div>
-      <!-- 向上强制移动 -->
-      <div :class="{'myContent': same, 'content': !same}">{{ text }}</div>
+      <div :class="{'content-container':!same,'content-container-reverse':same}">
+        <!-- 向上强制移动 -->
+        <div :class="{'myContent': same, 'content': !same}">
+          <!-- 根据 type 的取值,条件渲染 -->
+          <div v-if="type==='text'">{{ content }}</div>
+          <div v-else-if="type==='img'">
+            <el-image class="limited-size-image" :src="content"/>
+          </div>
+          <div v-else-if="type==='doc'" class="doc-type-layout">
+            <el-avatar :src="fileicon" 
+                        alt="Avatar" class="avatar" 
+                        shape="square" 
+                        fit="cover" 
+                        size="40" />
+            <downloadlink :fileUrl="content" linkText=""/>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
 </template>
 
 <script>
+import Downloadlink from './Downloadlink.vue';
 export default {
+  components: { Downloadlink },
   props: {
-    text: {
+    content: {
       type: String,
       required: true
     },
@@ -29,6 +47,15 @@ export default {
     same: {
       type: Boolean,
       required: true
+    },
+    type: {
+      type: String,
+      required: true
+    },
+  },
+  computed: {
+    fileicon(){
+      return this.same? require('@/assets/file_green.png') : require('@/assets/file_blue.png')
     }
   }
 };
@@ -40,6 +67,14 @@ export default {
   align-items: flex-start;
   /* margin-bottom: 10px; */
   /* padding: 10px; */
+  max-width: 100%;
+}
+
+.chat-bubble-reverse{
+  display: flex;
+  align-items: flex-start;
+  flex-direction: row-reverse;
+  max-width: 100%;
 }
 
 .avatar {
@@ -52,8 +87,35 @@ export default {
   flex-direction: column;
   align-items: flex-start;
   /* 确保左对齐 */
-  max-width: calc(100% - 50px);
+  max-width: 100%;
   /* Adjusts width to fit within parent, considering avatar width and margin */
+}
+
+
+.content-container-reverse {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  
+  /* 确保左对齐 */
+  max-width: 100%;
+  /* Adjusts width to fit within parent, considering avatar width and margin */
+}
+
+.c1 {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  /* 确保左对齐 */
+  max-width: calc(100% - 50px);
+}
+
+.c1-reverse {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  /* 确保左对齐 */
+  max-width: calc(100% - 50px);
 }
 
 .username {
@@ -78,6 +140,12 @@ export default {
   transform: translate(0, -10px);
 }
 
+.limited-size-image {
+  max-width: 300px;
+  max-height: 200px;
+  width: auto;
+  height: auto;
+}
 
 /* 发送者 */
 .chat-left_triangle {
@@ -100,12 +168,12 @@ export default {
   width: 5%;
   border-width: 8px;
   border-style: solid;
-  border-color: transparent #67C23A transparent transparent;
+  border-color: transparent transparent transparent #67C23A;
   /* position: relative;
   left: -22px;
   top: 3px; */
 
-  transform: translate(-100%, 100%);
+  transform: translate(100%, 100%);
   z-index: 10;
 }
 
@@ -123,5 +191,12 @@ export default {
   color: #f0f0f0;
   
   transform: translate(0, -10px);
+}
+
+.doc-type-layout {
+  display: flex;
+  justify-content: flex-start; /* 从左往右排列 */
+  align-items: center; /* 在高度方向居中对齐 */
+  gap: 10px;
 }
 </style>
