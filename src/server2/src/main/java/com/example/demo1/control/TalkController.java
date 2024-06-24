@@ -122,10 +122,12 @@ public class TalkController {
         System.out.println(originalFilename);
         String filename= UUID.randomUUID().toString()+originalFilename.substring(originalFilename.lastIndexOf("."));
         String projectRootPath = resourceLoader.getResource("classpath:").getFile().getAbsolutePath();
-        System.out.println(projectRootPath);
-        file.transferTo(new File(projectRootPath + "/../../src/main/resources/static/"+filename));
+//        System.out.println(projectRootPath);
+//        file.transferTo(new File(projectRootPath + "/../../src/main/resources/static/"+filename));
+        file.transferTo(new File("D:/h2/"+filename));
         Getip getip=new Getip();
-        String context=getip.getip()+":8080"+ '/' + filename;
+        String context="http://" + getip.getip()+":8080"+ "/files/" + filename;
+//        System.out.println(request.getServerName());
         System.out.println(context);
         String roomname=request.getHeader("roomname");
         Map<String,Object> map = ThreadLocalUtil.get();
