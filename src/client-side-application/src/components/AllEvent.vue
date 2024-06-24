@@ -79,6 +79,7 @@ const register = () => {     //注册
   }).then(response => {
     if(response.data.code === 0){
       console.log('注册成功了', response);
+      alert("注册成功");
     } else{
       console.log('注册出现了错误');
     }
@@ -103,6 +104,7 @@ const logIn = () => {     //登录
       loginInfo.value.JWT = response.data.data;
       loginInfo.value.isLogIn = true;
       console.log('JWT: ' + loginInfo.value.JWT);
+      alert("登录成功");
     } else{
       console.log('登录出现了错误');
     }

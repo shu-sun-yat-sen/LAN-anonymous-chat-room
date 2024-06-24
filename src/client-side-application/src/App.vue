@@ -57,40 +57,40 @@ const roomInfo = ref(
   { 
     currentRoomName: "sampleRoom1",
     roomList: [
-      {
-        roomName: "sampleRoom1",
-        roomAvatar: 'https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png',
-        isLocked: false,
-        isIn:true,
-        password: "123456",
-        messages: [
-          {
-            senderID: '用户名',
-            type:"text",
-            senderFakeName: "fakeSender",
-            content: "示例消息,登录以获取更多消息",
-            avatar: 'https://via.placeholder.com/40',
-            time: "fakeTime"
-          }
-        ]
-      },
-      {
-        roomName: "sampleRoom2",
-        roomAvatar: 'https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png',
-        isLocked: false,
-        isIn:true,
-        password: "123456",
-        messages: [
-        {
-            senderID: '用户名',
-            type:"text",
-            senderFakeName: "fakeSender",
-            content: "示例消息,登录以获取更多消息",
-            avatar: 'https://via.placeholder.com/40',
-            time: "fakeTime"
-          }
-        ]
-      }
+      // {
+      //   roomName: "sampleRoom1",
+      //   roomAvatar: 'https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png',
+      //   isLocked: false,
+      //   isIn:true,
+      //   password: "123456",
+      //   messages: [
+      //     {
+      //       senderID: '用户名',
+      //       type:"text",
+      //       senderFakeName: "fakeSender",
+      //       content: "示例消息,登录以获取更多消息",
+      //       avatar: 'https://via.placeholder.com/40',
+      //       time: "fakeTime"
+      //     }
+      //   ]
+      // },
+      // {
+      //   roomName: "sampleRoom2",
+      //   roomAvatar: 'https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png',
+      //   isLocked: false,
+      //   isIn:true,
+      //   password: "123456",
+      //   messages: [
+      //   {
+      //       senderID: '用户名',
+      //       type:"text",
+      //       senderFakeName: "fakeSender",
+      //       content: "示例消息,登录以获取更多消息",
+      //       avatar: 'https://via.placeholder.com/40',
+      //       time: "fakeTime"
+      //     }
+      //   ]
+      // }
     ]
   }
 );
