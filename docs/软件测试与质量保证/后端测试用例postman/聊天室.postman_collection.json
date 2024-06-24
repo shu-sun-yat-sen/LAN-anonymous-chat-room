@@ -1,0 +1,122 @@
+{
+	"info": {
+		"_postman_id": "06c2505c-657e-4a6e-a771-a770b1d691f3",
+		"name": "聊天室",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "36503299"
+	},
+	"item": [
+		{
+			"name": "创建房间",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGFpbXMiOnsidXNlcnBpYyI6InVzZXJwaWMvbGl0dGxlX2JlYXIuanBnIiwiaWQiOiIxODAyNTE2MDMyNSIsImZha2VuYW1lIjoiNTM0NTMifSwiZXhwIjoxNzE5MjQ0MDY0fQ.sdV_ajcnzLA5tXF6T6t-uIUUVO0cCk8XmB18ysQ4Wy0",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:8080/room?roomName=happyman",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"room"
+					],
+					"query": [
+						{
+							"key": "roomName",
+							"value": "happyman"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "获取所有聊天室信息",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGFpbXMiOnsidXNlcnBpYyI6InVzZXJwaWMvbGl0dGxlX2JlYXIuanBnIiwiaWQiOiIxODAyNTE2MDMyNSIsImZha2VuYW1lIjoiNTM0NTMifSwiZXhwIjoxNzE5MjQ0MDY0fQ.sdV_ajcnzLA5tXF6T6t-uIUUVO0cCk8XmB18ysQ4Wy0",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:8080/room",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"room"
+					],
+					"query": [
+						{
+							"key": "roomName",
+							"value": "happyman",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "获取指定聊天室信息",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGFpbXMiOnsidXNlcnBpYyI6InVzZXJwaWMvbGl0dGxlX2JlYXIuanBnIiwiaWQiOiIxODAyNTE2MDMyNSIsImZha2VuYW1lIjoiNTM0NTMifSwiZXhwIjoxNzE5MjQ0MDY0fQ.sdV_ajcnzLA5tXF6T6t-uIUUVO0cCk8XmB18ysQ4Wy0",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:8080/room/roominfo?roomName=happyman",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"room",
+						"roominfo"
+					],
+					"query": [
+						{
+							"key": "roomName",
+							"value": "happyman"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "加入聊天室",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGFpbXMiOnsidXNlcnBpYyI6InVzZXJwaWMvbGl0dGxlX2JlYXIuanBnIiwiaWQiOiIxODAyNTE2MDMyNSIsImZha2VuYW1lIjoiNTM0NTMifSwiZXhwIjoxNzE5MjQ0MDY0fQ.sdV_ajcnzLA5tXF6T6t-uIUUVO0cCk8XmB18ysQ4Wy0",
+						"type": "text"
+					},
+					{
+						"key": "roomname",
+						"value": "happyman",
+						"type": "text"
+					}
+				],
+				"url": "localhost:8080/room/roominfo"
+			},
+			"response": []
+		}
+	]
+}
