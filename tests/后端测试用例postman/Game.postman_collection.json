@@ -1,0 +1,142 @@
+{
+	"info": {
+		"_postman_id": "61d137a0-5585-4977-ab13-19b766e48af6",
+		"name": "Game",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "36503299"
+	},
+	"item": [
+		{
+			"name": "创建游戏",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGFpbXMiOnsidXNlcnBpYyI6InVzZXJwaWMvbGl0dGxlX2JlYXIuanBnIiwiaWQiOiIxODAyNTE2MDMyNCIsImZha2VuYW1lIjoiNTM0NTMifSwiZXhwIjoxNzE5MDk4MjUzfQ.F1hMD60L1v2lZECbRN-QB8W8LsYTH5gGpmJVkZOfmpE",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"roomName\":\"sad3\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/game/addgame?id=0989090&chatroom=32324&gameid=1",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"game",
+						"addgame"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "0989090"
+						},
+						{
+							"key": "row",
+							"value": "2",
+							"disabled": true
+						},
+						{
+							"key": "col",
+							"value": "7",
+							"disabled": true
+						},
+						{
+							"key": "chatroom",
+							"value": "32324"
+						},
+						{
+							"key": "gameid",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "离开（删除）游戏",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGFpbXMiOnsidXNlcnBpYyI6InVzZXJwaWMvbGl0dGxlX2JlYXIuanBnIiwiaWQiOiIxODAyNTE2MDMyNSIsImZha2VuYW1lIjoiNTM0NTMifSwiZXhwIjoxNzE5MDk4NjQwfQ.3bR2M73m9TKdQq1gLj5EJoz3A8JfaQuGS95DddEA9z0",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "localhost:8080/game/leavegame?id=0989090",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"game",
+						"leavegame"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "0989090"
+						},
+						{
+							"key": "row",
+							"value": "2",
+							"disabled": true
+						},
+						{
+							"key": "col",
+							"value": "7",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "进行游戏",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/game/play?id=0989090&row=1&col=2",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"game",
+						"play"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "0989090"
+						},
+						{
+							"key": "row",
+							"value": "1"
+						},
+						{
+							"key": "col",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

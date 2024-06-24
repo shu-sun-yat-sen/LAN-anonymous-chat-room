@@ -1,0 +1,102 @@
+{
+	"info": {
+		"_postman_id": "3de7b6e6-a6d3-42f6-871b-d143aec629f9",
+		"name": "Talk",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "36503299"
+	},
+	"item": [
+		{
+			"name": "发布消息",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGFpbXMiOnsidXNlcnBpYyI6InVzZXJwaWMvbGl0dGxlX2JlYXIuanBnIiwiaWQiOiIxODAyNTE2MDMyNSIsImZha2VuYW1lIjoiNTM0NTMifSwiZXhwIjoxNzE5MjQ0MDY0fQ.sdV_ajcnzLA5tXF6T6t-uIUUVO0cCk8XmB18ysQ4Wy0",
+						"type": "text"
+					},
+					{
+						"key": "roomname",
+						"value": "happyman",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:8080/room/talk?context=das",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"room",
+						"talk"
+					],
+					"query": [
+						{
+							"key": "context",
+							"value": "das"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "获取消息",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGFpbXMiOnsidXNlcnBpYyI6InVzZXJwaWMvbGl0dGxlX2JlYXIuanBnIiwiaWQiOiIxODAyNTE2MDMyNSIsImZha2VuYW1lIjoiNTM0NTMifSwiZXhwIjoxNzE5MjQ0MDY0fQ.sdV_ajcnzLA5tXF6T6t-uIUUVO0cCk8XmB18ysQ4Wy0",
+						"type": "text"
+					},
+					{
+						"key": "roomname",
+						"value": "happyman",
+						"type": "text"
+					}
+				],
+				"url": "localhost:8080/room/talk"
+			},
+			"response": []
+		},
+		{
+			"name": "机器人聊天",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGFpbXMiOnsidXNlcnBpYyI6Ii9zcmMvdXNlcnBpYy9saXR0bGVfYmVhci5qcGciLCJpZCI6IjE4MDI1MTYwMzI5IiwiZmFrZW5hbWUiOiI1MzQ1MyJ9LCJleHAiOjE3MTg4MTMwMzl9.QHj8zWlC4NpwiYex-CE3C5PaTDUVX3ZldMg7BmjDHxE",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "localhost:8080/ai/assistant?message=给我讲个100字的故事",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"ai",
+						"assistant"
+					],
+					"query": [
+						{
+							"key": "message",
+							"value": "给我讲个100字的故事"
+						},
+						{
+							"key": null,
+							"value": "What is the time now",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

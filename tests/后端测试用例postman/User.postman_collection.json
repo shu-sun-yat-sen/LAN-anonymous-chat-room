@@ -1,0 +1,81 @@
+{
+	"info": {
+		"_postman_id": "7b83cc1e-19f2-4034-9303-649535018387",
+		"name": "User",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "36503299"
+	},
+	"item": [
+		{
+			"name": "用户登录",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/user/login?id=18025160325&password=222",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user",
+						"login"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "18025160325"
+						},
+						{
+							"key": "fakename",
+							"value": "53453",
+							"disabled": true
+						},
+						{
+							"key": "password",
+							"value": "222"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "用户注册",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:8080/user/register?id=18025160329&fakename=53453&password=222",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user",
+						"register"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "18025160329"
+						},
+						{
+							"key": "fakename",
+							"value": "53453"
+						},
+						{
+							"key": "password",
+							"value": "222"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

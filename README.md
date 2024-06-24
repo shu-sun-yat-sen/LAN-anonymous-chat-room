@@ -10,13 +10,9 @@
 - release: 可执行文件
 - script: 构建,部署脚本
 - src: 源代码
-  - C
-  - Python
-- tests: 测试代码
+- tests: 测试相关
 
 2024 Junior Soft Engineering Project
-
-
 
 ## 项目成员
 
