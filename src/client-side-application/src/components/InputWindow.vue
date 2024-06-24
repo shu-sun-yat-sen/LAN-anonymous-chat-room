@@ -5,6 +5,7 @@
             <EmojiButton @send-emoji="handleSendEmoji"/>
             <FileUploadButton @upload-file="handleUploadFile"/> 
             <ChessButton @start-chess="handleChess" @create-game="handleCreateGame" @join-game="handleJoinGame"/>
+            <SnakeGameButton/>
         </div>
         <div class="bottomWindow">
             <TextInput @send-text="handleSendText" :emojiMessage="emojiMessage" @clearEmojiMessage="clearEmojiMessage"/>
@@ -22,6 +23,7 @@ import EmojiButton from './inputWindowComponent/EmojiButton.vue';
 import TextInput from './inputWindowComponent/TextInput.vue';
 import FileUploadButton from './inputWindowComponent/FileUploadButton.vue';
 import ChessButton from './inputWindowComponent/ChessButton.vue';
+import SnakeGameButton from './inputWindowComponent/SnakeGameButton.vue';
 
 export default {
     name: 'InputWindow',
@@ -29,7 +31,8 @@ export default {
         EmojiButton,
         TextInput,
         FileUploadButton,
-        ChessButton
+        ChessButton,
+        SnakeGameButton
     },
     data() {
         return {

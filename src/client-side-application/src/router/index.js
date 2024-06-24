@@ -41,9 +41,18 @@ const routes = [
                 name: 'ChessGame',
                 component: ChessGame,
                 meta: { showExtraContent: false }
+            },
+            {
+                path:'external',
+                redirect: 'https://www.baidu.com/?tn=68018901_16_pg'
             }
         ]
     }
+    // ,
+    // {
+    //     path : '/ex',
+    //     name : 'snake'
+    // }
 ];
 
 const router = createRouter({
