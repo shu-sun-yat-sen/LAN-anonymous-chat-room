@@ -12,6 +12,7 @@
     "axios": "^1.7.2",
     "core-js": "^3.37.1",
     "element-plus": "^2.7.5",
+    "http-server": "^14.1.1",
     "vue": "^3.2.13",
     "vue-router": "^4.3.3"
   },
