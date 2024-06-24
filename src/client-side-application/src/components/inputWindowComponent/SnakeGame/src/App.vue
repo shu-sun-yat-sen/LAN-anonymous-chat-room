@@ -308,7 +308,7 @@ export default {
 }
 
 .button-play {
-  width: 190px;
+  width: 200px;
 }
 
 .title {
