@@ -1,9 +1,18 @@
-@echo off
+@echo on
 
 rem 切换到前端应用的目录并启动前端应用
 echo Starting client-side application...
-cd client-side-application/
-start cmd /k "npm run serve"
+
+npm list -g --depth=0 | findstr /i "http-server"
+
+if %errorlevel% equ 0 (
+start cmd /k "cd FrontEndPackage\SnakeDist && http-server -p 8082"
+start cmd /k "cd FrontEndPackage\MainDist && http-server -p 8081"
+) else (
+echo http-server not install.
+pause
+exit
+)
 
 rem 检查前端应用是否启动成功
 if %errorlevel% neq 0 (
@@ -12,7 +21,7 @@ if %errorlevel% neq 0 (
 )
 
 rem 返回到脚本所在的根目录
-cd ..
+
 
 rem 等待几秒钟以确保前端服务器启动
 timeout /t 5 /nobreak
