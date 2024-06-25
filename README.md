@@ -5,10 +5,7 @@
 ## 文件组织
 
 - assets:图片等静态文件
-- config: 配置文件
 - docs: 开发文档
-- release: 可执行文件
-- script: 构建,部署脚本
 - src: 源代码
 - tests: 测试相关
 
