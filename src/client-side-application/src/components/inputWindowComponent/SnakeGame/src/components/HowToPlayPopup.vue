@@ -15,7 +15,7 @@ export default {
     VPopup,
   },
   setup() {
-    const filePath = "../../HOW_TO_PLAY.md";
+    const filePath = "./HOW_TO_PLAY.md";
     const howToPlayMarkdownContent = ref<string>("Loading...");
     fetch(filePath)
       .then((response: Response) => {
