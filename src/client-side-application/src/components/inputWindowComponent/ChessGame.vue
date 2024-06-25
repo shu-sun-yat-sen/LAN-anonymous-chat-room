@@ -252,7 +252,7 @@ export default {
         }
       }, error => {
         console.log('落子失败');
-        alert(error);
+        // alert(error);
       });
     },
 
