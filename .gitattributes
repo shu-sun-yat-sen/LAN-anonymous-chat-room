@@ -1,2 +1,4 @@
 src/client-side-application.zip filter=lfs diff=lfs merge=lfs -text
 src/server2/demo1-0.0.1-SNAPSHOT.jar filter=lfs diff=lfs merge=lfs -text
+*.jar filter=lfs diff=lfs merge=lfs -text
+*.zip filter=lfs diff=lfs merge=lfs -text
