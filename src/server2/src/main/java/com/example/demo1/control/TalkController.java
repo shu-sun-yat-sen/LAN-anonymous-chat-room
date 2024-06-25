@@ -57,6 +57,10 @@ public class TalkController {
         talk.setSendername(sendername);
         talk.setSenderpic(senderpic);
         talk.setSenderid(senderid);
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String formattedString = now.format(formatter);
+        talk.setTime(formattedString);
         talk.setType("text");
         if(judge.contains("@chatai")){
             String newcontext = context.substring(7);
@@ -69,6 +73,10 @@ public class TalkController {
             talk1.setSendername("chatai");
             talk1.setSenderpic("/robot.jpg");
             talk1.setType("text");
+            LocalDateTime now1 = LocalDateTime.now();
+            DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            String formattedString1 = now1.format(formatter1);
+            talk1.setTime(formattedString1);
             out.add(talk1);
             talkMap.writeToMap(talk1.getTime(),talk1);
             talkService.saveTalk(talk1);
@@ -141,6 +149,10 @@ public class TalkController {
         talk.setSendername(sendername);
         talk.setSenderpic(senderpic);
         talk.setSenderid(senderid);
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String formattedString = now.format(formatter);
+        talk.setTime(formattedString);
         if(filename.contains(".jfif") ||
                 filename.contains(".jpg")||filename.contains(".jpeg")||
                 filename.contains(".png")||filename.contains(".gif")||

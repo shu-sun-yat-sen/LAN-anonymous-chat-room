@@ -19,17 +19,33 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @SpringBootApplication
 @EnableJpaRepositories
+@EnableScheduling
 @EntityScan
 public class DemoApplication {
-
+	@Autowired
+	private static HazelcastInstance hazelcastInstance;
+	@Autowired
+	private UserMap userMap;
+	@Autowired
+	private static UserService userService;
+	@Autowired
+	private RoomMap roomMap;
+	@Autowired
+	private static RoomService roomService;
+	@Autowired
+	private TalkMap talkMap;
+	@Autowired
+	private static TalkService talkService;
 	public static void main(String[] args) {
 		File folder = new File("src/main/resources/static/userpic");
 		File[] files = folder.listFiles();
@@ -44,7 +60,7 @@ public class DemoApplication {
 	@Component
 	public static class InitService {  // 把本地的数据上传到集群
 		@Autowired
-		HazelcastInstance hazelcastInstance;
+		private HazelcastInstance hazelcastInstance;
 		@Autowired
 		private UserMap userMap;
 		@Autowired
@@ -61,7 +77,6 @@ public class DemoApplication {
 		public void init() {
 			// 初始化方法中不再写入数据
 		}
-
 		@EventListener(ApplicationReadyEvent.class)
 		public void populateDataAfterTableCreation() {
 			int members=hazelcastInstance.getCluster().getMembers().size();

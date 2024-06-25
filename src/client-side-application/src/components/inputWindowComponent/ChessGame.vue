@@ -98,7 +98,7 @@ export default {
 
     // 告诉后端我要开始下棋了
     console.log('准备好了，可以开始下棋了');
-    this.intervalId = setInterval(this.listenOtherChessLocation, 300);
+    this.intervalId = setInterval(this.listenOtherChessLocation, 200);
   },
   computed: {
     chessText() {
@@ -319,11 +319,9 @@ export default {
           // console.log(this.curGame.turntoId);
         } else{
           console.log('获取棋面失败', this.curGame.gameId, response.data.message);
-          alert(response.data.message);
         }
       }, error => {
         console.log('获取棋面失败');
-        alert(error);
       });
     }
   }

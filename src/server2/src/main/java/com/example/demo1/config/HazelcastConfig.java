@@ -1,4 +1,5 @@
 package com.example.demo1.config;
+import com.example.demo1.model.HazelcastH2MapStoreGame;
 import com.example.demo1.model.HazelcastH2MapStoreRoom;
 import com.example.demo1.model.HazelcastH2MapStoreTalk;
 import com.example.demo1.model.HazelcastH2MapStoreUser;
@@ -72,6 +73,12 @@ public class HazelcastConfig {
             mapConfigUser.getMapStoreConfig()
                     .setEnabled(true)
                     .setImplementation(new HazelcastH2MapStoreUser(dataSource()));
+            MapConfig gameConfigUser1=config.getMapConfig("GameMap");
+            gameConfigUser1.setBackupCount(2);
+            gameConfigUser1.setReadBackupData(true);
+            gameConfigUser1.getMapStoreConfig()
+                    .setEnabled(true)
+                    .setImplementation(new HazelcastH2MapStoreGame(dataSource()));
             MapConfig mapConfigRoom=config.getMapConfig("RoomMap");
             mapConfigRoom.setBackupCount(2);
             mapConfigRoom.setReadBackupData(true);

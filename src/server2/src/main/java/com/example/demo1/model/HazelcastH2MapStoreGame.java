@@ -22,7 +22,7 @@ public class HazelcastH2MapStoreGame implements MapStore<String,GAME> {
     @Override
     public void store(String s, GAME game) {
         try (Connection conn = dataSource.getConnection();
-             PreparedStatement checkStmt = conn.prepareStatement("SELECT COUNT(*) FROM GAME WHERE TIME = ?");
+             PreparedStatement checkStmt = conn.prepareStatement("SELECT COUNT(*) FROM GAME WHERE ID = ?");
              PreparedStatement insertStmt = conn.prepareStatement("INSERT INTO GAME (ID,CHATROOM,TIME,GAMEID,WINNER,TURN,BOARD,PLAYERS,ISEND) VALUES (?,?,?,?,? ?, ?,?,?)")) {
 
             // 检查是否已经存在相同ID的记录
@@ -37,12 +37,14 @@ public class HazelcastH2MapStoreGame implements MapStore<String,GAME> {
 
             // 插入新记录
             insertStmt.setString(1, s);
-            insertStmt.setInt(2, game.getGameid());
-            insertStmt.setInt(3,game.getWinner());
-            insertStmt.setInt(4, game.getWinner());
-            insertStmt.setString(5, game.getBoard());
-            insertStmt.setString(6,game.getPlayers());
-            insertStmt.setInt(7, game.getIsend());
+            insertStmt.setString(2, game.getChatroom());
+            insertStmt.setString(3,game.getTime());
+            insertStmt.setInt(4, game.getGameid());
+            insertStmt.setInt(5,game.getWinner());
+            insertStmt.setInt(6,game.getTurn());
+            insertStmt.setString(7, game.getBoard());
+            insertStmt.setString(8,game.getPlayers());
+            insertStmt.setInt(9, game.getIsend());
             insertStmt.executeUpdate();
             System.out.print("存入:");
             System.out.println(game);
@@ -63,7 +65,7 @@ public class HazelcastH2MapStoreGame implements MapStore<String,GAME> {
     @Override
     public void delete(String s) {
         try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement("DELETE FROM GAME WHERE TIME = ?")) {
+             PreparedStatement stmt = conn.prepareStatement("DELETE FROM GAME WHERE ID = ?")) {
             stmt.setString(1, s);
             stmt.executeUpdate();
             System.out.print("删除:");
@@ -85,11 +87,11 @@ public class HazelcastH2MapStoreGame implements MapStore<String,GAME> {
     @Override
     public GAME load(String s) {
         try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM GAME WHERE TIME = ?")) {
+             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM GAME WHERE ID = ?")) {
             stmt.setString(1, s);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    GAME customer = new GAME(rs.getInt("TIME"));
+                    GAME customer = new GAME(rs.getInt("GAMEID"));
                     System.out.print("读取:");
                     System.out.println(customer);
                     return customer;

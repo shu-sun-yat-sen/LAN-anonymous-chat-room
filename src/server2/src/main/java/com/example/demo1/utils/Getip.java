@@ -17,7 +17,9 @@ public class Getip {
             for (NetworkInterface networkInterface : Collections.list(networkInterfaces)) {
                 // 过滤掉不是WLAN的接口
                 System.out.println(networkInterface.getName());
-                if (networkInterface.getName().contains("wireless") || networkInterface.getName().startsWith("eth")) {
+                if (networkInterface.getName().contains("wireless") ||
+                        networkInterface.getName().startsWith("wlan") ||
+                        networkInterface.getName().startsWith("wl")) {
                     Enumeration<InetAddress> inetAddresses = networkInterface.getInetAddresses();
                     for (InetAddress inetAddress : Collections.list(inetAddresses)) {
                         // 只获取IPv4地址，并且排除回环地址

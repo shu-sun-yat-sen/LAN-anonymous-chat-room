@@ -15,10 +15,10 @@ public class TalkService {
     @Autowired
     TalkRepository talkRepository;
     public void saveTalk(Talk talk){
-        LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String formattedString = now.format(formatter);
-        talk.setTime(formattedString);
+//        LocalDateTime now = LocalDateTime.now();
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+//        String formattedString = now.format(formatter);
+//        talk.setTime(formattedString);
         talkRepository.save(talk);
     }
     public List<Talk> findalltalk(){

@@ -15,7 +15,7 @@ public class GameMap {
 
     @PostConstruct
     private void init(){
-        gomoMap = hazelcastInstance.getMap("Game");
+        gomoMap = hazelcastInstance.getMap("GameMap");
     }
 
     public void writeToMap(String key, GAME value) {

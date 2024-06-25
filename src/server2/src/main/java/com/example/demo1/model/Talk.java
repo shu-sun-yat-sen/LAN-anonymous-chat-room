@@ -19,11 +19,6 @@ public class Talk {
     public Talk(){}
     public Talk(String context){
         this.context=context;
-        LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String formattedString = now.format(formatter);
-        this.time=formattedString;
-
     }
     //GET函数
     public String getType(){return type;}
