@@ -1,6 +1,5 @@
 @echo on
 
-:: 设置变量
 set MY_VAR=Hello, World!
 
 npm list -g --depth=0 | findstr /i "http-server"
