@@ -1,3 +1,3 @@
-npm install -g http-server
+npm install -g spa-http-server
 
 
