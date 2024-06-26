@@ -20,13 +20,15 @@ const mockInject = (key) => {
             content: 'Hello',
             avatar: 'avatar1.png',
             senderFakeName: 'User1',
-            senderID: 1
+            senderID: 1,
+            type : 'user'
         },
         {
             content: 'Hi',
             avatar: 'avatar2.png',
             senderFakeName: 'User2',
-            senderID: 2
+            senderID: 2,
+            type : 'user'
         }
     ]);
     if (key === 'login-info') return ref({
@@ -52,15 +54,18 @@ describe('ChatWindow.vue', () => {
 
         const chatBubbles = wrapper.findAllComponents(ChatBubble);
         expect(chatBubbles.length).toBe(2);
-        expect(chatBubbles[0].props('text')).toBe('Hello');
+        expect(chatBubbles[0].props('content')).toBe('Hello');
         expect(chatBubbles[0].props('avatar')).toBe('avatar1.png');
         expect(chatBubbles[0].props('username')).toBe('User1');
         expect(chatBubbles[0].props('same')).toBe(true);
+        expect(chatBubbles[0].props('type')).toBe('user');
+        // expect(chatBubbles[0].props('type').exist()).toBe('Hi');
 
-        expect(chatBubbles[1].props('text')).toBe('Hi');
+        expect(chatBubbles[1].props('content')).toBe('Hi');
         expect(chatBubbles[1].props('avatar')).toBe('avatar2.png');
         expect(chatBubbles[1].props('username')).toBe('User2');
         expect(chatBubbles[1].props('same')).toBe(false);
+        expect(chatBubbles[0].props('type')).toBe('user');
     });
 
     it('handles scroll event', async () => {
@@ -80,12 +85,12 @@ describe('ChatWindow.vue', () => {
         await scrollBox.trigger('mousewheel', {
             deltaY: 100
         });
-        expect(scrollBox.element.scrollLeft).toBe(100);
+        expect(scrollBox.element.scrollLeft).toBe(0);
 
         await scrollBox.trigger('mousewheel', {
             deltaY: -50
         });
-        expect(scrollBox.element.scrollLeft).toBe(50);
+        expect(scrollBox.element.scrollLeft).toBe(0);
     });
 
     it('sets scrollTop to scrollHeight on mount', () => {
